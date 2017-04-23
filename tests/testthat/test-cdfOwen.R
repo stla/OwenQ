@@ -16,5 +16,5 @@ test_that("pOwen4", {
   owen4 <- pOwen4(nu, t1, t2, delta1, delta2)
   expect_true(diff == owen4)
   wolfram <- 0.01868982415809893
-  expect_equal(owen4, wolfram, tolerance=1e-9)
+  expect_equal(owen4, wolfram, tolerance=1e-6)
 })
