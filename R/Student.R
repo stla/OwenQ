@@ -44,7 +44,7 @@ ptOwen <- function(q, nu, delta=0, jmax=50L, cut.point=8){
   }
   if(nu%%2L==1L){
     sB <- sqrt(b)
-    C <- pnorm(-delta*sB) + 2*.OwenT(delta*sB,a, jmax=jmax, cut.point=cut.point)
+    C <- pnorm(-delta*sB) + 2*OwenT(delta*sB,a, jmax=jmax, cut.point=cut.point)
     if(nu==1L){
       return(C)
     }

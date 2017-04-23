@@ -8,15 +8,15 @@
 #' @param jmax,cut.point passed to \code{\link{OwenT}} (when \code{nu} is odd)
 #' @return A vector of numbers between \eqn{0} and \eqn{1}, the values of the integral from \eqn{0} to \eqn{R}.
 #' @export
-#' @importFrom stats pnorm dnorm
+#' @importFrom Rcpp evalCpp
+#' @useDynLib OwenQ
 #' @note The results are theoretically exact when the number of degrees of freedom is even.
 #' When odd, the procedure resorts to the Owen T-function.
 #' @examples
 #' # OwenQ1(nu, t, delta, Inf) = pt(t, nu, delta)
 #' OwenQ1(nu=4, t=3, delta=2, R=100)
 #' ptOwen(q=3, nu=4, delta=2)
-#' @useDynLib OwenQ
-OwenQ1 <- function(nu, t, delta, R, jmax=50L, cut.point=8){
+OwenQ1 <- function(nu, t, delta, R, jmax=8L, cut.point=50){
   if(length(delta) != length(R)){
     stop("`delta` and `R` must have the same length.")
   }
