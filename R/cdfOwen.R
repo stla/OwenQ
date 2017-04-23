@@ -5,7 +5,6 @@
 #' @param delta1,delta2 two vectors of finite numbers, with the same length
 #' @return A vector of numbers between \eqn{0} and \eqn{1}, the values of the integral from \eqn{0} to \eqn{R}.
 #' @export
-#' @importFrom stats pnorm dnorm
 pOwen4 <- function(nu, t1, t2, delta1, delta2){
   J <- length(delta1)
   if(J != length(delta1)){
