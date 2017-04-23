@@ -25,6 +25,12 @@ test_that("OwenQ1 for t=-Inf equals 0", {
   expect_equal(OwenQ1(6, -Inf, 2, 100), 0, tolerance=1e-17)
 })
 
+test_that("OwenQ1 for nu=1 - comparison Wolfram", {
+  owen <- OwenQ1(1, 3, 2, 1)
+  wolfram <- 0.219018703856082
+  expect_equal(owen, wolfram, tolerance=1e-11)
+})
+
 test_that("OwenQ1 - bivariate Student", {
   t1 <- 2; t2 <- 1; delta1 <- 3; delta2 <- 2
   nu <- 6
