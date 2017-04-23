@@ -3,8 +3,10 @@
 #' @param nu integer greater than \eqn{1}, the number of degrees of freedom
 #' @param t1,t2 two finite numbers, positive or negative
 #' @param delta1,delta2 two vectors of finite numbers, with the same length
-#' @return A vector of numbers between \eqn{0} and \eqn{1}, the values of the integral from \eqn{0} to \eqn{R}.
+#' @return A vector of numbers between \eqn{0} and \eqn{1}.
 #' @export
+#' @importFrom Rcpp evalCpp
+#' @useDynLib OwenQ
 pOwen4 <- function(nu, t1, t2, delta1, delta2){
   J <- length(delta1)
   if(J != length(delta1)){
@@ -22,7 +24,8 @@ pOwen4 <- function(nu, t1, t2, delta1, delta2){
   if(isNotPositiveInteger(nu)){
     stop("`nu` must be an integer >=1.")
   }
-  R <- sqrt(nu)*(delta1 - delta2)/(t1-t2)
-  RcppOwenQ1(nu, t2, delta2, R, jmax=8L, cutpoint=50) -
-    RcppOwenQ1(nu, t1, delta1, R, jmax=8L, cutpoint=50)
+  # R <- sqrt(nu)*(delta1 - delta2)/(t1-t2)
+  # RcppOwenQ1(nu, t2, delta2, R, jmax=8L, cutpoint=50) -
+  #   RcppOwenQ1(nu, t1, delta1, R, jmax=8L, cutpoint=50)
+  RcppOwenCDF4(nu, t1, t2, delta1, delta2, jmax=8L, cutpoint=50)
 }
