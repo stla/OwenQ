@@ -74,7 +74,7 @@ NumericVector RcppOwenQ1(int nu, double t, NumericVector delta, NumericVector R,
   double asB;
   if(fabs(t)>DBL_MAX){
     ab = 0;
-    asB = sign(t);
+    asB = R::sign(t);
   }else{
     ab = a*b;
     asB = R::sign(t)*sqrt(t*t/(nu+t*t));
