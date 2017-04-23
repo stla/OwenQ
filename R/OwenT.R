@@ -1,5 +1,14 @@
 #' @useDynLib OwenQ
 OwenT01 <- function(h, a, jmax=50L, cut.point=8) {
+  if(isNotPositiveInteger(jmax)){
+    stop("`jmax` must be an integer >=1.")
+  }
+  if(cut.point <= 0){
+    stop("`cut.point` must be a strictly positive number")
+  }
+  if(a<0 || a>1){ # ok pour a = 0 ?
+    stop("`a` must be a number between 0 and 1")
+  }
   RcppOwenT01(h, a, jmax, cut.point)
 }
 
@@ -28,6 +37,12 @@ OwenT01 <- function(h, a, jmax=50L, cut.point=8) {
 #' @export
 OwenT <- function (h, a, jmax = 50L, cut.point = 8)
 {
+  if(isNotPositiveInteger(jmax)){
+    stop("`jmax` must be an integer >=1.")
+  }
+  if(cut.point <= 0){
+    stop("`cut.point` must be a strictly positive number")
+  }
   if (!is.vector(a) || length(a) > 1L)
     stop("'a' must be a vector of length 1")
   if (!is.vector(h))
