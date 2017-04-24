@@ -46,7 +46,7 @@ test_that("OwenQ1 - bivariate Student", {
   R <- sqrt(nu)*(delta1 - delta2)/(t1-t2)
   owen <- OwenQ1(nu, t2, delta2, R) - OwenQ1(nu, t1, delta1, R)
   wolfram <- 0.01868982415809893
-  expect_equal(owen, wolfram, tolerance=1e-6)
+  expect_equal(owen, wolfram, tolerance=1e-9)
   # wolfram input:
   # With[{t1 = 2, t2=1,delta1=3, delta2=2, nu=6},
   #      NProbability[
@@ -68,7 +68,7 @@ test_that("OwenQ2 - bivariate Student", {
   owen <- - (ptOwen(t2, nu, delta2) - OwenQ1(nu, t2, delta2, R)) +
     (ptOwen(t1, nu, delta1) - OwenQ1(nu, t1, delta1, R))
   wolfram <- 0.0353568969628651
-  expect_equal(owen, wolfram, tolerance=1e-6)
+  expect_equal(owen, wolfram, tolerance=1e-9)
 })
 
 

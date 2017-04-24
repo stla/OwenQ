@@ -1,15 +1,15 @@
-Ssequences <- function(n, a, b, d){
-  A <- M <- numeric(n)
-  sb <- sqrt(b)
-  M[1L] <- a * sb * dnorm(d*sb) * pnorm(d*a*sb)
-  A[2L] <- 1
-  M[2L] <- b * (d * a * M[1L] + a * dnorm(d) / sqrt(2*pi))
-  for(k in 3L:n){
-    A[k] <- 1 /(k-2)/A[k-1L]
-    M[k] <- (k-2)/(k-1) * b * (A[k-1L] * d * a * M[k-1L] + M[k-2L])
-  }
-  return(M)
-}
+# Ssequences <- function(n, a, b, d){
+#   A <- M <- numeric(n)
+#   sb <- sqrt(b)
+#   M[1L] <- a * sb * dnorm(d*sb) * pnorm(d*a*sb)
+#   A[2L] <- 1
+#   M[2L] <- b * (d * a * M[1L] + a * dnorm(d) / sqrt(2*pi))
+#   for(k in 3L:n){
+#     A[k] <- 1 /(k-2)/A[k-1L]
+#     M[k] <- (k-2)/(k-1) * b * (A[k-1L] * d * a * M[k-1L] + M[k-2L])
+#   }
+#   return(M)
+# }
 
 #' @title Student CDF with integer number of degrees of freedom
 #' @description Cumulative distribution function of the noncentrel Student
@@ -21,7 +21,8 @@ Ssequences <- function(n, a, b, d){
 #' @return Numeric value, the CDF evaluated at \code{q}.
 #' @export
 #' @importFrom stats pnorm dnorm
-#' @note The results are theoretically exact when the number of degrees of freedom is even.
+#' @note The results are theoretically exact when the number of degrees of
+#' freedom is even.
 #' When odd, the procedure resorts to the Owen T-function.
 #' @examples
 #' ptOwen(2, 3) - pt(2, 3)
@@ -36,26 +37,37 @@ ptOwen <- function(q, nu, delta=0, jmax=50L, cut.point=8){
   a <- sign(q)*sqrt(q*q/nu)
   b <- nu/(nu+q*q)
   nu <- as.integer(nu)
-  if(nu==2L){
-    sB <- sqrt(b)
-    asB <- sign(q)*sqrt(q*q/(nu+q*q))
-    return(pnorm(-delta) + sqrt(2*pi) *
-             (asB * dnorm(delta*sB) * pnorm(delta*asB)))
+  if(nu==1L){
+    dsB <- delta*sqrt(b)
+    return(pnorm(-dsB) +
+             2*OwenT(dsB,a, jmax=jmax, cut.point=cut.point))
+  }
+  n <- nu - 1L
+  M <- numeric(n)
+  dsB <- delta*sqrt(b)
+  M[1L] <- a * sqrt(b) * dnorm(dsB) * pnorm(a*dsB)
+  if(nu>2L){
+    M[2L] <- b * (delta * a * M[1L] + a * dnorm(delta) / sqrt(2*pi))
+    if(nu>3L){
+      A <- numeric(n-2L)
+      A[1L] <- 1
+      if(nu>4L){
+        for(k in 2L:(n-2L)){
+          A[k] <- 1/(k-1)/A[k-1L]
+        }
+      }
+      for(k in 3L:n){
+        M[k] <- (k-2)/(k-1) * b * (A[k-2L] * delta * a * M[k-1L] + M[k-2L])
+      }
+    }
   }
   if(nu%%2L==1L){
-    sB <- sqrt(b)
-    C <- pnorm(-delta*sB) + 2*OwenT(delta*sB,a, jmax=jmax, cut.point=cut.point)
-    if(nu==1L){
-      return(C)
-    }
-    if(nu==3L){
-      ab <- a*b
-      asB <- sign(q)*sqrt(q*q/(nu+q*q))
-      return(C + 2 * ab * (delta * asB * dnorm(delta*sB) * pnorm(delta*asB)
-                     + exp(-delta*delta/2)/(2*pi)))
-    }
-    return(C + 2*sum(Ssequences(nu-1, a, b, delta)[seq(2L, nu-1L, by=2L)]))
+    dsB <- delta*sqrt(b)
+    C <- pnorm(-dsB) +
+      2*OwenT(dsB,a, jmax=jmax, cut.point=cut.point)
+    return(C + 2*sum(M[seq(2L, n, by=2L)]))
   }
-  return(pnorm(-delta) + sqrt(2*pi) * sum(Ssequences(nu-1, a, b, delta)[seq(1L, nu-1L, by=2L)]))
+  return(pnorm(-delta) + sqrt(2*pi) *
+           sum(M[seq(1L, n, by=2L)]))
 }
 

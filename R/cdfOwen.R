@@ -7,7 +7,7 @@
 #' @export
 #' @importFrom Rcpp evalCpp
 #' @useDynLib OwenQ
-pOwen4 <- function(nu, t1, t2, delta1, delta2){
+pOwen4 <- function(nu, t1, t2, delta1, delta2, jmax=50L, cut.point=8){
   J <- length(delta1)
   if(J != length(delta1)){
     stop("`delta1` and `delta2` must have the same length.")
@@ -27,5 +27,5 @@ pOwen4 <- function(nu, t1, t2, delta1, delta2){
   # R <- sqrt(nu)*(delta1 - delta2)/(t1-t2)
   # RcppOwenQ1(nu, t2, delta2, R, jmax=8L, cutpoint=50) -
   #   RcppOwenQ1(nu, t1, delta1, R, jmax=8L, cutpoint=50)
-  RcppOwenCDF4(nu, t1, t2, delta1, delta2, jmax=8L, cutpoint=50)
+  RcppOwenCDF4(nu, t1, t2, delta1, delta2, jmax, cut.point)
 }

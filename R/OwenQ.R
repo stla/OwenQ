@@ -16,7 +16,7 @@
 #' # OwenQ1(nu, t, delta, Inf) = pt(t, nu, delta)
 #' OwenQ1(nu=4, t=3, delta=2, R=100)
 #' ptOwen(q=3, nu=4, delta=2)
-OwenQ1 <- function(nu, t, delta, R, jmax=8L, cut.point=50){
+OwenQ1 <- function(nu, t, delta, R, jmax=50L, cut.point=8){
   if(length(delta) != length(R)){
     stop("`delta` and `R` must have the same length.")
   }
