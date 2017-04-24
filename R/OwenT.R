@@ -20,9 +20,9 @@ OwenT01 <- function(h, a, jmax=50L, cutpoint=8) {
 #' @description Evaluates the Owen T-function.
 #' @param h numeric scalar
 #' @param a numeric scalar
-#' @param jmax integer scalar controlling the number of terms of the
+#' @param jmax integer controlling the number of terms of the
 #' series expansion; see Details
-#' @param cutpoint scalar number, the cut point in the algorithm;
+#' @param cutpoint positive number, the cut point in the algorithm;
 #' see Details
 #' @return A number between 0 and 1.
 #' @export

@@ -5,7 +5,8 @@
 #' @param t finite number, positive or negative
 #' @param delta vector of finite numbers, with the same length as \code{R}
 #' @param R (upper bound of the integral) vector of finite positive numbers, with the same length as \code{delta}
-#' @param jmax,cutpoint passed to \code{\link{OwenT}} (when \code{nu} is odd)
+#' @param jmax,cutpoint parameters controlling the algorithm for the Owen-T function;
+#' see \code{\link{OwenT}} (used only when \code{nu} is odd)
 #' @return A vector of numbers between \eqn{0} and \eqn{1}, the values of the integral from \eqn{0} to \eqn{R}.
 #' @export
 #' @importFrom Rcpp evalCpp
