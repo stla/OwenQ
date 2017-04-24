@@ -3,6 +3,7 @@
 #' @param nu integer greater than \eqn{1}, the number of degrees of freedom
 #' @param t1,t2 two finite numbers, positive or negative
 #' @param delta1,delta2 two vectors of finite numbers, with the same length
+#' @param jmax,cut.point passed to \code{\link{OwenT}} (when \code{nu} is odd)
 #' @return A vector of numbers between \eqn{0} and \eqn{1}.
 #' @export
 #' @importFrom Rcpp evalCpp
