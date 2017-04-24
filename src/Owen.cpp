@@ -55,12 +55,12 @@ double RcppOwenT(double h, double a, int jmax, double cutpoint);
 // [[Rcpp::export]]
 NumericVector RcppOwenStudent(double q, int nu, NumericVector delta,
     int jmax=50, double cutpoint=8){
-  const double a = R::sign(t)*sqrt(q*q/nu);
+  const double a = R::sign(q)*sqrt(q*q/nu);
   const double b = nu/(nu+q*q);
   NumericVector dsB = delta*sqrt(b);
   const int J = delta.size();
   if(nu==1){
-    NumericVector C = pnorm(dsB);
+    NumericVector C = pnorm(-dsB);
     int i;
     for(i=0; i<J; i++){
       C[i] += 2*RcppOwenT(dsB[i], a, jmax, cutpoint);
@@ -69,12 +69,13 @@ NumericVector RcppOwenStudent(double q, int nu, NumericVector delta,
   }
   NumericMatrix M(nu-1,J);
   M(0,_) = a * sqrt(b) * dnorm(dsB) * pnorm(a*dsB);
+  const double sqrt2pi = 2.506628274631000502415765284811;
   if(nu>2){
-    const double sqrt2pi = 2.506628274631000502415765284811;
     M(1,_) = b * (delta * a * M(0,_) + a * dnorm(delta) / sqrt2pi);
     if(nu>3){
       NumericVector A(nu-3);
       A[0] = 1;
+      int k;
       if(nu>4){
         for(k=1; k<nu-4; k++){
           A[k] = 1/k/A[k-1];
@@ -85,9 +86,9 @@ NumericVector RcppOwenStudent(double q, int nu, NumericVector delta,
       }
     }
   }
+  int i;
   if(nu%2==1){
-    NumericVector C = pnorm(dsB);
-    int i;
+    NumericVector C = pnorm(-dsB);
     for(i=0; i<J; i++){
       C[i] += 2*RcppOwenT(dsB[i], a, jmax, cutpoint);
     }

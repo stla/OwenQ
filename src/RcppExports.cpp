@@ -33,6 +33,21 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// RcppOwenStudent
+NumericVector RcppOwenStudent(double q, int nu, NumericVector delta, int jmax, double cutpoint);
+RcppExport SEXP OwenQ_RcppOwenStudent(SEXP qSEXP, SEXP nuSEXP, SEXP deltaSEXP, SEXP jmaxSEXP, SEXP cutpointSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type q(qSEXP);
+    Rcpp::traits::input_parameter< int >::type nu(nuSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type delta(deltaSEXP);
+    Rcpp::traits::input_parameter< int >::type jmax(jmaxSEXP);
+    Rcpp::traits::input_parameter< double >::type cutpoint(cutpointSEXP);
+    rcpp_result_gen = Rcpp::wrap(RcppOwenStudent(q, nu, delta, jmax, cutpoint));
+    return rcpp_result_gen;
+END_RCPP
+}
 // RcppOwenQ1
 NumericVector RcppOwenQ1(int nu, double t, NumericVector delta, NumericVector R, int jmax, double cutpoint);
 RcppExport SEXP OwenQ_RcppOwenQ1(SEXP nuSEXP, SEXP tSEXP, SEXP deltaSEXP, SEXP RSEXP, SEXP jmaxSEXP, SEXP cutpointSEXP) {

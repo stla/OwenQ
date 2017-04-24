@@ -9,6 +9,10 @@ RcppOwenT <- function(h, a, jmax, cutpoint) {
     .Call('OwenQ_RcppOwenT', PACKAGE = 'OwenQ', h, a, jmax, cutpoint)
 }
 
+RcppOwenStudent <- function(q, nu, delta, jmax = 50L, cutpoint = 8) {
+    .Call('OwenQ_RcppOwenStudent', PACKAGE = 'OwenQ', q, nu, delta, jmax, cutpoint)
+}
+
 RcppOwenQ1 <- function(nu, t, delta, R, jmax, cutpoint) {
     .Call('OwenQ_RcppOwenQ1', PACKAGE = 'OwenQ', nu, t, delta, R, jmax, cutpoint)
 }
@@ -17,7 +21,7 @@ RcppOwenCDF4 <- function(nu, t1, t2, delta1, delta2, jmax, cutpoint) {
     .Call('OwenQ_RcppOwenCDF4', PACKAGE = 'OwenQ', nu, t1, t2, delta1, delta2, jmax, cutpoint)
 }
 
-Cconstant <- function(t, delta, R, jmax = 8L, cutpoint = 50) {
+Cconstant <- function(t, delta, R, jmax = 50L, cutpoint = 8) {
     .Call('OwenQ_Cconstant', PACKAGE = 'OwenQ', t, delta, R, jmax, cutpoint)
 }
 
