@@ -17,3 +17,7 @@ RcppOwenCDF4 <- function(nu, t1, t2, delta1, delta2, jmax, cutpoint) {
     .Call('OwenQ_RcppOwenCDF4', PACKAGE = 'OwenQ', nu, t1, t2, delta1, delta2, jmax, cutpoint)
 }
 
+Cconstant <- function(t, delta, R, jmax = 8L, cutpoint = 50) {
+    .Call('OwenQ_Cconstant', PACKAGE = 'OwenQ', t, delta, R, jmax, cutpoint)
+}
+

@@ -66,3 +66,18 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// Cconstant
+NumericVector Cconstant(double t, double delta, double R, int jmax, double cutpoint);
+RcppExport SEXP OwenQ_Cconstant(SEXP tSEXP, SEXP deltaSEXP, SEXP RSEXP, SEXP jmaxSEXP, SEXP cutpointSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type t(tSEXP);
+    Rcpp::traits::input_parameter< double >::type delta(deltaSEXP);
+    Rcpp::traits::input_parameter< double >::type R(RSEXP);
+    Rcpp::traits::input_parameter< int >::type jmax(jmaxSEXP);
+    Rcpp::traits::input_parameter< double >::type cutpoint(cutpointSEXP);
+    rcpp_result_gen = Rcpp::wrap(Cconstant(t, delta, R, jmax, cutpoint));
+    return rcpp_result_gen;
+END_RCPP
+}

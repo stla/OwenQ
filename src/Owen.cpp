@@ -188,7 +188,7 @@ NumericVector RcppOwenCDF4(int nu, double t1, double t2, NumericVector delta1,
   NumericMatrix H(n,J);
   NumericMatrix M1(n,J);
   NumericMatrix M2(n,J);
-  H(0,_) = pnorm(a2*R-delta2) - pnorm(a1*R-delta1);
+  H(0,_) = -dnorm(R) * (pnorm(a2*R-delta2) - pnorm(a1*R-delta1));
   M1(0,_) = asB1*dnorm(delta1*sB1)*(pnorm(delta1*asB1)-pnorm((delta1*ab1-R)/sB1));
   M2(0,_) = asB2*dnorm(delta2*sB2)*(pnorm(delta2*asB2)-pnorm((delta2*ab2-R)/sB2));
   if(nu >= 3){
@@ -225,7 +225,7 @@ NumericVector RcppOwenCDF4(int nu, double t1, double t2, NumericVector delta1,
     }
   }
   if(nu % 2 == 0){
-    double sqrt2pi = 2.506628274631000502415765284811;
+    const double sqrt2pi = 2.506628274631000502415765284811;
     NumericVector sum(J);
     int i;
     for(i=0; i<nu-1; i+=2){
@@ -253,4 +253,25 @@ NumericVector RcppOwenCDF4(int nu, double t1, double t2, NumericVector delta1,
     }
     return C+2*sum;
   }
+}
+
+
+//****************************************************************************80
+// [[Rcpp::export]]
+NumericVector Cconstant(double t, double delta, double R,
+    int jmax=8, double cutpoint=50){
+  int nu = 1;
+  const double a = R::sign(t)*sqrt(t*t/nu);
+  const double b = nu/(nu+t*t);
+  const double sB = sqrt(b);
+  double ab = a*b;
+  double C = pNorm(R) - (delta > 0);
+  double C1 =
+    RcppOwenT(delta*sB, a, jmax, cutpoint);
+  double C2 =
+    RcppOwenT(R, (a*R-delta)/R, jmax, cutpoint);
+  double C3 =
+    RcppOwenT(delta*sB, (delta*ab-R)/b/delta, jmax, cutpoint);
+  C += 2*(C1 - C2 - C3);
+  return NumericVector::create(C, C1, C2, C3, R, (a*R-delta)/R);
 }
