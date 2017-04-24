@@ -28,7 +28,12 @@ test_that("OwenQ1 for t=-Inf equals 0", {
 test_that("OwenQ1 for nu=1 - comparison Wolfram", {
   owen <- OwenQ1(1, 3, 2, 1)
   wolfram <- 0.219018703856082
-  expect_equal(owen, wolfram, tolerance=1e-11)
+  expect_equal(owen, wolfram, tolerance=1e-15)
+  wolfram <- c(0.52485658843054409291,0.62938193306526904118,0.68001173355723140333,0.71048916647247223585,
+               0.73097050978732740047,0.74563903448183001384,0.75650064658430460294,0.76456656856157965989,
+               0.77030437685878389173,0.77383547873740988537)
+  owen <- sapply(1:10, function(nu) OwenQ1(nu, 3, 2, 5))
+  expect_equal(owen, wolfram, tolerance=1e-15)
 })
 
 test_that("OwenQ1 - bivariate Student", {
