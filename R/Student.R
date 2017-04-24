@@ -7,6 +7,8 @@
 #' @param jmax,cut.point passed to \code{\link{OwenT}} (when \code{nu} is odd)
 #' @return Numeric vector, the CDF evaluated at \code{q}.
 #' @export
+#' @importFrom Rcpp evalCpp
+#' @useDynLib OwenQ
 #' @note The results are theoretically exact when the number of degrees of
 #' freedom is even.
 #' When odd, the procedure resorts to the Owen T-function.

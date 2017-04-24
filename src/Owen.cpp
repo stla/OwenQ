@@ -77,11 +77,11 @@ NumericVector RcppOwenStudent(double q, int nu, NumericVector delta,
       A[0] = 1;
       int k;
       if(nu>4){
-        for(k=1; k<nu-4; k++){
-          A[k] = 1/k/A[k-1];
+        for(k=1; k<nu-3; k++){
+          A[k] = 1.0/k/A[k-1];
         }
       }
-      for(k=2; k<nu-2; k++){
+      for(k=2; k<nu-1; k++){
         M(k,_) = (k-1) * b * (A[k-2] * delta * a * M(k-1,_) + M(k-2L,_)) / k;
       }
     }
