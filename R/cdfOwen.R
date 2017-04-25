@@ -20,14 +20,17 @@ pOwen4 <- function(nu, t1, t2, delta1, delta2, jmax=50L, cutpoint=8){
   if(any(delta1<=delta2)){
     stop("`delta1` must be >`delta2`.")
   }
-  if(any(t1<=t2)){
+  if(t1<t2){
     stop("`t1` must be >`t2`.")
   }
-  if(any(is.infinite(t1) | is.infinite(t2))){
+  if(is.infinite(t1) || is.infinite(t2)){
     stop("`t1` and `t2` must be finite.")
   }
   if(isNotPositiveInteger(nu)){
     stop("`nu` must be an integer >=1.")
+  }
+  if(t1==t2){
+    return(ptOwen(t2, nu, delta2, jmax, cutpoint)-ptOwen(t2, nu, delta1, jmax, cutpoint))
   }
   RcppOwenCDF4(nu, t1, t2, delta1, delta2, jmax, cutpoint)
 }
