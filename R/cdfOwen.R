@@ -1,8 +1,9 @@
 #' @title Owen's equality 11
 #' @description Evaluates the Owen cumulative distribution function in the 4th case.
-#' @param nu integer greater than \eqn{1}, the number of degrees of freedom
+#' @param nu integer greater than \eqn{1}, the number of degrees of freedom;
+#' infinite allowed
 #' @param t1,t2 two finite numbers, positive or negative
-#' @param delta1,delta2 two vectors of finite numbers, with the same length
+#' @param delta1,delta2 two vectors of numbers, with the same length; infinite allowed
 #' @param jmax,cutpoint parameters controlling the algorithm for the Owen-T function;
 #' see \code{\link{OwenT}} (used only when \code{nu} is odd)
 #' @return A vector of numbers between \eqn{0} and \eqn{1}.
@@ -24,7 +25,7 @@ pOwen4 <- function(nu, t1, t2, delta1, delta2, jmax=50L, cutpoint=8){
     stop("`delta1` and `delta2` must have the same length.")
   }
   if(t1<t2){
-    stop("`t1` must be >`t2`.")
+    stop("`t1` must be >=`t2`.")
   }
   if(any(delta1<delta2)){
     stop("`delta1` must be >=`delta2`.")
@@ -40,6 +41,22 @@ pOwen4 <- function(nu, t1, t2, delta1, delta2, jmax=50L, cutpoint=8){
   }
   if(t1==t2){
     return(ptOwen(t2, nu, delta2, jmax, cutpoint)-ptOwen(t2, nu, delta1, jmax, cutpoint))
+  }
+  if(any(inf <- (is.infinite(delta1) | is.infinite(delta2)))){
+    out <- numeric(J)
+    inf1 <- which(delta1==Inf)
+    if(length(inf1)){
+      out[inf1] <- ptOwen(t2, nu, delta2[inf1])
+    }
+    minf2 <- setdiff(which(delta2==-Inf), inf1)
+    if(length(minf2)){
+      out[minf2] <- 1-ptOwen(t1, nu, delta1)
+    }
+    if(!all(inf)){
+      noninf <- which(!inf)
+      out[noninf] <- RcppOwenCDF4(nu, t1, t2, delta1[noninf], delta2[noninf], jmax, cutpoint)
+    }
+    return(out)
   }
   RcppOwenCDF4(nu, t1, t2, delta1, delta2, jmax, cutpoint)
 }
