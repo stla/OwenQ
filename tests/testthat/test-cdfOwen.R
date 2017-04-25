@@ -64,3 +64,9 @@ test_that("Comparison with PASS", {
   }
   identical(round(owen,4), PASS$power)
 })
+
+test_that("pOwen4 - infinite nu", {
+  t1 <- 2; t2 <- 1; delta1 <- 4; delta2 <- 2
+  expect_equal(pOwen4(2000, t1, t2, delta1, delta2), pOwen4(Inf, t1, t2, delta1, delta2),
+               tolerance=1e-4)
+})

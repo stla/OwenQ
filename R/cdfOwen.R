@@ -32,6 +32,9 @@ pOwen4 <- function(nu, t1, t2, delta1, delta2, jmax=50L, cutpoint=8){
   if(is.infinite(t1) || is.infinite(t2)){
     stop("`t1` and `t2` must be finite.")
   }
+  if(nu == Inf){
+    return(pmax(0, pnorm(t2, mean=delta2)-pnorm(t1, mean=delta1)))
+  }
   if(isNotPositiveInteger(nu)){
     stop("`nu` must be an integer >=1.")
   }
