@@ -1,9 +1,10 @@
 #' @title Student CDF with integer number of degrees of freedom
 #' @description Cumulative distribution function of the noncentrel Student
 #' distribution with an integer number of degrees of freedom.
-#' @param q quantile
-#' @param nu integer greater than \eqn{1}, the number of degrees of freedom
-#' @param delta numeric vector of noncentrality parameters
+#' @param q quantile, a finite number
+#' @param nu integer greater than \eqn{1}, the number of degrees of freedom;
+#' possibly infinite
+#' @param delta numeric vector of noncentrality parameters; possibly infinite
 #' @param jmax,cutpoint parameters controlling the algorithm for the Owen-T function;
 #' see \code{\link{OwenT}} (used only when \code{nu} is odd)
 #' @return Numeric vector, the CDF evaluated at \code{q}.
@@ -21,12 +22,24 @@
 #' ptOwen(2, 3) - pt(2, 3)
 #' ptOwen(2, 3, delta=1) - pt(2, 3, ncp=1)
 ptOwen <- function(q, nu, delta=0, jmax=50L, cutpoint=8){
+  if(is.infinite(q)){
+    stop("`q` must be finite.")
+  }
+  if(nu==Inf){
+    return(pnorm(q, mean=delta))
+  }
   if(isNotPositiveInteger(nu)){
     stop("`nu` must be an integer >=1.")
   }
-  if(is.infinite(q) || is.infinite(delta)){
-    stop("Parameters must be finite.")
+  out <- numeric(J <- length(delta))
+  winf <- which(inf <- is.infinite(delta))
+  if(L <- length(winf)){
+    out[winf] <- ifelse(delta[winf]==Inf, 0, 1)
   }
-  RcppOwenStudent(q, nu, delta, jmax, cutpoint)
+  if(L < J){
+    noninf <- which(!inf)
+    out[noninf] <- RcppOwenStudent(q, nu, delta[noninf], jmax, cutpoint)
+  }
+  out
 }
 

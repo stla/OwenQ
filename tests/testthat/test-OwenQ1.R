@@ -6,6 +6,14 @@ test_that("OwenQ1 for large R equals ptOwen", {
   expect_equal(OwenQ1(5, 3, 2, 100), pt(3, 5, 2), tolerance=1e-10)
 })
 
+test_that("OwenQ1 is correctly vectorized", {
+  delta <- c(Inf, 0, -Inf); R <- c(1,2,3)
+  nu <- 5; t <- 2
+  expect_identical(OwenQ1(nu, t, delta, R),
+                   c(OwenQ1(nu, t, delta[1], R[1]), OwenQ1(nu, t, delta[2], R[2]),
+                     OwenQ1(nu, t, delta[3], R[3])))
+})
+
 test_that("OwenQ1 for t=+Inf does not depend on delta", {
   expect_true(OwenQ1(5, Inf, 2, 2) == OwenQ1(5, Inf, 3, 2))
   expect_true(OwenQ1(6, Inf, 2, 2) == OwenQ1(6, Inf, 3, 2))
@@ -20,6 +28,9 @@ test_that("OwenQ1 for t=+Inf does not depend on delta", {
   expect_equal(OwenQ1(6, Inf, 2, 2), OwenQ1(6, 1, -100, 2), tolerance=1e-15)
   expect_true(OwenQ1(1, Inf, 2, 2) == OwenQ:::RcppOwenQ1(1, 1, -Inf, 2))
   expect_equal(OwenQ1(2, Inf, 2, 2), OwenQ:::RcppOwenQ1(2, 1, -Inf, 2), tolerance=1e-15)
+  # now delta=-Inf is implemented
+  expect_equal(OwenQ1(5, Inf, 2, 2), OwenQ1(5, 1, -Inf, 2), tolerance=1e-15)
+  expect_equal(OwenQ1(6, Inf, 2, 2), OwenQ1(6, 1, -Inf, 2), tolerance=1e-15)
 })
 
 test_that("OwenQ1 for t=-Inf equals 0", {

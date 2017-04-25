@@ -9,6 +9,7 @@
 #' see \code{\link{OwenT}} (used only when \code{nu} is odd)
 #' @return A vector of numbers between \eqn{0} and \eqn{1}, the values of the integral from \eqn{0} to \eqn{R}.
 #' @export
+#' @importFrom stats pgamma
 #' @importFrom Rcpp evalCpp
 #' @useDynLib OwenQ
 #' @note The results are theoretically exact when the number of degrees of freedom is even.
@@ -22,22 +23,29 @@
 #' OwenQ1(nu=5, t=3, delta=2, R=100)
 #' pt(q=3, df=5, ncp=2)
 OwenQ1 <- function(nu, t, delta, R, jmax=50L, cutpoint=8){
-  if(length(delta) != length(R)){
+  J <- length(delta)
+  if(J != length(R)){
     stop("`delta` and `R` must have the same length.")
   }
-  if(any(R<0)){
-    stop("`R` must be positive.")
+  if(any(R<0 || R==Inf)){
+    stop("`R` must be a finite positive number.")
+  }
+  if(nu==Inf){
+    return(numeric(J))
   }
   if(isNotPositiveInteger(nu)){
     stop("`nu` must be an integer >=1.")
   }
-  if(any(is.infinite(R))){
-    stop("`R` must be finite.")
+  out <- numeric(J)
+  if(any(minf <- delta==-Inf)){
+    wminf <- which(minf)
+    out[wminf] <- pgamma(R[wminf]^2/2, nu/2, lower.tail=TRUE)
   }
-  if(any(is.infinite(delta))){
-    stop("`delta` must be finite.")
+  if(!all(inf <- is.infinite(delta))){
+    noninf <- which(!inf)
+    out[noninf] <- RcppOwenQ1(nu, t, delta[noninf], R[noninf], jmax=jmax, cutpoint=cutpoint)
   }
-  RcppOwenQ1(nu, t, delta, R, jmax=jmax, cutpoint=cutpoint)
+  return(out)
 }
 
 #' @title Second Owen Q-function
@@ -53,6 +61,7 @@ OwenQ1 <- function(nu, t, delta, R, jmax=50L, cutpoint=8){
 #' @return A vector of numbers between \eqn{0} and \eqn{1}, the values of the integral
 #' from \eqn{R} to \eqn{\infty}.
 #' @export
+#' @importFrom stats pgamma
 #' @importFrom Rcpp evalCpp
 #' @useDynLib OwenQ
 #' @note The results are theoretically exact when the number of degrees of freedom is even.
@@ -66,20 +75,27 @@ OwenQ1 <- function(nu, t, delta, R, jmax=50L, cutpoint=8){
 #' OwenQ1(nu=5, t=3, delta=2, R=1) + OwenQ2(nu=5, t=3, delta=2, R=1)
 #' pt(q=3, df=5, ncp=2)
 OwenQ2 <- function(nu, t, delta, R, jmax=50L, cutpoint=8){
-  if(length(delta) != length(R)){
+  J <- length(R)
+  if(length(delta) != J){
     stop("`delta` and `R` must have the same length.")
   }
-  if(any(R<0)){
-    stop("`R` must be positive.")
+  if(any(R<0 || R==Inf)){
+    stop("`R` must be a finite positive number.")
+  }
+  if(nu==Inf){
+    return(pnorm(t, mean=delta))
   }
   if(isNotPositiveInteger(nu)){
     stop("`nu` must be an integer >=1.")
   }
-  if(any(is.infinite(R))){
-    stop("`R` must be finite.")
+  out <- numeric(J)
+  if(any(minf <- delta==-Inf)){
+    wminf <- which(minf)
+    out[wminf] <- pgamma(R[wminf]^2/2, nu/2, lower.tail=FALSE)
   }
-  if(any(is.infinite(delta))){
-    stop("`delta` must be finite.")
+  if(!all(inf <- is.infinite(delta))){
+    noninf <- which(!inf)
+    out[noninf] <- RcppOwenQ2(nu, t, delta[noninf], R[noninf], jmax=jmax, cutpoint=cutpoint)
   }
-  RcppOwenQ2(nu, t, delta, R, jmax=jmax, cutpoint=cutpoint)
+  return(out)
 }

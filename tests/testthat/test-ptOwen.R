@@ -14,3 +14,8 @@ test_that("ptOwen = pt", {
   ncp <- -1
   expect_equal(ptOwen(q, nu=3, delta=ncp), pt(q, df=3, ncp=ncp), tolerance=1e-13)
 })
+
+test_that("ptOwen for infinite delta", {
+  expect_true(ptOwen(2, nu=3, delta=100) == 0)
+  expect_true(ptOwen(2, nu=3, delta=-100) == 1)
+})

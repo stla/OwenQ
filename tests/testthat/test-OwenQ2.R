@@ -6,6 +6,14 @@ test_that("OwenQ2 for R=0 equals ptOwen", {
   expect_equal(owenQ2, owenS, tolerance=1e-15)
 })
 
+test_that("OwenQ2 is correctly vectorized", {
+  delta <- c(Inf, 0, -Inf); R <- c(1,2,3)
+  nu <- 5; t <- 2
+  expect_identical(OwenQ2(nu, t, delta, R),
+                   c(OwenQ2(nu, t, delta[1], R[1]), OwenQ2(nu, t, delta[2], R[2]),
+                     OwenQ2(nu, t, delta[3], R[3])))
+})
+
 test_that("OwenQ1+OwenQ2 equals ptOwen", {
   owenQ2 <- sapply(1:8,
                    function(nu){
@@ -21,6 +29,14 @@ test_that("OwenQ2 for t=+Inf does not depend on delta", {
   # does not depend on t for delta=-Inf and the same result
   expect_true(OwenQ2(5, Inf, 2, 2) == OwenQ2(5, 1, -100, 2))
   expect_true(OwenQ2(6, Inf, 2, 2) == OwenQ2(6, 1, -100, 2))
+  # now delta=-Inf is implemented
+  expect_equal(OwenQ2(5, Inf, 2, 2), OwenQ2(5, 1, -Inf, 2), tolerance=1e-15)
+  expect_equal(OwenQ2(6, Inf, 2, 2), OwenQ2(6, 1, -Inf, 2), tolerance=1e-15)
+})
+
+test_that("OwenQ2 for delta=Inf", {
+  expect_true(OwenQ2(5, 1, Inf, 2) == 0)
+  expect_true(OwenQ2(5, 1, 100, 2) == 0)
 })
 
 test_that("OwenQ2 for t=-Inf equals 0", {

@@ -96,7 +96,7 @@ test_that("pOwen4 - delta1=Inf and delta2=-Inf", {
   # the result is 1
   expect_true(pOwen4(2, 3, 1, 100, -100) == 1)
   expect_true(pOwen4(Inf, 3, 1, 100, -100) == 1)
-  # => what if t1=Inf ?
+  # => what if t1=Inf ? for instance t1=delta1 -> Inf
 })
 
 test_that("pOwen4 - delta1=Inf and delta2=Inf", {
