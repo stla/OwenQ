@@ -13,6 +13,10 @@
 #' @useDynLib OwenQ
 #' @note The results are theoretically exact when the number of degrees of freedom is even.
 #' When odd, the procedure resorts to the Owen T-function.
+#' @references
+#' Owen, D. B. (1965).
+#' A special case of a bivariate noncentral t-distribution.
+#' \emph{Biometrika} \bold{52}, 437-446.
 #' @examples
 #' # OwenQ1(nu, t, delta, Inf) = pt(t, nu, delta)
 #' OwenQ1(nu=5, t=3, delta=2, R=100)
@@ -53,6 +57,10 @@ OwenQ1 <- function(nu, t, delta, R, jmax=50L, cutpoint=8){
 #' @useDynLib OwenQ
 #' @note The results are theoretically exact when the number of degrees of freedom is even.
 #' When odd, the procedure resorts to the Owen T-function.
+#' @references
+#' Owen, D. B. (1965).
+#' A special case of a bivariate noncentral t-distribution.
+#' \emph{Biometrika} \bold{52}, 437-446.
 #' @examples
 #' # OwenQ1(nu, t, delta, R) + OwenQ2(nu, t, delta, R) = pt(t, nu, delta)
 #' OwenQ1(nu=5, t=3, delta=2, R=1) + OwenQ2(nu=5, t=3, delta=2, R=1)

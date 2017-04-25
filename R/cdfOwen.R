@@ -9,8 +9,14 @@
 #' @export
 #' @importFrom Rcpp evalCpp
 #' @useDynLib OwenQ
+#' @note The results are theoretically exact when the number of degrees of freedom is even.
+#' When odd, the procedure resorts to the Owen T-function.
+#' @references
+#' Owen, D. B. (1965).
+#' A special case of a bivariate noncentral t-distribution.
+#' \emph{Biometrika} \bold{52}, 437-446.
 #' @examples
-#' #  Wolfram integration gives 0.018689824158
+#' # Wolfram integration gives 0.018689824158
 #' pOwen4(nu=5, t1=2, t2=1, delta1=3, delta2=2)
 pOwen4 <- function(nu, t1, t2, delta1, delta2, jmax=50L, cutpoint=8){
   J <- length(delta1)

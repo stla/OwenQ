@@ -13,6 +13,10 @@
 #' @note The results are theoretically exact when the number of degrees of
 #' freedom is even.
 #' When odd, the procedure resorts to the Owen T-function.
+#' @references
+#' Owen, D. B. (1965).
+#' A special case of a bivariate noncentral t-distribution.
+#' \emph{Biometrika} \bold{52}, 437-446.
 #' @examples
 #' ptOwen(2, 3) - pt(2, 3)
 #' ptOwen(2, 3, delta=1) - pt(2, 3, ncp=1)
