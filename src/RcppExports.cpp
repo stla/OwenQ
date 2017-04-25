@@ -64,6 +64,22 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// RcppOwenQ2
+NumericVector RcppOwenQ2(int nu, double t, NumericVector delta, NumericVector R, int jmax, double cutpoint);
+RcppExport SEXP OwenQ_RcppOwenQ2(SEXP nuSEXP, SEXP tSEXP, SEXP deltaSEXP, SEXP RSEXP, SEXP jmaxSEXP, SEXP cutpointSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< int >::type nu(nuSEXP);
+    Rcpp::traits::input_parameter< double >::type t(tSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type delta(deltaSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type R(RSEXP);
+    Rcpp::traits::input_parameter< int >::type jmax(jmaxSEXP);
+    Rcpp::traits::input_parameter< double >::type cutpoint(cutpointSEXP);
+    rcpp_result_gen = Rcpp::wrap(RcppOwenQ2(nu, t, delta, R, jmax, cutpoint));
+    return rcpp_result_gen;
+END_RCPP
+}
 // RcppOwenCDF4
 NumericVector RcppOwenCDF4(int nu, double t1, double t2, NumericVector delta1, NumericVector delta2, int jmax, double cutpoint);
 RcppExport SEXP OwenQ_RcppOwenCDF4(SEXP nuSEXP, SEXP t1SEXP, SEXP t2SEXP, SEXP delta1SEXP, SEXP delta2SEXP, SEXP jmaxSEXP, SEXP cutpointSEXP) {
@@ -78,21 +94,6 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< int >::type jmax(jmaxSEXP);
     Rcpp::traits::input_parameter< double >::type cutpoint(cutpointSEXP);
     rcpp_result_gen = Rcpp::wrap(RcppOwenCDF4(nu, t1, t2, delta1, delta2, jmax, cutpoint));
-    return rcpp_result_gen;
-END_RCPP
-}
-// Cconstant
-NumericVector Cconstant(double t, double delta, double R, int jmax, double cutpoint);
-RcppExport SEXP OwenQ_Cconstant(SEXP tSEXP, SEXP deltaSEXP, SEXP RSEXP, SEXP jmaxSEXP, SEXP cutpointSEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< double >::type t(tSEXP);
-    Rcpp::traits::input_parameter< double >::type delta(deltaSEXP);
-    Rcpp::traits::input_parameter< double >::type R(RSEXP);
-    Rcpp::traits::input_parameter< int >::type jmax(jmaxSEXP);
-    Rcpp::traits::input_parameter< double >::type cutpoint(cutpointSEXP);
-    rcpp_result_gen = Rcpp::wrap(Cconstant(t, delta, R, jmax, cutpoint));
     return rcpp_result_gen;
 END_RCPP
 }

@@ -270,7 +270,7 @@ NumericVector RcppOwenQ2(int nu, double t, NumericVector delta, NumericVector R,
     for(i=0; i<nu-1; i+=2){
       sum += M(i,_)-H(i,_);
     }
-    return pnorm(-delta) + sqrt2pi * sum;
+    return sqrt2pi * sum;
   }else{
     NumericVector sum(J);
     int i;
@@ -278,7 +278,6 @@ NumericVector RcppOwenQ2(int nu, double t, NumericVector delta, NumericVector R,
       sum += M(i,_)-H(i,_);
     }
     NumericVector C = pnorm(-delta*sB) - pnorm(R) + isPositive(delta);
-    int i;
     for(i=0; i<J; i++){
       double C2 =
         RcppOwenT(R[i], (a*R[i]-delta[i])/R[i], jmax, cutpoint);
