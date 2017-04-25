@@ -57,8 +57,8 @@ OwenT <- function (h, a, jmax = 50L, cutpoint = 8)
     stop("'h' must be a vector")
   if (is.na(a))
     stop("parameter 'a' is NA")
-  if (is.infinite(h)){
-    return(0)
-  }
+  # if (is.infinite(h)){
+  #   return(0)
+  # }
   return(RcppOwenT(h, a, jmax, cutpoint))
 }

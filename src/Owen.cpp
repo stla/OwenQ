@@ -4,7 +4,7 @@ using namespace Rcpp;
 #include <cfloat>
 
 // [[Rcpp::export]]
-double RcppOwenT01(double h, double a, int jmax, double cutpoint){
+double RcppOwenT01(double h, double a, int jmax=50, double cutpoint=8){
   const double twopi = 2*3.14159265358979323846;
   if(h > cutpoint){
     return atan(a) * exp(-0.5 * (h*h) * a / atan(a)) *
@@ -34,12 +34,15 @@ double pNorm(double q);
 
 //****************************************************************************80
 // [[Rcpp::export]]
-double RcppOwenT(double h, double a, int jmax, double cutpoint){
+double RcppOwenT(double h, double a, int jmax=50, double cutpoint=8){
   if(a == 0.0){
     return 0.0;
   }
-  double absa = fabs(a);
   double absh = fabs(h);
+  if(absh > DBL_MAX){
+    return 0.0;
+  }
+  double absa = fabs(a);
   if(absa > DBL_MAX){
     return R::sign(a) * pNorm(-absh) / 2;
   }
@@ -120,7 +123,7 @@ NumericVector isPositive(NumericVector x);
 //****************************************************************************80
 // [[Rcpp::export]]
 NumericVector RcppOwenQ1(int nu, double t, NumericVector delta, NumericVector R,
-    int jmax, double cutpoint){
+    int jmax=50, double cutpoint=8){
   const double a = R::sign(t)*sqrt(t*t/nu);
   const double b = nu/(nu+t*t);
   const double sB = sqrt(b);
@@ -140,10 +143,13 @@ NumericVector RcppOwenQ1(int nu, double t, NumericVector delta, NumericVector R,
     for(i=0; i<J; i++){
       double C1 =
         RcppOwenT(delta[i]*sB, a, jmax, cutpoint);
+      // double C2 =
+      //   RcppOwenT(R[i], (a*R[i]-delta[i])/R[i], jmax, cutpoint);
       double C2 =
-        RcppOwenT(R[i], (a*R[i]-delta[i])/R[i], jmax, cutpoint);
+        RcppOwenT(R[i], a-delta[i]/R[i], jmax, cutpoint);
       double C3 =
-        RcppOwenT(delta[i]*sB, (delta[i]*ab-R[i])/b/delta[i], jmax, cutpoint);
+        // RcppOwenT(delta[i]*sB, (delta[i]*ab-R[i])/b/delta[i], jmax, cutpoint);
+        RcppOwenT(delta[i]*sB, (ab-R[i]/delta[i])/b, jmax, cutpoint);
       C[i] += 2*(C1 - C2 - C3);
     }
     return C;
@@ -195,10 +201,13 @@ NumericVector RcppOwenQ1(int nu, double t, NumericVector delta, NumericVector R,
     for(i=0; i<J; i++){
       double C1 =
         RcppOwenT(delta[i]*sB, a, jmax, cutpoint);
+      // double C2 =
+      //   RcppOwenT(R[i], (a*R[i]-delta[i])/R[i], jmax, cutpoint);
       double C2 =
-        RcppOwenT(R[i], (a*R[i]-delta[i])/R[i], jmax, cutpoint);
+        RcppOwenT(R[i], a-delta[i]/R[i], jmax, cutpoint);
       double C3 =
-        RcppOwenT(delta[i]*sB, (delta[i]*ab-R[i])/b/delta[i], jmax, cutpoint);
+        // RcppOwenT(delta[i]*sB, (delta[i]*ab-R[i])/b/delta[i], jmax, cutpoint);
+        RcppOwenT(delta[i]*sB, (ab-R[i]/delta[i])/b, jmax, cutpoint);
       C[i] += 2*(C1 - C2 - C3);
     }
     return C+2*sum;
@@ -208,7 +217,7 @@ NumericVector RcppOwenQ1(int nu, double t, NumericVector delta, NumericVector R,
 //****************************************************************************80
 // [[Rcpp::export]]
 NumericVector RcppOwenQ2(int nu, double t, NumericVector delta, NumericVector R,
-    int jmax, double cutpoint){
+    int jmax=50, double cutpoint=8){
   const double a = R::sign(t)*sqrt(t*t/nu);
   const double b = nu/(nu+t*t);
   const double sB = sqrt(b);
@@ -292,7 +301,7 @@ NumericVector RcppOwenQ2(int nu, double t, NumericVector delta, NumericVector R,
 //****************************************************************************80
 // [[Rcpp::export]]
 NumericVector RcppOwenCDF4(int nu, double t1, double t2, NumericVector delta1,
-    NumericVector delta2, int jmax, double cutpoint){
+    NumericVector delta2, int jmax=50, double cutpoint=8){
   const double a1 = R::sign(t1)*sqrt(t1*t1/nu);
   const double b1 = nu/(nu+t1*t1);
   const double sB1 = sqrt(b1);
