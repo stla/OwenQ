@@ -36,16 +36,19 @@ OwenQ1 <- function(nu, t, delta, R, jmax=50L, cutpoint=8){
   if(isNotPositiveInteger(nu)){
     stop("`nu` must be an integer >=1.")
   }
-  out <- numeric(J)
-  if(any(minf <- delta==-Inf)){
-    wminf <- which(minf)
-    out[wminf] <- pgamma(R[wminf]^2/2, nu/2, lower.tail=TRUE)
+  if(any(is.infinite(delta))){
+    out <- numeric(J)
+    if(any(minf <- delta==-Inf)){
+      wminf <- which(minf)
+      out[wminf] <- pgamma(R[wminf]^2/2, nu/2, lower.tail=TRUE)
+    }
+    if(!all(inf <- is.infinite(delta))){
+      noninf <- which(!inf)
+      out[noninf] <- RcppOwenQ1(nu, t, delta[noninf], R[noninf], jmax=jmax, cutpoint=cutpoint)
+    }
+    return(out)
   }
-  if(!all(inf <- is.infinite(delta))){
-    noninf <- which(!inf)
-    out[noninf] <- RcppOwenQ1(nu, t, delta[noninf], R[noninf], jmax=jmax, cutpoint=cutpoint)
-  }
-  return(out)
+  RcppOwenQ1(nu, t, delta, R, jmax=jmax, cutpoint=cutpoint)
 }
 
 #' @title Second Owen Q-function
@@ -88,14 +91,17 @@ OwenQ2 <- function(nu, t, delta, R, jmax=50L, cutpoint=8){
   if(isNotPositiveInteger(nu)){
     stop("`nu` must be an integer >=1.")
   }
-  out <- numeric(J)
-  if(any(minf <- delta==-Inf)){
-    wminf <- which(minf)
-    out[wminf] <- pgamma(R[wminf]^2/2, nu/2, lower.tail=FALSE)
+  if(any(is.infinite(delta))){
+    out <- numeric(J)
+    if(any(minf <- delta==-Inf)){
+      wminf <- which(minf)
+      out[wminf] <- pgamma(R[wminf]^2/2, nu/2, lower.tail=FALSE)
+    }
+    if(!all(inf <- is.infinite(delta))){
+      noninf <- which(!inf)
+      out[noninf] <- RcppOwenQ2(nu, t, delta[noninf], R[noninf], jmax=jmax, cutpoint=cutpoint)
+    }
+    return(out)
   }
-  if(!all(inf <- is.infinite(delta))){
-    noninf <- which(!inf)
-    out[noninf] <- RcppOwenQ2(nu, t, delta[noninf], R[noninf], jmax=jmax, cutpoint=cutpoint)
-  }
-  return(out)
+  RcppOwenQ2(nu, t, delta, R, jmax=jmax, cutpoint=cutpoint)
 }
