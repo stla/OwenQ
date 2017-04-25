@@ -73,7 +73,7 @@ test_that("pOwen4 - infinite nu", {
 
 test_that("pOwen4 - delta2=-Inf", {
   # the result does not depend on t2
-  nu <- 2; t1 <- 3; delta1 <- 2 # rk: works only for nu=2
+  nu <- 2; t1 <- 3; delta1 <- 2 # rk: works only for nu=1 and nu=2
   x1 <- OwenQ:::RcppOwenCDF4(nu, t1, 1, delta1, -Inf, jmax=50L, 8)
   x2 <- OwenQ:::RcppOwenCDF4(nu, t1, 2, delta1, -Inf, jmax=50L, 8)
   expect_true(x1==x2)
@@ -89,6 +89,7 @@ test_that("pOwen4 - delta1=Inf", {
   expect_true(x1==x2)
   # so the result is P2 (take t1=-Inf ??? t1>t2 - rather because T1=Inf)
   expect_equal(x1, ptOwen(t2, nu, delta2), tolerance=1e-16)
+  expect_true(OwenQ:::RcppOwenCDF4(1, 3, t2, Inf, delta2) == ptOwen(t2, 1, delta2))
 })
 
 test_that("pOwen4 - delta1=Inf and delta2=-Inf", {

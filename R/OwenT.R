@@ -51,12 +51,12 @@ OwenT <- function (h, a, jmax = 50L, cutpoint = 8)
   if(cutpoint <= 0){
     stop("`cutpoint` must be a strictly positive number")
   }
-  if (!is.vector(a) || length(a) > 1L)
-    stop("'a' must be a vector of length 1")
-  if (!is.vector(h))
-    stop("'h' must be a vector")
+  if (!is.numeric(a) || length(a) > 1L)
+    stop("`a` must be a scalar number")
+  if (!is.numeric(h) || length(h) > 1L)
+    stop("`h` must be a scalar number")
   if (is.na(a))
-    stop("parameter 'a' is NA")
+    stop("parameter `a` is NA")
   # if (is.infinite(h)){
   #   return(0)
   # }
