@@ -402,6 +402,108 @@ NumericVector RcppOwenCDF4(int nu, double t1, double t2, NumericVector delta1,
   }
 }
 
+//****************************************************************************80
+// [[Rcpp::export]]
+NumericVector RcppOwenCDF3(int nu, double t1, double t2, NumericVector delta1,
+    NumericVector delta2, int jmax=50, double cutpoint=8){
+  const double a1 = R::sign(t1)*sqrt(t1*t1/nu);
+  const double b1 = nu/(nu+t1*t1);
+  const double sB1 = sqrt(b1);
+  const double ab1 = a1*b1;
+  const double asB1 = R::sign(t1)*sqrt(t1*t1/(nu+t1*t1));
+  const double a2 = R::sign(t2)*sqrt(t2*t2/nu);
+  const double b2 = nu/(nu+t2*t2);
+  const double sB2 = sqrt(b2);
+  const double ab2 = a2*b2;
+  const double asB2 = R::sign(t2)*sqrt(t2*t2/(nu+t2*t2));
+  const int J = delta1.size();
+  const NumericVector R = sqrt(nu)*(delta1 - delta2)/(t1-t2);
+  if(nu==1){
+    NumericVector C = 1 - isPositive(delta1) - isPositive(delta2) - pnorm(-delta*sB);
+    int i;
+    for(i=0; i<J; i++){
+      double C1 =
+        - RcppOwenT(delta2[i]*sB2, a2, jmax, cutpoint);
+      double C2 =
+        - RcppOwenT(R[i], (a2*R[i]-delta2[i])/R[i], jmax, cutpoint) +
+          RcppOwenT(R[i], (a1*R[i]-delta1[i])/R[i], jmax, cutpoint);
+      double C3 =
+        - RcppOwenT(delta2[i]*sB2, (delta2[i]*ab2-R[i])/b2/delta2[i], jmax, cutpoint) +
+          RcppOwenT(delta1[i]*sB1, (delta1[i]*ab1-R[i])/b1/delta1[i], jmax, cutpoint);
+      C[i] += 2*(C1 + C2 + C3);
+    }
+    return C;
+  }
+  const int n = nu-1;
+  NumericMatrix H(n,J);
+  NumericMatrix M1(n,J);
+  NumericMatrix M2(n,J);
+  H(0,_) = -dnorm(R) * (pnorm(a2*R-delta2) + pnorm(a1*R-delta1));
+  M1(0,_) = asB1*dnorm(delta1*sB1)*pnorm((delta1*ab1-R)/sB1);
+  M2(0,_) = asB2*dnorm(delta2*sB2)*(pnorm(delta2*asB2)-pnorm((delta2*ab2-R)/sB2));
+  if(nu >= 3){
+    H(1,_) = R * H(0,_);
+    M1(1,_) = delta1*ab1*M1(0,_) + ab1*dnorm(delta1*sB1)*dnorm((delta1*ab1-R)/sB1);
+    M2(1,_) = delta2*ab2*M2(0,_) +
+              ab2*dnorm(delta2*sB2)*(dnorm(delta2*asB2)-dnorm((delta2*ab2-R)/sB2));
+    if(nu >= 4){
+      NumericVector A(n);
+      NumericMatrix L1(n-2,J);
+      NumericMatrix L2(n-2,J);
+      A[0] = 1;
+      A[1] = 1;
+      L1(0,_) = ab1 * R * dnorm(R) * dnorm(a1*R-delta1) / 2;
+      L2(0,_) = ab2 * R * dnorm(R) * dnorm(a2*R-delta2) / 2;
+      int k;
+      for(k=2; k<n; k++){
+        A[k] = 1.0/k/A[k-1];
+      }
+      if(nu >= 5){
+        for(k=1; k<n-2; k++){
+          L1(k,_) = A[k+2] * R * L1(k-1,_);
+          L2(k,_) = A[k+2] * R * L2(k-1,_);
+        }
+      }
+      for(k=2; k<n; k++){
+        H(k,_) = A[k] * R * H(k-1,_);
+        M1(k,_) = (k-1.0)/k *
+                  (A[k-2] * delta1 * ab1 * M1(k-1,_) + b1*M1(k-2,_)) - L1(k-2,_);
+        M2(k,_) = (k-1.0)/k *
+                  (A[k-2] * delta2 * ab2 * M2(k-1,_) + b2*M2(k-2,_)) - L2(k-2,_);
+      }
+    }
+  }
+  if(nu % 2 == 0){
+    const double sqrt2pi = 2.506628274631000502415765284811;
+    NumericVector sum(J);
+    int i;
+    for(i=0; i<nu-1; i+=2){
+      sum += -M2(i,_)-M1(i,_)+H(i,_);
+    }
+    return 1.0 - pnorm(-delta2) + sqrt2pi * sum;
+  }else{
+    NumericVector sum(J);
+    int i;
+    for(i=1; i<nu-1; i+=2){
+      sum += -M2(i,_)-M1(i,_)+H(i,_);
+    }
+    NumericVector C = 1 - isPositive(delta1) - isPositive(delta2) - pnorm(-delta*sB);
+    int i;
+    for(i=0; i<J; i++){
+      double C1 =
+        - RcppOwenT(delta2[i]*sB2, a2, jmax, cutpoint);
+      double C2 =
+        - RcppOwenT(R[i], (a2*R[i]-delta2[i])/R[i], jmax, cutpoint) +
+          RcppOwenT(R[i], (a1*R[i]-delta1[i])/R[i], jmax, cutpoint);
+      double C3 =
+        - RcppOwenT(delta2[i]*sB2, (delta2[i]*ab2-R[i])/b2/delta2[i], jmax, cutpoint) +
+          RcppOwenT(delta1[i]*sB1, (delta1[i]*ab1-R[i])/b1/delta1[i], jmax, cutpoint);
+      C[i] += 2*(C1 + C2 + C3);
+    }
+    return C+2*sum;
+  }
+}
+
 
 // //****************************************************************************80
 // //
