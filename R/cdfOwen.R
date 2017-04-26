@@ -131,3 +131,29 @@ pOwen3 <- function(nu, t1, t2, delta1, delta2, jmax=50L, cutpoint=8){
   }
   RcppOwenCDF3(nu, t1, t2, delta1, delta2, jmax, cutpoint)
 }
+
+
+#' @title Owen's equality 9
+#' @description Evaluates the Owen cumulative distribution function in the 2nd case.
+#' @param nu integer greater than \eqn{1}, the number of degrees of freedom;
+#' infinite allowed
+#' @param t1,t2 two finite numbers, positive or negative
+#' @param delta1,delta2 two vectors of numbers, with the same length; infinite allowed
+#' @param jmax,cutpoint parameters controlling the algorithm for the Owen-T function;
+#' see \code{\link{OwenT}} (used only when \code{nu} is odd)
+#' @return A vector of numbers between \eqn{0} and \eqn{1}.
+#' @export
+#' @importFrom Rcpp evalCpp
+#' @useDynLib OwenQ
+#' @note The results are theoretically exact when the number of degrees of freedom is even.
+#' When odd, the procedure resorts to the Owen T-function.
+#' @references
+#' Owen, D. B. (1965).
+#' A special case of a bivariate noncentral t-distribution.
+#' \emph{Biometrika} \bold{52}, 437-446.
+#' @examples
+#' # Wolfram integration gives 0.0353568969628651
+#' pOwen2(nu=5, t1=2, t2=1, delta1=3, delta2=2)
+pOwen2 <- function(nu, t1, t2, delta1, delta2, jmax=50L, cutpoint=8){
+  RcppOwenCDF2(nu, t1, t2, delta1, delta2, jmax, cutpoint)
+}
