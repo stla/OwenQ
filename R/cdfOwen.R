@@ -35,7 +35,7 @@ pOwen4 <- function(nu, t1, t2, delta1, delta2, jmax=50L, cutpoint=8){
   }
   if(any(lower <- (delta1<delta2))){
     out <- numeric(J)
-    out[lower] <- 0
+    #out[lower] <- 0
     if(length(nonlower <- which(!lower))){
       out[nonlower] <- RcppOwenCDF4(nu, t1, t2, delta1[nonlower], delta2[nonlower],
                                     jmax, cutpoint)
@@ -52,11 +52,11 @@ pOwen4 <- function(nu, t1, t2, delta1, delta2, jmax=50L, cutpoint=8){
     out <- numeric(J)
     inf1 <- which(delta1==Inf)
     if(length(inf1)){
-      out[inf1] <- ptOwen(t2, nu, delta2[inf1])
+      out[inf1] <- ptOwen(t2, nu, delta2[inf1], jmax, cutpoint)
     }
     minf2 <- setdiff(which(delta2==-Inf), inf1)
     if(length(minf2)){
-      out[minf2] <- 1-ptOwen(t1, nu, delta1)
+      out[minf2] <- 1 - ptOwen(t1, nu, delta1, jmax, cutpoint)
     }
     if(!all(inf)){
       noninf <- which(!inf)
@@ -67,8 +67,8 @@ pOwen4 <- function(nu, t1, t2, delta1, delta2, jmax=50L, cutpoint=8){
   RcppOwenCDF4(nu, t1, t2, delta1, delta2, jmax, cutpoint)
 }
 
-#' @title Owen's equality 11
-#' @description Evaluates the Owen cumulative distribution function in the 4th case.
+#' @title Owen's equality 10
+#' @description Evaluates the Owen cumulative distribution function in the 3rd case.
 #' @param nu integer greater than \eqn{1}, the number of degrees of freedom;
 #' infinite allowed
 #' @param t1,t2 two finite numbers, positive or negative
@@ -86,8 +86,48 @@ pOwen4 <- function(nu, t1, t2, delta1, delta2, jmax=50L, cutpoint=8){
 #' A special case of a bivariate noncentral t-distribution.
 #' \emph{Biometrika} \bold{52}, 437-446.
 #' @examples
-#' # Wolfram integration gives 0.018689824158
+#' # Wolfram integration gives 0.806507459306199
 #' pOwen3(nu=5, t1=2, t2=1, delta1=3, delta2=2)
 pOwen3 <- function(nu, t1, t2, delta1, delta2, jmax=50L, cutpoint=8){
+  J <- length(delta1)
+  if(J != length(delta1)){
+    stop("`delta1` and `delta2` must have the same length.")
+  }
+  if(t1<t2){
+    stop("`t1` must be >=`t2`.")
+  }
+  if(is.infinite(t1) || is.infinite(t2)){
+    stop("`t1` and `t2` must be finite.")
+  }
+  if(isNotPositiveInteger(nu)){
+    stop("`nu` must be an integer >=1.")
+  }
+  if(any(lower <- (delta1<delta2))){
+    out <- numeric(J)
+    out[lower] <- 1 - ptOwen(t1, nu, delta1, jmax, cutpoint)
+    if(length(nonlower <- which(!lower))){
+      out[nonlower] <- RcppOwenCDF3(nu, t1, t2, delta1[nonlower], delta2[nonlower],
+                                    jmax, cutpoint)
+    }
+    return(out)
+  }
+  if(nu == Inf){ # to simplify
+    return(1-pnorm(t1, mean=delta1) - pmax(0, pnorm(t2, mean=delta2)-pnorm(t1, mean=delta1)))
+  }
+  if(t1==t2){
+    return(1-ptOwen(t2, nu, delta2, jmax, cutpoint))
+  }
+  if(any(inf <- (is.infinite(delta1) | is.infinite(delta2)))){
+    out <- numeric(J)
+    inf1 <- which(is.infinite(delta1))
+    if(length(inf1)){
+      out[inf1] <- ifelse(delta1[inf1]==Inf, 1-ptOwen(t2, nu, delta2[inf1], jmax, cutpoint), 0)
+    }
+    if(!all(inf)){
+      noninf <- which(!inf)
+      out[noninf] <- RcppOwenCDF3(nu, t1, t2, delta1[noninf], delta2[noninf], jmax, cutpoint)
+    }
+    return(out)
+  }
   RcppOwenCDF3(nu, t1, t2, delta1, delta2, jmax, cutpoint)
 }
