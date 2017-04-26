@@ -291,3 +291,93 @@ test_that("pOwen2 - delta1=-Inf and delta2=-Inf", {
   expect_true(pOwen2(2, 3, 1, -Inf, -Inf) == 0)
 })
 
+
+test_that("pOwen1", {
+  t1 <- 2; t2 <- 1; delta1 <- 3; delta2 <- 2
+  nu <- 6
+  R <- sqrt(nu)*(delta1 - delta2)/(t1-t2)
+  diff <- OwenQ1(nu, t1, delta1, R) + OwenQ2(nu, t2, delta2, R)
+  owen1 <- pOwen1(nu, t1, t2, delta1, delta2)
+  expect_equal(diff, owen1, tolerance=1e-16)
+  wolfram <- 0.1404299569049368
+  expect_equal(owen1, wolfram, tolerance=1e-10)
+  #
+  nu <- 5
+  R <- sqrt(nu)*(delta1 - delta2)/(t1-t2)
+  diff <- OwenQ1(nu, t1, delta1, R) + OwenQ2(nu, t2, delta2, R)
+  owen1 <- pOwen1(nu, t1, t2, delta1, delta2)
+  expect_equal(diff, owen1, tolerance=1e-16)
+  wolfram <- 0.1394458271284726
+  expect_equal(owen1, wolfram, tolerance=1e-9)
+})
+
+
+test_that("pOwen1+pOwen2=P1", {
+  t1 <- 2; t2 <- 1; delta1 <- 3; delta2 <- 2
+  nu <- 6
+  owen1 <- pOwen1(nu, t1, t2, delta1, delta2)
+  owen2 <- pOwen2(nu, t1, t2, delta1, delta2)
+  P1 <- ptOwen(t1, nu, delta1)
+  expect_equal(owen1+owen2, P1, tolerance=1e-15)
+  nu <- 5
+  owen1 <- pOwen1(nu, t1, t2, delta1, delta2)
+  owen2 <- pOwen2(nu, t1, t2, delta1, delta2)
+  P1 <- ptOwen(t1, nu, delta1)
+  expect_equal(owen1+owen2, P1, tolerance=1e-15)
+})
+
+test_that("pOwen1 - infinite nu", {
+  t1 <- 2; t2 <- 1; delta1 <- 4; delta2 <- 2
+  expect_true(pOwen1(Inf, t1, t2, delta1, delta2) == 0)
+  t1 <- 4; t2 <- 1; delta1 <- 4; delta2 <- 2
+  expect_equal(pOwen1(2000, t1, t2, delta1, delta2), pOwen1(Inf, t1, t2, delta1, delta2),
+               tolerance=1e-3)
+})
+
+test_that("pOwen1 - delta2=-Inf", {
+  # the result is P1
+  nu <- 2; t1 <- 3; delta1 <- 2 # rk: works only for nu=1 and nu=2
+  x1 <- OwenQ:::RcppOwenCDF1(nu, t1, 1, delta1, -Inf, jmax=50L, 8)
+  x2 <- ptOwen(t1, nu, delta1)
+  expect_true(x1==x2)
+  # now this is implemented in pOwen1
+  x <- pOwen1(nu, t1, 2, delta1, -Inf)
+  expect_true(x==x2)
+})
+
+test_that("pOwen1 - delta1=Inf", {
+  # the result is 0
+  nu <- 2; t2 <- 1; delta2 <- 2
+  x1 <- pOwen1(nu, 3, t2, 100, delta2)
+  x2 <- pOwen1(nu, 13, t2, 100, delta2)
+  expect_true(x1==0)
+  expect_equal(x2, 0, tolerance=1e-30)
+  # now this is implemented in pOwen1
+  x <- pOwen1(nu, 3, t2, Inf, delta2)
+  expect_true(x==0)
+})
+
+test_that("pOwen1 - delta1=Inf and delta2=-Inf", {
+  # the result is 0
+  expect_true(pOwen1(2, 3, 1, 100, -100) == 0)
+  expect_true(pOwen1(Inf, 3, 1, 100, -100) == 0)
+  # now this is implemented in pOwen1
+  expect_true(pOwen1(2, 3, 1, Inf, -Inf) == 0)
+})
+
+test_that("pOwen1 - delta1=Inf and delta2=Inf", {
+  # the result is 0
+  expect_true(pOwen1(2, 3, 1, 101, 100) == 0)
+  expect_true(pOwen1(Inf, 3, 1, 101, 100) == 0)
+  # now this is implemented in pOwen1
+  expect_true(pOwen1(2, 3, 1, Inf, Inf) == 0)
+})
+
+test_that("pOwen1 - delta1=-Inf and delta2=-Inf", {
+  # the result is 1
+  expect_true(pOwen1(2, 3, 1, -100, -101) == 1)
+  expect_true(pOwen1(Inf, 3, 1, -100, -101) == 1)
+  # now this is implemented in pOwen1
+  expect_true(pOwen1(2, 3, 1, -Inf, -Inf) == 1)
+})
+
