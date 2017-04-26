@@ -3,6 +3,7 @@
 export(OwenQ1)
 export(OwenQ2)
 export(OwenT)
+export(pOwen3)
 export(pOwen4)
 export(ptOwen)
 importFrom(Rcpp,evalCpp)

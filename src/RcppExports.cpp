@@ -97,3 +97,20 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// RcppOwenCDF3
+NumericVector RcppOwenCDF3(int nu, double t1, double t2, NumericVector delta1, NumericVector delta2, int jmax, double cutpoint);
+RcppExport SEXP OwenQ_RcppOwenCDF3(SEXP nuSEXP, SEXP t1SEXP, SEXP t2SEXP, SEXP delta1SEXP, SEXP delta2SEXP, SEXP jmaxSEXP, SEXP cutpointSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< int >::type nu(nuSEXP);
+    Rcpp::traits::input_parameter< double >::type t1(t1SEXP);
+    Rcpp::traits::input_parameter< double >::type t2(t2SEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type delta1(delta1SEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type delta2(delta2SEXP);
+    Rcpp::traits::input_parameter< int >::type jmax(jmaxSEXP);
+    Rcpp::traits::input_parameter< double >::type cutpoint(cutpointSEXP);
+    rcpp_result_gen = Rcpp::wrap(RcppOwenCDF3(nu, t1, t2, delta1, delta2, jmax, cutpoint));
+    return rcpp_result_gen;
+END_RCPP
+}

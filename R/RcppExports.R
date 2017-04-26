@@ -25,3 +25,7 @@ RcppOwenCDF4 <- function(nu, t1, t2, delta1, delta2, jmax = 50L, cutpoint = 8) {
     .Call('OwenQ_RcppOwenCDF4', PACKAGE = 'OwenQ', nu, t1, t2, delta1, delta2, jmax, cutpoint)
 }
 
+RcppOwenCDF3 <- function(nu, t1, t2, delta1, delta2, jmax = 50L, cutpoint = 8) {
+    .Call('OwenQ_RcppOwenCDF3', PACKAGE = 'OwenQ', nu, t1, t2, delta1, delta2, jmax, cutpoint)
+}
+

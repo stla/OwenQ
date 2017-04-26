@@ -114,3 +114,22 @@ test_that("pOwen4 - delta1=Inf and delta2=Inf", {
   # now this is implemented in pOwen4
   expect_true(pOwen4(2, 3, 1, Inf, Inf) == 0)
 })
+
+test_that("pOwen3", {
+  t1 <- 2; t2 <- 1; delta1 <- 3; delta2 <- 2
+  nu <- 6
+  R <- sqrt(nu)*(delta1 - delta2)/(t1-t2)
+  diff <- 1 - OwenQ1(nu, t2, delta2, R) - OwenQ2(nu, t1, delta1, R)
+  owen3 <- pOwen3(nu, t1, t2, delta1, delta2)
+  expect_true(diff == owen3)
+  wolfram <- 0.809137482066635
+  expect_equal(owen3, wolfram, tolerance=1e-9)
+  #
+  nu <- 5
+  R <- sqrt(nu)*(delta1 - delta2)/(t1-t2)
+  diff <- 1 - OwenQ1(nu, t2, delta2, R) - OwenQ2(nu, t1, delta1, R)
+  owen3 <- pOwen3(nu, t1, t2, delta1, delta2)
+  expect_true(diff == owen3)
+  wolfram <- 0.806507459306199
+  expect_equal(owen3, wolfram, tolerance=1e-9)
+})
