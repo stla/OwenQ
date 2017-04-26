@@ -300,7 +300,7 @@ test_that("pOwen1", {
   owen1 <- pOwen1(nu, t1, t2, delta1, delta2)
   expect_equal(diff, owen1, tolerance=1e-16)
   wolfram <- 0.1404299569049368
-  expect_equal(owen1, wolfram, tolerance=1e-10)
+  expect_equal(owen1, wolfram, tolerance=1e-8)
   #
   nu <- 5
   R <- sqrt(nu)*(delta1 - delta2)/(t1-t2)
@@ -308,7 +308,7 @@ test_that("pOwen1", {
   owen1 <- pOwen1(nu, t1, t2, delta1, delta2)
   expect_equal(diff, owen1, tolerance=1e-16)
   wolfram <- 0.1394458271284726
-  expect_equal(owen1, wolfram, tolerance=1e-9)
+  expect_equal(owen1, wolfram, tolerance=1e-8)
 })
 
 
@@ -327,11 +327,9 @@ test_that("pOwen1+pOwen2=P1", {
 })
 
 test_that("pOwen1 - infinite nu", {
-  t1 <- 2; t2 <- 1; delta1 <- 4; delta2 <- 2
-  expect_true(pOwen1(Inf, t1, t2, delta1, delta2) == 0)
   t1 <- 4; t2 <- 1; delta1 <- 4; delta2 <- 2
   expect_equal(pOwen1(2000, t1, t2, delta1, delta2), pOwen1(Inf, t1, t2, delta1, delta2),
-               tolerance=1e-3)
+               tolerance=1e-8)
 })
 
 test_that("pOwen1 - delta2=-Inf", {
@@ -339,7 +337,7 @@ test_that("pOwen1 - delta2=-Inf", {
   nu <- 2; t1 <- 3; delta1 <- 2 # rk: works only for nu=1 and nu=2
   x1 <- OwenQ:::RcppOwenCDF1(nu, t1, 1, delta1, -Inf, jmax=50L, 8)
   x2 <- ptOwen(t1, nu, delta1)
-  expect_true(x1==x2)
+  expect_equal(x1, x2, tolerance=1e-15)
   # now this is implemented in pOwen1
   x <- pOwen1(nu, t1, 2, delta1, -Inf)
   expect_true(x==x2)
@@ -351,7 +349,7 @@ test_that("pOwen1 - delta1=Inf", {
   x1 <- pOwen1(nu, 3, t2, 100, delta2)
   x2 <- pOwen1(nu, 13, t2, 100, delta2)
   expect_true(x1==0)
-  expect_equal(x2, 0, tolerance=1e-30)
+  expect_equal(x2, 0, tolerance=1e-25)
   # now this is implemented in pOwen1
   x <- pOwen1(nu, 3, t2, Inf, delta2)
   expect_true(x==0)
