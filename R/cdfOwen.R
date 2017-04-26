@@ -208,6 +208,36 @@ pOwen2 <- function(nu, t1, t2, delta1, delta2, jmax=50L, cutpoint=8){
 #' # Wolfram integration gives 0.1394458271284726
 #' pOwen1(nu=5, t1=2, t2=1, delta1=3, delta2=2)
 pOwen1 <- function(nu, t1, t2, delta1, delta2, jmax=50L, cutpoint=8){
-  R <- sqrt(nu)*(delta1 - delta2)/(t1-t2)
-  OwenQ1(nu, t1, delta1, R) + OwenQ2(nu, t2, delta2, R)
+  J <- length(delta1)
+  if(J != length(delta2)){
+    stop("`delta1` and `delta2` must have the same length.")
+  }
+  if(any(delta1<=delta2 & is.finite(delta1) & is.finite(delta2))){
+    stop("`delta1` must be >`delta2`.")
+  }
+  if(is.infinite(t1) || is.infinite(t2)){
+    stop("`t1` and `t2` must be finite.")
+  }
+  if(isNotPositiveInteger(nu)){
+    stop("`nu` must be an integer >=1.")
+  }
+  if(t1<=t2){
+    return(ptOwen(t1, nu, delta1))
+  }
+  if(nu == Inf){
+    return(pnorm(t1, mean=delta1) - pmax(0, pnorm(t1, mean=delta1)-pnorm(t2, mean=delta2)))
+  }
+  if(any(inf <- (is.infinite(delta1) | is.infinite(delta2)))){
+    out <- numeric(J)
+    if(any(inf2 <- delta2==-Inf)){
+      winf2 <- which(inf2)
+      out[winf2] <- ptOwen(t1, nu, delta1[winf2])
+    }
+    if(!all(inf)){
+      noninf <- which(!inf)
+      out[noninf] <- RcppOwenCDF1(nu, t1, t2, delta1[noninf], delta2[noninf], jmax, cutpoint)
+    }
+    return(out)
+  }
+  RcppOwenCDF1(nu, t1, t2, delta1, delta2, jmax, cutpoint)
 }
