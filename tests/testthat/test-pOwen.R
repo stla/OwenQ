@@ -1,4 +1,4 @@
-context("cdfOwen")
+context("pOwen")
 
 test_that("pOwen4", {
   t1 <- 2; t2 <- 1; delta1 <- 3; delta2 <- 2
@@ -379,3 +379,18 @@ test_that("pOwen1 - delta1=-Inf and delta2=-Inf", {
   expect_true(pOwen1(2, 3, 1, -Inf, -Inf) == 1)
 })
 
+test_that("The pOwen's sum to 1", {
+  nu=5; t1=2; t2=1; delta1=3; delta2=2
+  p1 <- pOwen1(nu, t1, t2, delta1, delta2)
+  p2 <- pOwen2(nu, t1, t2, delta1, delta2)
+  p3 <- pOwen3(nu, t1, t2, delta1, delta2)
+  p4 <- pOwen4(nu, t1, t2, delta1, delta2)
+  expect_that(p1+p2+p3+p4 == 1)
+  # case t2>t1
+  t2=3
+  p1 <- pOwen1(nu, t1, t2, delta1, delta2)
+  p2 <- pOwen2(nu, t1, t2, delta1, delta2)
+  p3 <- pOwen3(nu, t1, t2, delta1, delta2)
+  p4 <- pOwen4(nu, t1, t2, delta1, delta2)
+  expect_that(p1+p2+p3+p4 == 1)
+})
