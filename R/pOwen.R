@@ -3,16 +3,16 @@
 #' when the noncentrality parameters satisfy \eqn{\delta_1>\delta_2} and
 #' the number of degrees of freedom is integer.
 #' \itemize{
-#' \item \code{pOwen1} evaluates \eqn{P(T_1\le t_1, T_2 \le t_2)}
+#' \item \code{powen1} evaluates \eqn{P(T_1\le t_1, T_2 \le t_2)}
 #' (Owen's equality 8)
-#' \item \code{pOwen2} evaluates \eqn{P(T_1\le t_1, T_2 \ge t_2)}
+#' \item \code{powen2} evaluates \eqn{P(T_1\le t_1, T_2 \ge t_2)}
 #' (Owen's equality 9)
-#' \item \code{pOwen3} evaluates \eqn{P(T_1\ge t_1, T_2 \ge t_2)}
+#' \item \code{powen3} evaluates \eqn{P(T_1\ge t_1, T_2 \ge t_2)}
 #' (Owen's equality 10)
-#' \item \code{pOwen4} evaluates \eqn{P(T_1\ge t_1, T_2 \le t_2)}
+#' \item \code{powen4} evaluates \eqn{P(T_1\ge t_1, T_2 \le t_2)}
 #' (Owen's equality 11)
 #' }
-#' @name pOwen
+#' @name powen
 #' @param nu integer greater than \eqn{1}, the number of degrees of freedom;
 #' infinite allowed
 #' @param t1,t2 two finite numbers, positive or negative
@@ -34,20 +34,20 @@
 #' @examples
 #' nu=5; t1=2; t2=1; delta1=3; delta2=2
 #' # Wolfram integration gives 0.1394458271284726
-#' ( p1 <- pOwen1(nu, t1, t2, delta1, delta2) )
+#' ( p1 <- powen1(nu, t1, t2, delta1, delta2) )
 #' # Wolfram integration gives 0.0353568969628651
-#' ( p2 <- pOwen2(nu, t1, t2, delta1, delta2) )
+#' ( p2 <- powen2(nu, t1, t2, delta1, delta2) )
 #' # Wolfram integration gives 0.806507459306199
-#' ( p3 <- pOwen3(nu, t1, t2, delta1, delta2) )
+#' ( p3 <- powen3(nu, t1, t2, delta1, delta2) )
 #' # Wolfram integration gives 0.018689824158
-#' ( p4 <- pOwen4(nu, t1, t2, delta1, delta2) )
+#' ( p4 <- powen4(nu, t1, t2, delta1, delta2) )
 #' # the sum should be 1
 #' p1+p2+p3+p4
 NULL
 
-#' @rdname pOwen
+#' @rdname powen
 #' @export
-pOwen1 <- function(nu, t1, t2, delta1, delta2, jmax=50L, cutpoint=8){
+powen1 <- function(nu, t1, t2, delta1, delta2, jmax=50L, cutpoint=8){
   J <- length(delta1)
   if(J != length(delta2)){
     stop("`delta1` and `delta2` must have the same length.")
@@ -82,9 +82,9 @@ pOwen1 <- function(nu, t1, t2, delta1, delta2, jmax=50L, cutpoint=8){
   RcppOwenCDF1(nu, t1, t2, delta1, delta2, jmax, cutpoint)
 }
 
-#' @rdname pOwen
+#' @rdname powen
 #' @export
-pOwen2 <- function(nu, t1, t2, delta1, delta2, jmax=50L, cutpoint=8){
+powen2 <- function(nu, t1, t2, delta1, delta2, jmax=50L, cutpoint=8){
   J <- length(delta1)
   if(J != length(delta2)){
     stop("`delta1` and `delta2` must have the same length.")
@@ -116,9 +116,9 @@ pOwen2 <- function(nu, t1, t2, delta1, delta2, jmax=50L, cutpoint=8){
   RcppOwenCDF2(nu, t1, t2, delta1, delta2, jmax, cutpoint)
 }
 
-#' @rdname pOwen
+#' @rdname powen
 #' @export
-pOwen3 <- function(nu, t1, t2, delta1, delta2, jmax=50L, cutpoint=8){
+powen3 <- function(nu, t1, t2, delta1, delta2, jmax=50L, cutpoint=8){
   J <- length(delta1)
   if(J != length(delta2)){
     stop("`delta1` and `delta2` must have the same length.")
@@ -162,9 +162,9 @@ pOwen3 <- function(nu, t1, t2, delta1, delta2, jmax=50L, cutpoint=8){
   RcppOwenCDF3(nu, t1, t2, delta1, delta2, jmax, cutpoint)
 }
 
-#' @rdname pOwen
+#' @rdname powen
 #' @export
-pOwen4 <- function(nu, t1, t2, delta1, delta2, jmax=50L, cutpoint=8){
+powen4 <- function(nu, t1, t2, delta1, delta2, jmax=50L, cutpoint=8){
   J <- length(delta1)
   if(J != length(delta2)){
     stop("`delta1` and `delta2` must have the same length.")
