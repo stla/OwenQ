@@ -13,8 +13,6 @@
 #' @param t1,t2 two finite numbers, positive or negative
 #' @param delta1,delta2 two vectors of possibly infinite numbers with the same length,
 #' the noncentrality parameters;
-#' @param jmax,cutpoint parameters controlling the algorithm for the Owen-T function;
-#' see \code{\link{OwenT}} (used only when \code{nu} is odd)
 #' @return A vector of numbers between \eqn{0} and \eqn{1}.
 #' @note The results are theoretically exact when the number of degrees of freedom is even.
 #' When odd, the procedure resorts to the Owen T-function.
@@ -35,7 +33,7 @@ NULL
 
 #' @rdname psbt
 #' @export
-psbt1 <- function(nu, t1, t2, delta1, delta2, jmax=50L, cutpoint=8){
+psbt1 <- function(nu, t1, t2, delta1, delta2){
   L <- length(delta1)
   if(L != length(delta2)){
     stop("`delta1` and `delta2` must have the same length.")
@@ -43,19 +41,19 @@ psbt1 <- function(nu, t1, t2, delta1, delta2, jmax=50L, cutpoint=8){
   out <- numeric(L)
   higher <- (delta1 > delta2) | is.infinite(delta1) | is.infinite(delta2)
   if(J <- length(whigher <- which(higher))){
-    out[whigher] <- powen1(nu, t1, t2, delta1[whigher], delta2[whigher], jmax, cutpoint)
+    out[whigher] <- powen1(nu, t1, t2, delta1[whigher], delta2[whigher])
   }
   if(J < L){
     equal <- delta1==delta2
     if(K <- length(wequal <- which(equal))){
-      out[wequal] <- ptOwen(min(t1,t2), nu, delta1[wequal], jmax, cutpoint)
+      out[wequal] <- ptOwen(min(t1,t2), nu, delta1[wequal])
     }
     if(J+K < L){
       wlower <- which(!(higher|equal))
       if(t1 < t2){
-        out[wlower] <- RcppOwenCDF1(nu, t2, t1, delta2[wlower], delta1[wlower], jmax, cutpoint)
+        out[wlower] <- RcppOwenCDF1(nu, t2, t1, delta2[wlower], delta1[wlower])
       }else{
-        out[wlower] <- ptOwen(t2, nu, delta2[wlower], jmax, cutpoint)
+        out[wlower] <- ptOwen(t2, nu, delta2[wlower])
       }
     }
   }
@@ -64,7 +62,7 @@ psbt1 <- function(nu, t1, t2, delta1, delta2, jmax=50L, cutpoint=8){
 
 #' @rdname psbt
 #' @export
-psbt2 <- function(nu, t1, t2, delta1, delta2, jmax=50L, cutpoint=8){
+psbt2 <- function(nu, t1, t2, delta1, delta2){
   L <- length(delta1)
   if(L != length(delta2)){
     stop("`delta1` and `delta2` must have the same length.")
@@ -72,22 +70,22 @@ psbt2 <- function(nu, t1, t2, delta1, delta2, jmax=50L, cutpoint=8){
   out <- numeric(L)
   higher <- (delta1 > delta2) | is.infinite(delta1) | is.infinite(delta2)
   if(J <- length(whigher <- which(higher))){
-    out[whigher] <- powen2(nu, t1, t2, delta1[whigher], delta2[whigher], jmax, cutpoint)
+    out[whigher] <- powen2(nu, t1, t2, delta1[whigher], delta2[whigher])
   }
   if(J < L){
     equal <- delta1==delta2
     if(K <- length(wequal <- which(equal))){
       if(t2 < t1){
-        out[wequal] <- ptOwen(t1, nu, delta1[wequal], jmax, cutpoint) -
-          ptOwen(t2, nu, delta1[wequal], jmax, cutpoint)
+        out[wequal] <- ptOwen(t1, nu, delta1[wequal]) -
+          ptOwen(t2, nu, delta1[wequal])
       }
     }
     if(J+K < L){
       wlower <- which(!(higher|equal))
       if(t1 < t2){
-        out[wlower] <- RcppOwenCDF4(nu, t2, t1, delta2[wlower], delta1[wlower], jmax, cutpoint)
+        out[wlower] <- RcppOwenCDF4(nu, t2, t1, delta2[wlower], delta1[wlower])
       }else{
-        out[wlower] <- ptOwen(t1, nu, delta1[wlower], jmax, cutpoint) - ptOwen(t2, nu, delta2[wlower], jmax, cutpoint)
+        out[wlower] <- ptOwen(t1, nu, delta1[wlower]) - ptOwen(t2, nu, delta2[wlower])
       }
     }
   }
@@ -96,7 +94,7 @@ psbt2 <- function(nu, t1, t2, delta1, delta2, jmax=50L, cutpoint=8){
 
 #' @rdname psbt
 #' @export
-psbt3 <- function(nu, t1, t2, delta1, delta2, jmax=50L, cutpoint=8){
+psbt3 <- function(nu, t1, t2, delta1, delta2){
   L <- length(delta1)
   if(L != length(delta2)){
     stop("`delta1` and `delta2` must have the same length.")
@@ -104,19 +102,19 @@ psbt3 <- function(nu, t1, t2, delta1, delta2, jmax=50L, cutpoint=8){
   out <- numeric(L)
   higher <- (delta1 > delta2) | is.infinite(delta1) | is.infinite(delta2)
   if(J <- length(whigher <- which(higher))){
-    out[whigher] <- powen3(nu, t1, t2, delta1[whigher], delta2[whigher], jmax, cutpoint)
+    out[whigher] <- powen3(nu, t1, t2, delta1[whigher], delta2[whigher])
   }
   if(J < L){
     equal <- delta1==delta2
     if(K <- length(wequal <- which(equal))){
-      out[wequal] <- 1 - ptOwen(max(t1,t2), nu, delta1[wequal], jmax, cutpoint)
+      out[wequal] <- 1 - ptOwen(max(t1,t2), nu, delta1[wequal])
     }
     if(J+K < L){
       wlower <- which(!(higher|equal))
       if(t1 < t2){
-        out[wlower] <- RcppOwenCDF3(nu, t2, t1, delta2[wlower], delta1[wlower], jmax, cutpoint)
+        out[wlower] <- RcppOwenCDF3(nu, t2, t1, delta2[wlower], delta1[wlower])
       }else{
-        out[wlower] <- 1-ptOwen(t1, nu, delta1[wlower], jmax, cutpoint)
+        out[wlower] <- 1-ptOwen(t1, nu, delta1[wlower])
       }
     }
   }
@@ -125,7 +123,7 @@ psbt3 <- function(nu, t1, t2, delta1, delta2, jmax=50L, cutpoint=8){
 
 #' @rdname psbt
 #' @export
-psbt4 <- function(nu, t1, t2, delta1, delta2, jmax=50L, cutpoint=8){
+psbt4 <- function(nu, t1, t2, delta1, delta2){
   L <- length(delta1)
   if(L != length(delta2)){
     stop("`delta1` and `delta2` must have the same length.")
@@ -133,20 +131,20 @@ psbt4 <- function(nu, t1, t2, delta1, delta2, jmax=50L, cutpoint=8){
   out <- numeric(L)
   higher <- (delta1 > delta2) | is.infinite(delta1) | is.infinite(delta2)
   if(J <- length(whigher <- which(higher))){
-    out[whigher] <- powen4(nu, t1, t2, delta1[whigher], delta2[whigher], jmax, cutpoint)
+    out[whigher] <- powen4(nu, t1, t2, delta1[whigher], delta2[whigher])
   }
   if(J < L){
     equal <- delta1==delta2
     if(K <- length(wequal <- which(equal))){
       if(t2 > t1){
-        out[wequal] <- ptOwen(t2, nu, delta1[wequal], jmax, cutpoint) -
-          ptOwen(t1, nu, delta1[wequal], jmax, cutpoint)
+        out[wequal] <- ptOwen(t2, nu, delta1[wequal]) -
+          ptOwen(t1, nu, delta1[wequal])
       }
     }
     if(J+K < L){
       wlower <- which(!(higher|equal))
       if(t1 < t2){
-        out[wlower] <- RcppOwenCDF2(nu, t2, t1, delta2[wlower], delta1[wlower], jmax, cutpoint)
+        out[wlower] <- RcppOwenCDF2(nu, t2, t1, delta2[wlower], delta1[wlower])
       }
     }
   }

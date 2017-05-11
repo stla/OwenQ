@@ -5,8 +5,6 @@
 #' @param nu integer greater than \eqn{1}, the number of degrees of freedom;
 #' possibly infinite
 #' @param delta numeric vector of noncentrality parameters; possibly infinite
-#' @param jmax,cutpoint parameters controlling the algorithm for the Owen-T function;
-#' see \code{\link{OwenT}} (used only when \code{nu} is odd)
 #' @return Numeric vector, the CDF evaluated at \code{q}.
 #' @export
 #' @importFrom Rcpp evalCpp
@@ -21,7 +19,7 @@
 #' @examples
 #' ptOwen(2, 3) - pt(2, 3)
 #' ptOwen(2, 3, delta=1) - pt(2, 3, ncp=1)
-ptOwen <- function(q, nu, delta=0, jmax=50L, cutpoint=8){
+ptOwen <- function(q, nu, delta=0){
   if(is.infinite(q)){
     stop("`q` must be finite.")
   }
@@ -38,7 +36,7 @@ ptOwen <- function(q, nu, delta=0, jmax=50L, cutpoint=8){
   }
   if(L < J){
     noninf <- which(!inf)
-    out[noninf] <- RcppOwenStudent(q, nu, delta[noninf], jmax, cutpoint)
+    out[noninf] <- RcppOwenStudent(q, nu, delta[noninf])
   }
   out
 }

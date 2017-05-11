@@ -1,16 +1,18 @@
 Package: OwenQ
 Type: Package
 Title: Owen Q-function
-Version: 0.2.1
-Date: 2017-04-28
+Version: 0.3.0
+Date: 2017-05-11
 Author: Stéphane Laurent
 Maintainer: Stéphane Laurent <laurent_step@yahoo.fr>
 Description: Evaluates the Owen Q-function for an integer value of the degrees of freedom.
     Also provides an implementation of the Owen T-function.
 License: GPL-3 + file LICENSE
 Imports: Rcpp (>= 0.12.10),
-    stats
-LinkingTo: Rcpp
+    stats,
+    BH
+LinkingTo: Rcpp,
+           BH
 Suggests: testthat
 Encoding: UTF-8
 LazyData: true

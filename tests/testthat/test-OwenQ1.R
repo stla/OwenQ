@@ -21,7 +21,7 @@ test_that("OwenQ1 for t=+Inf does not depend on delta", {
   expect_equal(OwenQ1(2, Inf, 1, 2), sqrt(2*pi)*(dnorm(0)-dnorm(2)), tolerance=1e-15)
   # nu >=1 => incomplete Gamma
   R <- 2; nu <- 6
-  expect_equal(OwenQ1(nu, Inf, 3, R), 1-gsl::gamma_inc(nu/2,R^2/2)/gamma(nu/2),
+  expect_equal(OwenQ1(nu, Inf, 3, R), pgamma(R^2/2, nu/2),
                tolerance=1e-14)
   # does not depend on t for delta=-Inf and the same result
   expect_true(OwenQ1(5, Inf, 2, 2) == OwenQ1(5, 1, -100, 2))

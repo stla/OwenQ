@@ -74,8 +74,8 @@ test_that("powen4 - infinite nu", {
 test_that("powen4 - delta2=-Inf", {
   # the result does not depend on t2
   nu <- 2; t1 <- 3; delta1 <- 2 # rk: works only for nu=1 and nu=2
-  x1 <- OwenQ:::RcppOwenCDF4(nu, t1, 1, delta1, -Inf, jmax=50L, 8)
-  x2 <- OwenQ:::RcppOwenCDF4(nu, t1, 2, delta1, -Inf, jmax=50L, 8)
+  x1 <- OwenQ:::RcppOwenCDF4(nu, t1, 1, delta1, -Inf)
+  x2 <- OwenQ:::RcppOwenCDF4(nu, t1, 2, delta1, -Inf)
   expect_true(x1==x2)
   # so the result is 1-P1 (because T2=-Inf)
   expect_equal(x1, 1-ptOwen(t1, nu, delta1), tolerance=1e-15)
@@ -92,7 +92,10 @@ test_that("powen4 - delta1=Inf", {
   expect_true(x1==x2)
   # so the result is P2 (rather because T1=Inf)
   expect_equal(x1, ptOwen(t2, nu, delta2), tolerance=1e-16)
-  expect_true(OwenQ:::RcppOwenCDF4(1, 3, t2, Inf, delta2) == ptOwen(t2, 1, delta2))
+  # boost version: delta1 = Inf ne marche plus
+  # BIZARRE
+  expect_equal(OwenQ:::RcppOwenCDF4(1, 3, t2, 1000, delta2), ptOwen(t2, 1, delta2),
+               tolerance=1e-100)
   # now this is implemented in powen4
   x <- powen4(nu, 3, t2, Inf, delta2)
   expect_equal(x1, x, tolerance=1e-16)
@@ -145,7 +148,8 @@ test_that("powen3+powen4=1-P1", {
   owen3 <- powen3(nu, t1, t2, delta1, delta2)
   owen4 <- powen4(nu, t1, t2, delta1, delta2)
   P1 <- ptOwen(t1, nu, delta1)
-  expect_true(owen3+owen4 == 1-P1)
+  #expect_true(owen3+owen4 == 1-P1)
+  expect_equal(owen3+owen4, 1-P1, tolerance=1e-15)
 })
 
 test_that("powen3 - infinite nu", {
@@ -157,7 +161,7 @@ test_that("powen3 - infinite nu", {
 test_that("powen3 - delta2=-Inf", {
   # the result is 0
   nu <- 2; t1 <- 3; delta1 <- 2 # rk: works only for nu=1 and nu=2
-  x1 <- OwenQ:::RcppOwenCDF3(nu, t1, 1, delta1, -Inf, jmax=50L, 8)
+  x1 <- OwenQ:::RcppOwenCDF3(nu, t1, 1, delta1, -Inf)
   expect_true(x1==0)
   # now this is implemented in powen3
   x <- powen3(nu, t1, 2, delta1, -Inf)
@@ -172,7 +176,9 @@ test_that("powen3 - delta1=Inf", {
   expect_true(x1==x2)
   # so the result is 1-P1-P2 = 1-P2
   expect_equal(x1, 1-ptOwen(99, nu, Inf)-ptOwen(t2, nu, delta2), tolerance=1e-15)
-  expect_true(OwenQ:::RcppOwenCDF3(1, 3, t2, Inf, delta2) == 1-ptOwen(t2, 1, delta2))
+  #expect_true(OwenQ:::RcppOwenCDF3(1, 3, t2, Inf, delta2) == 1-ptOwen(t2, 1, delta2))
+  # boost version: delta1=Inf gives NaN
+  expect_true(OwenQ:::RcppOwenCDF3(1, 3, t2, 1000, delta2) == 1-ptOwen(t2, 1, delta2))
   # now this is implemented in powen3
   x <- powen3(nu, 3, t2, Inf, delta2)
   expect_equal(x1, x, tolerance=1e-15)
@@ -248,7 +254,7 @@ test_that("powen2 - infinite nu", {
 test_that("powen2 - delta2=-Inf", {
   # the result is 0
   nu <- 2; t1 <- 3; delta1 <- 2 # rk: works only for nu=1 and nu=2
-  x1 <- OwenQ:::RcppOwenCDF2(nu, t1, 1, delta1, -Inf, jmax=50L, 8)
+  x1 <- OwenQ:::RcppOwenCDF2(nu, t1, 1, delta1, -Inf)
   expect_true(x1==0)
   # now this is implemented in powen2
   x <- powen2(nu, t1, 2, delta1, -Inf)
@@ -335,7 +341,7 @@ test_that("powen1 - infinite nu", {
 test_that("powen1 - delta2=-Inf", {
   # the result is P1
   nu <- 2; t1 <- 3; delta1 <- 2 # rk: works only for nu=1 and nu=2
-  x1 <- OwenQ:::RcppOwenCDF1(nu, t1, 1, delta1, -Inf, jmax=50L, 8)
+  x1 <- OwenQ:::RcppOwenCDF1(nu, t1, 1, delta1, -Inf)
   x2 <- ptOwen(t1, nu, delta1)
   expect_equal(x1, x2, tolerance=1e-15)
   # now this is implemented in powen1

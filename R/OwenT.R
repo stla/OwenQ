@@ -1,29 +1,7 @@
-#' @importFrom Rcpp evalCpp
-#' @useDynLib OwenQ
-OwenT01 <- function(h, a, jmax=50L, cutpoint=8) {
-  if(isNotPositiveInteger(jmax)){
-    stop("`jmax` must be an integer >=1.")
-  }
-  if(cutpoint <= 0){
-    stop("`cutpoint` must be a strictly positive number.")
-  }
-  if(a<0 || a>1){
-    stop("`a` must be a number between 0 and 1.")
-  }
-  if(h<0){
-    stop("`h` must be positive.")
-  }
-  RcppOwenT01(h, a, jmax, cutpoint)
-}
-
 #' @title Owen T-function
 #' @description Evaluates the Owen T-function.
 #' @param h numeric scalar
 #' @param a numeric scalar
-#' @param jmax integer controlling the number of terms of the
-#' series expansion; see Details
-#' @param cutpoint positive number, the cut point in the algorithm;
-#' see Details
 #' @return A number between 0 and 1.
 #' @export
 #' @importFrom Rcpp evalCpp
@@ -43,22 +21,13 @@ OwenT01 <- function(h, a, jmax=50L, cutpoint=8) {
 #' @examples
 #' integrate(function(x) pnorm(1+2*x)^2*dnorm(x), lower=-Inf, upper=Inf)
 #' pnorm(1/sqrt(5)) - 2*OwenT(1/sqrt(5), 1/3)
-OwenT <- function (h, a, jmax = 50L, cutpoint = 8)
+OwenT <- function (h, a)
 {
-  if(isNotPositiveInteger(jmax)){
-    stop("`jmax` must be an integer >=1.")
-  }
-  if(cutpoint <= 0){
-    stop("`cutpoint` must be a strictly positive number")
-  }
   if (!is.numeric(a) || length(a) > 1L)
     stop("`a` must be a scalar number")
   if (!is.numeric(h) || length(h) > 1L)
     stop("`h` must be a scalar number")
   if (is.na(a))
     stop("parameter `a` is NA")
-  # if (is.infinite(h)){
-  #   return(0)
-  # }
-  return(RcppOwenT(h, a, jmax, cutpoint))
+  return(RcppOwenT(h, a))
 }
