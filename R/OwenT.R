@@ -7,13 +7,7 @@
 #' @importFrom Rcpp evalCpp
 #' @useDynLib OwenQ
 #' @export
-#' @details If \eqn{0\lea\le1}, and \eqn{0\leh\lec}, where \eqn{c} is
-#' the cut point, a series expansion is used.
-#' It is truncated after the \code{jmax}-th term.
-#' If \eqn{0\lea\le1}, and \eqn{h>c}, an asymptotic approximation is used.
-#' Otherwise, the properties of the Owen T-function are exploited
-#' to come down to the case \eqn{0\lea\le1}.
-#' See the reference for more information.
+#' @details This is a port of the function \code{owens_t} of the \strong{boost} library.
 #' @references
 #' Owen, D. B. (1956).
 #' Tables for computing bivariate normal probabilities.

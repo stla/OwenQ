@@ -1,5 +1,5 @@
 #' @title Owen distribution functions when \eqn{\delta_1>\delta_2}
-#' @description Evaluates the Owen cumulative distribution function
+#' @description Evaluates the Owen distribution functions
 #' when the noncentrality parameters satisfy \eqn{\delta_1>\delta_2} and
 #' the number of degrees of freedom is integer.
 #' \itemize{

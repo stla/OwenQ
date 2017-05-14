@@ -33,3 +33,7 @@ RcppOwenCDF1 <- function(nu, t1, t2, delta1, delta2) {
     .Call('OwenQ_RcppOwenCDF1', PACKAGE = 'OwenQ', nu, t1, t2, delta1, delta2)
 }
 
+RcppSpecialOwenCDF2 <- function(nu, t, delta) {
+    .Call('OwenQ_RcppSpecialOwenCDF2', PACKAGE = 'OwenQ', nu, t, delta)
+}
+

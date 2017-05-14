@@ -118,3 +118,16 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// RcppSpecialOwenCDF2
+NumericVector RcppSpecialOwenCDF2(int nu, double t, NumericVector delta);
+RcppExport SEXP OwenQ_RcppSpecialOwenCDF2(SEXP nuSEXP, SEXP tSEXP, SEXP deltaSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< int >::type nu(nuSEXP);
+    Rcpp::traits::input_parameter< double >::type t(tSEXP);
+    Rcpp::traits::input_parameter< NumericVector >::type delta(deltaSEXP);
+    rcpp_result_gen = Rcpp::wrap(RcppSpecialOwenCDF2(nu, t, delta));
+    return rcpp_result_gen;
+END_RCPP
+}
