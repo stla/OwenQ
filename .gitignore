@@ -11,4 +11,4 @@ src-i386/*.dll
 src-x64/*.o
 src-x64/*.dll
 
-
+inst/doc

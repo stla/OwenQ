@@ -131,3 +131,21 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+
+static const R_CallMethodDef CallEntries[] = {
+    {"OwenQ_RcppOwenT", (DL_FUNC) &OwenQ_RcppOwenT, 2},
+    {"OwenQ_RcppOwenStudent", (DL_FUNC) &OwenQ_RcppOwenStudent, 3},
+    {"OwenQ_RcppOwenQ1", (DL_FUNC) &OwenQ_RcppOwenQ1, 4},
+    {"OwenQ_RcppOwenQ2", (DL_FUNC) &OwenQ_RcppOwenQ2, 4},
+    {"OwenQ_RcppOwenCDF4", (DL_FUNC) &OwenQ_RcppOwenCDF4, 5},
+    {"OwenQ_RcppOwenCDF3", (DL_FUNC) &OwenQ_RcppOwenCDF3, 5},
+    {"OwenQ_RcppOwenCDF2", (DL_FUNC) &OwenQ_RcppOwenCDF2, 5},
+    {"OwenQ_RcppOwenCDF1", (DL_FUNC) &OwenQ_RcppOwenCDF1, 5},
+    {"OwenQ_RcppSpecialOwenCDF2", (DL_FUNC) &OwenQ_RcppSpecialOwenCDF2, 3},
+    {NULL, NULL, 0}
+};
+
+RcppExport void R_init_OwenQ(DllInfo *dll) {
+    R_registerRoutines(dll, NULL, CallEntries, NULL, NULL);
+    R_useDynamicSymbols(dll, FALSE);
+}

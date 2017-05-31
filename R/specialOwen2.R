@@ -9,6 +9,7 @@
 #' @export
 #' @details The value of \code{spowen2(nu, t, delta)} is the same as the value
 #' of \code{powen2(nu, t, -t, delta, -delta)}, but it is evaluated more efficiently.
+#' @seealso \code{\link{powen2}}
 #' @examples
 #' spowen2(4, 1, 2) == powen2(4, 1, -1, 2, -2)
 spowen2 <- function(nu, t, delta){

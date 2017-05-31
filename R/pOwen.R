@@ -24,7 +24,7 @@
 #' @useDynLib OwenQ
 #' @note The results are theoretically exact when the number of degrees of freedom is even.
 #' When odd, the procedure resorts to the Owen T-function.
-#' @seealso Use \code{\link{OwenCDF}} for general values of \code{delta1} and \code{delta2}.
+#' @seealso Use \code{\link{psbt}} for general values of \code{delta1} and \code{delta2}.
 #' @references
 #' Owen, D. B. (1965).
 #' A special case of a bivariate noncentral t-distribution.
