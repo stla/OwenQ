@@ -170,3 +170,23 @@ ptOwen(q, dof, delta2) - ptOwen(-q, dof, delta1) - powen4(dof, q, -q, delta1, de
 The `OwenQ` package also provides an implementation of the Owen $T$-function, 
 under the name `OwenT`. 
 This is a port of the function `owens_t` of the C++ `boost` library.
+
+
+## The Owen $Q$-functions
+
+The Owen cumulative functions are based on the two Owen $Q$-functions
+$$
+Q_1(\nu, t, \delta, R) = \frac{1}{\Gamma\left(\frac{\nu}{2}\right)2^{\frac12(\nu-2)}}
+\int_0^R \Phi\left(\frac{tx}{\sqrt{\nu}}-\delta\right)
+x^{\nu-1} e^{-\frac{x^2}{2}} \mathrm{d}x
+$$
+and
+$$
+Q_2(\nu, t, \delta, R) = \frac{1}{\Gamma\left(\frac{\nu}{2}\right)2^{\frac12(\nu-2)}}
+\int_R^\infty \Phi\left(\frac{tx}{\sqrt{\nu}}-\delta\right)
+x^{\nu-1} e^{-\frac{x^2}{2}} \mathrm{d}x
+$$
+
+They are implemented in the `OwenQ` package under the respective names `OwenQ1` and `OwenQ2` (for integer value of $\nu$). 
+
+## Reference 
