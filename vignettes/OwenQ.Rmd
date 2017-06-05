@@ -177,6 +177,13 @@ The `OwenQ` package also provides an implementation of the Owen $T$-function,
 under the name `OwenT`. 
 This is a port of the function `owens_t` of the C++ `boost` library.
 
+```{r, echo=FALSE, fig.width=5, fig.height=5}
+h <- seq(-3, 3, length.out=30)
+a <- seq(-5, 5, length.out=30)
+z <- outer(h, a, Vectorize(OwenT))
+par(mar=c(0,2,0,0))
+persp(h, a, z, theta=30, phi=30, expand=0.5, zlab="Owen T", ticktype = "detailed", col = "lightblue")
+```
 
 # The Owen $Q$-functions
 
