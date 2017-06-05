@@ -2,7 +2,11 @@
 title: "Owen cumulative functions"
 author: "Stéphane Laurent"
 date: "`r Sys.Date()`"
-output: rmarkdown::html_vignette
+output: 
+  rmarkdown::html_vignette:
+    fig_caption: no
+    number_sections: no
+    toc: yes
 vignette: >
   %\VignetteIndexEntry{Owen cumulative functions}
   %\VignetteEngine{knitr::rmarkdown}
@@ -15,7 +19,7 @@ knitr::opts_chunk$set(collapse=TRUE)
 ```
 
 
-## The Owen distribution
+# The Owen distribution
 
 Let $Z \sim {\cal N}(0,1)$ and $X \sim \chi^2_\nu$ be two independent random variables.
 For real numbers $\delta_1$ and $\delta_2$, define the two random variables
@@ -40,13 +44,13 @@ O_4(\nu, t_1, t_2, \delta_1, \delta_2) & = \Pr(T_1 \geq t_1, T_2 \leq t_2).
 \end{align}
 $$
 
-Owen provided a way to evaluate these functions *when $\nu$ is an integer number*. Owen's algorithms are implemented in the `OwenQ` package. 
+Owen provided an efficient way to evaluate these functions *when $\nu$ is an integer number*. Owen's algorithms are implemented in the `OwenQ` package. 
 
 For $\delta_1 > \delta_2$, these four functions are implemented in the `OwenQ` package under the respective names `powen1`, `powen2`, `powen3` and `powen4`. 
 For general values of $\delta_1$ and $\delta_2$, they are implemented under the respective names `psbt1`, `psbt2`, `psbt3` and `psbt4` 
 
 
-## Non-central Student distribution 
+# Non-central Student distribution 
 
 Owen (1965) also provided an algorithm to evaluate the cumulative distribution function of an univariate non-central Student distribution with an integer number of degrees of freedom. 
 This evaluation is performed by the function `ptOwen` of the `OwenQ` package.
@@ -68,7 +72,7 @@ p2 - wolfram
 ```
 
 
-## Limitations
+# Limitations
 
 When `q`$=$`delta`, the value of `ptOwen(q, nu, delta)` should go to `0.5` as `nu` increases to infinity. The examples below show the failure of this expectation when `nu` is too large.
 
@@ -82,14 +86,15 @@ ptOwen(q=50, nu=3680, delta=50)
 ```
 
 
-## Application to equivalence testing 
+# Application to equivalence testing 
 
 Assume a statistical model given by a sample 
 $y_i \sim_{\text{iid}} {\cal N}(\mu, \sigma^2)$ for $i=1, \ldots, n$. 
-We are interested in the alternative hypothesis 
+We want to demonstrate that, up to a given confidence level, the mean $\mu$ belongs to a certain interval $[\Delta_1, \Delta_2]$. 
+In other words, we are interested in the alternative hypothesis 
 $H_1\colon\{\Delta_1 \leq \mu \leq \Delta_2\}$. 
 
-Consider the $100(1-2\alpha)\%$-confidence interval about $\mu$:
+Consider the usual $100(1-2\alpha)\%$-confidence interval about $\mu$:
 $$
 \bigl[\bar y - t^\ast_{n-1}(\alpha)\frac{\hat\sigma}{\sqrt{n}}, \, 
 \bar y + t^\ast_{n-1}(\alpha)\frac{\hat\sigma}{\sqrt{n}} \bigr].
@@ -115,12 +120,12 @@ T_1 = \frac{z - \delta_1}{\dfrac{\sqrt{n-1}\hat\sigma/\sigma}{\sqrt{n-1}}}
 $$
 where
 $$
-z = \frac{\sqrt{n}\bar y}{\sigma} - \mu \sim {\cal N}(0,1)
+z = \frac{\sqrt{n}}{\sigma}(\bar y - \mu) \sim {\cal N}(0,1)
 \quad \text{and} \quad 
 \delta_1 = \frac{\mu - \Delta_1}{\sigma/\sqrt{n}}.
 $$
 
-By reasoning in the same way for $T_2$, we find that $(T_1, T_2)$ follows the 
+By reasoning in the same way for $T_2$, we find that the pair $(T_1, T_2)$ follows the 
 Owen distribution with degrees of freedom $\nu = n-1$, and non-centrality 
 parameters $\delta_1$ given above and 
 $\delta_2 = \tfrac{\mu - \Delta_2}{\sigma/\sqrt{n}}$.
@@ -131,7 +136,7 @@ O_4(n-1, t^\ast_{n-1}(\alpha), -t^\ast_{n-1}(\alpha), \delta_1, \delta_2),
 $$
 and then can be evaluated thanks to `powen4`. 
 
-### Inconclusive equivalence test
+## Inconclusive equivalence test
 
 The result of the equivalence test is said to be *inconclusive* when only one of the bounds of the confidence interval falls into the interval $[\Delta_1, \Delta_2]$. 
 
@@ -141,7 +146,7 @@ The probability to get an inconclusive result can be obtained with the `OwenQ` p
 Delta1 <- -2; Delta2 <- 2 
 mu <- 1; sigma <- 6; n <- 30L
 alpha <- 0.05
-nsims <- 1e5L
+nsims <- 1e6L
 equivalence <- inconclusive <- numeric(nsims)
 for (i in 1L:nsims) {
   y <- rnorm(n, mu, sigma)
@@ -166,14 +171,14 @@ ptOwen(q, dof, delta2) - ptOwen(-q, dof, delta1) - powen4(dof, q, -q, delta1, de
 ```
 
 
-## The Owen $T$-function
+# The Owen $T$-function
 
 The `OwenQ` package also provides an implementation of the Owen $T$-function, 
 under the name `OwenT`. 
 This is a port of the function `owens_t` of the C++ `boost` library.
 
 
-## The Owen $Q$-functions
+# The Owen $Q$-functions
 
 The Owen cumulative functions are based on the two Owen $Q$-functions
 $$
@@ -191,7 +196,7 @@ $$
 They are implemented in the `OwenQ` package under the respective names `OwenQ1` and `OwenQ2` (for integer values of $\nu$). 
 
 
-## Equal-tailed tolerance interval
+# Application: Equal-tailed tolerance interval
 
 Consider the statistical model given by a sample 
 $y_i \sim_{\text{iid}} {\cal N}(\mu, \sigma^2)$ for $i=1, \ldots, n$. 
@@ -223,7 +228,7 @@ uniroot(function(ke) spowen2(n-1, ke*sqrt(n), delta) - (1-alpha),
 The $k_e$ factors are tabulated in KrishnaMoorthy & Mathew's book.
 
 
-## References
+# References
 
 Owen, D. B. (1965). *A special case of a bivariate noncentral t-distribution.* Biometrika 52, 437-446.
 
