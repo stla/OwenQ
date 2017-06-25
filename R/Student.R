@@ -8,6 +8,7 @@
 #' @return Numeric vector, the CDF evaluated at \code{q}.
 #' @export
 #' @importFrom Rcpp evalCpp
+#' @importFrom stats pnorm
 #' @useDynLib OwenQ
 #' @note The results are theoretically exact when the number of degrees of
 #' freedom is even.

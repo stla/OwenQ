@@ -15,9 +15,6 @@ OwenQ2(nu, t, delta, R)
 
 \item{R}{(lower bound of the integral) vector of finite positive numbers,
 with the same length as \code{delta}}
-
-\item{jmax, cutpoint}{parameters controlling the algorithm for the Owen-T function;
-see \code{\link{OwenT}} (used only when \code{nu} is odd)}
 }
 \value{
 A vector of numbers between \eqn{0} and \eqn{1}, the values of the integral

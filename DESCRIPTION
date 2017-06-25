@@ -9,8 +9,7 @@ Description: Evaluates the Owen Q-function for an integer value of the degrees o
     Also provides an implementation of the Owen T-function.
 License: GPL-3 + file LICENSE
 Imports: Rcpp (>= 0.12.10),
-    stats,
-    BH
+    stats
 LinkingTo: Rcpp,
     BH
 Suggests: testthat,

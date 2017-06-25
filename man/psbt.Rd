@@ -57,5 +57,5 @@ A special case of a bivariate noncentral t-distribution.
 \emph{Biometrika} \bold{52}, 437-446.
 }
 \seealso{
-It is better to use \code{\link{pOwen}} if \code{delta1>delta2}.
+It is better to use \code{\link{powen}} if \code{delta1>delta2}.
 }

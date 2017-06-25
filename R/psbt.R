@@ -16,7 +16,7 @@
 #' @return A vector of numbers between \eqn{0} and \eqn{1}.
 #' @note The results are theoretically exact when the number of degrees of freedom is even.
 #' When odd, the procedure resorts to the Owen T-function.
-#' @seealso It is better to use \code{\link{pOwen}} if \code{delta1>delta2}.
+#' @seealso It is better to use \code{\link{powen}} if \code{delta1>delta2}.
 #' @references
 #' Owen, D. B. (1965).
 #' A special case of a bivariate noncentral t-distribution.

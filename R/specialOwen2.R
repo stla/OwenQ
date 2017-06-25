@@ -6,6 +6,7 @@
 #' @param delta vector of positive numbers
 #'
 #' @return A vector of numbers between 0 and 1.
+#' @importFrom stats pnorm
 #' @export
 #' @details The value of \code{spowen2(nu, t, delta)} is the same as the value
 #' of \code{powen2(nu, t, -t, delta, -delta)}, but it is evaluated more efficiently.

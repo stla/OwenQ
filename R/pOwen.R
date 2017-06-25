@@ -21,6 +21,7 @@
 #' must satisfy \code{delta1>delta2}
 #' @return A vector of numbers between \eqn{0} and \eqn{1}.
 #' @importFrom Rcpp evalCpp
+#' @importFrom stats pnorm
 #' @useDynLib OwenQ
 #' @note The results are theoretically exact when the number of degrees of freedom is even.
 #' When odd, the procedure resorts to the Owen T-function.
