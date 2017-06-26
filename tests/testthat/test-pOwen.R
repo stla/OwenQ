@@ -124,7 +124,7 @@ test_that("powen3", {
   R <- sqrt(nu)*(delta1 - delta2)/(t1-t2)
   diff <- 1 - OwenQ1(nu, t2, delta2, R) - OwenQ2(nu, t1, delta1, R)
   owen3 <- powen3(nu, t1, t2, delta1, delta2)
-  expect_true(diff == owen3)
+  expect_equal(diff, owen3, tolerance=1e-15)
   wolfram <- 0.809137482066635
   expect_equal(owen3, wolfram, tolerance=1e-9)
   #
@@ -143,7 +143,7 @@ test_that("powen3+powen4=1-P1", {
   owen3 <- powen3(nu, t1, t2, delta1, delta2)
   owen4 <- powen4(nu, t1, t2, delta1, delta2)
   P1 <- ptOwen(t1, nu, delta1)
-  expect_true(owen3+owen4 == 1-P1)
+  expect_equal(owen3+owen4, 1-P1, tolerance=1e-15)
   nu <- 5
   owen3 <- powen3(nu, t1, t2, delta1, delta2)
   owen4 <- powen4(nu, t1, t2, delta1, delta2)

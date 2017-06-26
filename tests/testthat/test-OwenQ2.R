@@ -40,7 +40,7 @@ test_that("OwenQ2 for delta=Inf", {
 })
 
 test_that("OwenQ2 for t=-Inf equals 0", {
-  expect_true(OwenQ2(5, -Inf, 2, 1) == 0)
+  expect_equal(OwenQ2(5, -Inf, 2, 1), 0, tolerance=1e-16)
   expect_true(OwenQ2(6, -Inf, 2, 1) == 0)
 })
 

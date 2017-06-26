@@ -16,7 +16,7 @@ test_that("OwenQ1 is correctly vectorized", {
 
 test_that("OwenQ1 for t=+Inf does not depend on delta", {
   expect_true(OwenQ1(5, Inf, 2, 2) == OwenQ1(5, Inf, 3, 2))
-  expect_true(OwenQ1(6, Inf, 2, 2) == OwenQ1(6, Inf, 3, 2))
+  expect_equal(OwenQ1(6, Inf, 2, 2), OwenQ1(6, Inf, 3, 2), tolerance=1e-16)
   # nu=2 => moment truncated normal
   expect_equal(OwenQ1(2, Inf, 1, 2), sqrt(2*pi)*(dnorm(0)-dnorm(2)), tolerance=1e-15)
   # nu >=1 => incomplete Gamma
