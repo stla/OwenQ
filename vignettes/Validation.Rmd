@@ -1,0 +1,511 @@
+---
+title: "Validation"
+author: "Stéphane Laurent"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Validation}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(collapse=TRUE)
+library(OwenQ)
+```
+
+# Owen $T$-function 
+
+The Owen $T$-function is implemented under the name `OwenT`. 
+This is a port of the function `owens_t` of the boost C++ library. 
+Some details about the C++ implementation are [available here](http://www.boost.org/doc/libs/1_61_0/libs/math/doc/html/math_toolkit/owens_t.html).
+
+Below we compare the results of `OwenT` to the six values given in Patefield's article, up to $14$ digits. We get the same results. 
+
+```{r}
+testData <- data.frame(
+  h = c(0.0625, 6.5, 7, 4.78125, 2, 1), 
+  a = c(0.25, 0.4375, 0.96875, 0.0625, 0.5, 0.9999975),
+  Tacc = c(3.8911930234701e-02, 2.0005773048508e-11,  6.3990627193899e-13, 1.0632974804687e-07, 8.6250779855215e-03, 6.6741808978229e-02),
+  OwenT = numeric(6)
+)
+for(i in 1:nrow(testData)){
+  testData$OwenT[i] <- OwenT(testData$h[i], testData$a[i])
+}
+print(testData, digits=14)
+```
+
+
+# Owen $Q$-functions 
+
+The two Owen $Q$-functions $Q_1$ and $Q_2$ are defined by:
+$$
+Q_1(\nu, t, \delta, R) = \frac{1}{\Gamma\left(\frac{\nu}{2}\right)2^{\frac12(\nu-2)}}
+\int_0^R \Phi\left(\frac{tx}{\sqrt{\nu}}-\delta\right)
+x^{\nu-1} e^{-\frac{x^2}{2}} \mathrm{d}x
+$$
+and
+$$
+Q_2(\nu, t, \delta, R) = \frac{1}{\Gamma\left(\frac{\nu}{2}\right)2^{\frac12(\nu-2)}}
+\int_R^\infty \Phi\left(\frac{tx}{\sqrt{\nu}}-\delta\right)
+x^{\nu-1} e^{-\frac{x^2}{2}} \mathrm{d}x.
+$$
+
+They are implemented in the `OwenQ` package under the respective names `OwenQ1` and `OwenQ2`, for integer values of $\nu$. 
+
+In Wolfram, these functions are not available, but we can evaluate them by numerical integration. 
+
+Below we compare two values of `OwenQ1` to the ones returned by Wolfram|Alpha:
+
+```{r}
+# wolfram: Integrate[(1+Erf[(3*x/Sqrt[3]-2)/Sqrt[2]])*x^(3-1)*Exp[-x^2/2],{x,0,5}]/2/Gamma[3/2]/2^((3-2)/2)
+OwenQ1(3, 3, 2, 5)
+```
+
+![](wolfram_OwenQ1.png)
+
+```{r}
+# wolfram: Integrate[(1+Erf[(3*x/Sqrt[1000]-2)/Sqrt[2]])*x^(1000-1)*Exp[-x^2/2],{x,0,30}]/2/Gamma[1000/2]/2^((1000-2)/2)
+OwenQ1(1000, 3, 2, 30)
+```
+
+![](wolfram_OwenQ1_1000.png)
+
+
+Below we compare two values of `OwenQ2` to the ones returned by Wolfram|Alpha:
+
+```{r}
+# wolfram: Integrate[(1+Erf[(3*x/Sqrt[3]-2)/Sqrt[2]])*x^(3-1)*Exp[-x^2/2],{x,5,Infinity}]/2/Gamma[3/2]/2^((3-2)/2)
+OwenQ2(3, 3, 2, 5)
+```
+
+![](wolfram_OwenQ2.png)
+
+```{r}
+# wolfram: Integrate[(1+Erf[(3*x/Sqrt[1000]-2)/Sqrt[2]])*x^(1000-1)*Exp[-x^2/2],{x,5,Infinity}]/2/Gamma[1000/2]/2^((1000-2)/2)
+OwenQ2(1000, 3, 2, 5)
+```
+
+![](wolfram_OwenQ2_1000.png)
+
+
+# Validation of `powen4` 
+
+As mentionned in the main vignette, the fourth Owen cumulative function $O_4$, implemented under the name `powen4`, can be used to evaluate the power of equivalence tests. 
+
+The `powerTOST` function below returns the power of the equivalence test for a so-called parallel design with equal variance, when considering the alternative hypothesis $H_1\colon\{-\Delta < \delta_0 < Delta \}$, where $\delta_0$ denotes the difference between the two means. 
+This function takes as arguments the significance level $\alpha$, the difference $\delta_0$ between the two means, the threshold $\Delta$, the common standard deviation $\sigma$ of the two samples, and the two sample sizes $n_1$ and $n_2$. 
+
+```{r}
+powerTOST <- function(alpha, delta0, Delta, sigma, n1, n2) {
+  se <- sqrt(1 / n1 + 1 / n2) * sigma
+  delta1 <- (delta0 + Delta) / se
+  delta2 <- (delta0 - Delta) / se
+  dof <- n1 + n2 - 2
+  q <- qt(1 - alpha, dof)
+  powen4(dof, q,-q, delta1, delta2)
+}
+```
+
+
+```{r echo=FALSE}
+PASS <-
+  structure(
+    list(
+      n1 = c(
+        10L,
+        15L,
+        20L,
+        25L,
+        30L,
+        10L,
+        15L,
+        20L,
+        25L,
+        30L,
+        10L,
+        15L,
+        20L,
+        25L,
+        30L,
+        10L,
+        15L,
+        20L,
+        25L,
+        30L,
+        10L,
+        15L,
+        20L,
+        25L,
+        30L,
+        10L,
+        15L,
+        20L,
+        25L,
+        30L,
+        10L,
+        15L,
+        20L,
+        25L,
+        30L,
+        10L,
+        15L,
+        20L,
+        25L,
+        30L,
+        10L,
+        15L,
+        20L,
+        25L,
+        30L,
+        10L,
+        15L,
+        20L,
+        25L,
+        30L,
+        10L,
+        15L,
+        20L,
+        25L,
+        30L,
+        10L,
+        15L,
+        20L,
+        25L,
+        30L
+      ),
+      n2 = c(
+        10L,
+        15L,
+        20L,
+        25L,
+        30L,
+        10L,
+        15L,
+        20L,
+        25L,
+        30L,
+        10L,
+        15L,
+        20L,
+        25L,
+        30L,
+        10L,
+        15L,
+        20L,
+        25L,
+        30L,
+        10L,
+        15L,
+        20L,
+        25L,
+        30L,
+        10L,
+        15L,
+        20L,
+        25L,
+        30L,
+        30L,
+        30L,
+        30L,
+        30L,
+        30L,
+        30L,
+        30L,
+        30L,
+        30L,
+        30L,
+        30L,
+        30L,
+        30L,
+        30L,
+        30L,
+        30L,
+        30L,
+        30L,
+        30L,
+        30L,
+        30L,
+        30L,
+        30L,
+        30L,
+        30L,
+        30L,
+        30L,
+        30L,
+        30L,
+        30L
+      ),
+      delta0 = c(
+        0,
+        0,
+        0,
+        0,
+        0,
+        0.1,
+        0.1,
+        0.1,
+        0.1,
+        0.1,
+        0.2,
+        0.2,
+        0.2,
+        0.2,
+        0.2,
+        0.3,
+        0.3,
+        0.3,
+        0.3,
+        0.3,
+        0.4,
+        0.4,
+        0.4,
+        0.4,
+        0.4,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0,
+        0,
+        0,
+        0,
+        0,
+        0.1,
+        0.1,
+        0.1,
+        0.1,
+        0.1,
+        0.2,
+        0.2,
+        0.2,
+        0.2,
+        0.2,
+        0.3,
+        0.3,
+        0.3,
+        0.3,
+        0.3,
+        0.4,
+        0.4,
+        0.4,
+        0.4,
+        0.4,
+        0.5,
+        0.5,
+        0.5,
+        0.5,
+        0.5
+      ),
+      power = c(
+        0.3909,
+        0.6954,
+        0.8558,
+        0.9343,
+        0.9709,
+        0.3827,
+        0.6784,
+        0.8366,
+        0.9178,
+        0.9589,
+        0.3591,
+        0.6295,
+        0.7807,
+        0.868,
+        0.9202,
+        0.3229,
+        0.5554,
+        0.6932,
+        0.7847,
+        0.8491,
+        0.2782,
+        0.4653,
+        0.5831,
+        0.6717,
+        0.7426,
+        0.2297,
+        0.3697,
+        0.4621,
+        0.5388,
+        0.606,
+        0.7037,
+        0.8576,
+        0.9232,
+        0.9545,
+        0.9709,
+        0.6865,
+        0.8385,
+        0.906,
+        0.94,
+        0.9589,
+        0.637,
+        0.7826,
+        0.8544,
+        0.895,
+        0.9202,
+        0.5619,
+        0.695,
+        0.7694,
+        0.8168,
+        0.8491,
+        0.4706,
+        0.5847,
+        0.6561,
+        0.7059,
+        0.7426,
+        0.3736,
+        0.4634,
+        0.5247,
+        0.5705,
+        0.606
+      )
+    ),
+    .Names = c("n1", "n2", "delta0", "power"),
+    row.names = c(NA, 60L),
+    class = "data.frame"
+  )
+```
+
+The table shown below contains $60$ results of power calculations with the PASS software.
+
+```{r, echo=FALSE}
+knitr::kable(PASS)
+```
+
+This table is stored in a dataframe named `PASS`.
+
+```{r}
+owen <- numeric(nrow(PASS))
+for (i in 1:nrow(PASS)) {
+  owen[i] <-
+    powerTOST(
+      alpha = 0.05,
+      delta0 = PASS$delta0[i],
+      Delta = 1,
+      sigma = 1,
+      n1 = PASS$n1[i],
+      n2 = PASS$n2[i]
+    )
+  
+}
+identical(round(owen, 4), PASS$power)
+```
+
+
+# Validation of `OwenQ1` 
+
+$$
+O_4(\nu, t_1, t_2, \delta_1, \delta_2) = 
+Q_1\left(\nu, t_2, \delta_2, \frac{\sqrt{\nu}(\delta_1-\delta_2)}{t_1-t_2}\right)
+- Q_1\left(\nu, t_1, \delta_1, \frac{\sqrt{\nu}(\delta_1-\delta_2)}{t_1-t_2}\right)
+$$
+
+```{r}
+powerTOST2 <- function(alpha, delta0, Delta, sigma, n1, n2) {
+  se <- sqrt(1 / n1 + 1 / n2) * sigma
+  delta1 <- (delta0 + Delta) / se
+  delta2 <- (delta0 - Delta) / se
+  dof <- n1 + n2 - 2
+  q <- qt(1 - alpha, dof)
+  R <- sqrt(dof)*(delta1 - delta2)/q/2
+  OwenQ1(dof, -q, delta2, R) - OwenQ1(dof, q, delta1, R)
+}
+```
+
+```{r}
+owen <- numeric(nrow(PASS))
+for (i in 1:nrow(PASS)) {
+  owen[i] <-
+    powerTOST2(
+      alpha = 0.05,
+      delta0 = PASS$delta0[i],
+      Delta = 1,
+      sigma = 1,
+      n1 = PASS$n1[i],
+      n2 = PASS$n2[i]
+    )
+  
+}
+identical(round(owen, 4), PASS$power)
+```
+
+## Validation of `powen1`, `powen2` and `powen3`
+
+$$
+O_1(\nu, t_1, t_2, \delta_1, \delta_2) + O_2(\nu, t_1, t_2, \delta_1, \delta_2) + 
+O_3(\nu, t_1, t_2, \delta_1, \delta_2) + O_4(\nu, t_1, t_2, \delta_1, \delta_2) = 1.
+$$
+
+```{r}
+f <- function(alpha, delta0, Delta, sigma, n1, n2) {
+  se <- sqrt(1 / n1 + 1 / n2) * sigma
+  delta1 <- (delta0 + Delta) / se
+  delta2 <- (delta0 - Delta) / se
+  dof <- n1 + n2 - 2
+  q <- qt(1 - alpha, dof)
+  powen1(dof, q,-q, delta1, delta2) + powen2(dof, q,-q, delta1, delta2) + 
+    powen3(dof, q,-q, delta1, delta2) + powen4(dof, q,-q, delta1, delta2)
+}
+```
+
+```{r}
+test <- numeric(nrow(PASS))
+for (i in 1:nrow(PASS)) {
+  test[i] <-
+    f(
+      alpha = 0.05,
+      delta0 = PASS$delta0[i],
+      Delta = 1,
+      sigma = 1,
+      n1 = PASS$n1[i],
+      n2 = PASS$n2[i]
+    )
+}
+all(abs(test-1) < 1e-15)
+```
+
+## Validation of `OwenQ2`
+
+$$
+O_2(\nu, t_1, t_2, \delta_1, \delta_2) = 
+Q_2\left(\nu, t_1, \delta_1, \frac{\sqrt{\nu}(\delta_1-\delta_2)}{t_1-t_2}\right)
+- Q_2\left(\nu, t_2, \delta_2, \frac{\sqrt{\nu}(\delta_1-\delta_2)}{t_1-t_2}\right)
+$$
+
+
+```{r}
+g <- function(alpha, delta0, Delta, sigma, n1, n2) {
+  se <- sqrt(1/n1 + 1/n2) * sigma
+  delta1 <- (delta0 + Delta) / se
+  delta2 <- (delta0 - Delta) / se
+  dof <- n1 + n2 - 2
+  q <- qt(1 - alpha, dof)
+  R <- sqrt(dof)*(delta1 - delta2)/q/2
+  x <- OwenQ2(dof, q, delta1, R) - OwenQ2(dof, -q, delta2, R)
+  y <- powen2(dof, q, -q, delta1, delta2)
+  x - y
+}
+```
+
+```{r}
+test <- numeric(nrow(PASS))
+for (i in 1:nrow(PASS)) {
+  test[i] <-
+    g(
+      alpha = 0.05,
+      delta0 = PASS$delta0[i],
+      Delta = 1,
+      sigma = 1,
+      n1 = PASS$n1[i],
+      n2 = PASS$n2[i]
+    )
+}
+all(abs(test) < 1e-15)
+```
+
+
+
+# References 
+
+   - M. Patefield. *Fast and Accurate Calculation of Owen's T Function.* Journal of Statistical Software  5 (5), 1--25, 2000 
