@@ -62,7 +62,7 @@ test_that("Comparison with PASS", {
                          n1=PASS$n1[i], n2=PASS$n2[i])
 
   }
-  identical(round(owen,4), PASS$power)
+  expect_true(identical(round(owen,4), PASS$power))
 })
 
 test_that("powen4 - infinite nu", {
