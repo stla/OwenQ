@@ -2,7 +2,9 @@
 title: "Validation"
 author: "Stéphane Laurent"
 date: "`r Sys.Date()`"
-output: rmarkdown::html_vignette
+output: 
+  rmarkdown::html_vignette:
+    toc: true
 vignette: >
   %\VignetteIndexEntry{Validation}
   %\VignetteEngine{knitr::rmarkdown}
@@ -14,19 +16,26 @@ knitr::opts_chunk$set(collapse=TRUE)
 library(OwenQ)
 ```
 
-# Owen $T$-function 
+# Purpose 
+
+The purpose of this vignette is to check that the functions of the `OwenQ` package return correct values. 
+To do so, we will compare the values we get to the ones obtained by other softwares.
+
+
+# Owen $T$-function (`OwenT`)
 
 The Owen $T$-function is implemented under the name `OwenT`. 
 This is a port of the function `owens_t` of the boost C++ library. 
 Some details about the C++ implementation are [available here](http://www.boost.org/doc/libs/1_61_0/libs/math/doc/html/math_toolkit/owens_t.html).
 
-Below we compare the results of `OwenT` to the six values given in Patefield's article, up to $14$ digits. We get the same results. 
+Below we compare the results of `OwenT` to the six values given in Patefield's article, up to $14$ digits. We have also checked that Wolfram|Alpha gives these values. We get the same results with `OwenT`.
 
 ```{r}
 testData <- data.frame(
   h = c(0.0625, 6.5, 7, 4.78125, 2, 1), 
   a = c(0.25, 0.4375, 0.96875, 0.0625, 0.5, 0.9999975),
-  Tacc = c(3.8911930234701e-02, 2.0005773048508e-11,  6.3990627193899e-13, 1.0632974804687e-07, 8.6250779855215e-03, 6.6741808978229e-02),
+  Patefield = c(3.8911930234701e-02, 2.0005773048508e-11, 6.3990627193899e-13, 1.0632974804687e-07, 8.6250779855215e-03, 6.6741808978229e-02),
+  Wolfram = c(0.038911930234701, 2.0005773048508e-11, 6.3990627193899e-13, 1.0632974804687e-07, 0.0086250779855215, 0.066741808978229),
   OwenT = numeric(6)
 )
 for(i in 1:nrow(testData)){
@@ -36,7 +45,7 @@ print(testData, digits=14)
 ```
 
 
-# Owen $Q$-functions 
+# Owen $Q$-functions: comparing a couple of values
 
 The two Owen $Q$-functions $Q_1$ and $Q_2$ are defined by:
 $$
@@ -51,7 +60,7 @@ Q_2(\nu, t, \delta, R) = \frac{1}{\Gamma\left(\frac{\nu}{2}\right)2^{\frac12(\nu
 x^{\nu-1} e^{-\frac{x^2}{2}} \mathrm{d}x.
 $$
 
-They are implemented in the `OwenQ` package under the respective names `OwenQ1` and `OwenQ2`, for integer values of $\nu$. 
+They are implemented in the `OwenQ` package under the respective names `OwenQ1` and `OwenQ2`, for integer values of $\nu$, following Owen's algorithm (1965). 
 
 In Wolfram, these functions are not available, but we can evaluate them by numerical integration. 
 
@@ -89,16 +98,17 @@ OwenQ2(1000, 3, 2, 5)
 ![](wolfram_OwenQ2_1000.png)
 
 
-# Validation of `powen4` 
+# Fourth Owen cumulative function $O_4$ 
 
 As mentionned in the main vignette, the fourth Owen cumulative function $O_4$, implemented under the name `powen4`, can be used to evaluate the power of equivalence tests. 
+This is actually the main application.
 
-The `powerTOST` function below returns the power of the equivalence test for a so-called parallel design with equal variance, when considering the alternative hypothesis $H_1\colon\{-\Delta < \delta_0 < Delta \}$, where $\delta_0$ denotes the difference between the two means. 
+The `powerTOST` function below returns the power of the equivalence test for a so-called parallel design with equal variances, when considering the alternative hypothesis $H_1\colon\{-\Delta < \delta_0 < \Delta \}$, where $\delta_0$ denotes the difference between the two means. 
 This function takes as arguments the significance level $\alpha$, the difference $\delta_0$ between the two means, the threshold $\Delta$, the common standard deviation $\sigma$ of the two samples, and the two sample sizes $n_1$ and $n_2$. 
 
 ```{r}
 powerTOST <- function(alpha, delta0, Delta, sigma, n1, n2) {
-  se <- sqrt(1 / n1 + 1 / n2) * sigma
+  se <- sqrt(1/n1 + 1/n2) * sigma
   delta1 <- (delta0 + Delta) / se
   delta2 <- (delta0 - Delta) / se
   dof <- n1 + n2 - 2
@@ -367,18 +377,20 @@ PASS <-
   )
 ```
 
-The table shown below contains $60$ results of power calculations with the PASS software.
+The table shown below contains $60$ results of power calculations with the PASS software (version ?XXXXX?). 
+PASS does not provide more than four digits. 
 
 ```{r, echo=FALSE}
 knitr::kable(PASS)
 ```
 
-This table is stored in a dataframe named `PASS`.
+This table is stored in a dataframe named `PASS`. We compare these values to the ones 
+obtained by our `powerTOST` function. Our values rounded to four digits are exactly the same as the ones provided by PASS.
 
 ```{r}
-owen <- numeric(nrow(PASS))
+power <- numeric(nrow(PASS))
 for (i in 1:nrow(PASS)) {
-  owen[i] <-
+  power[i] <-
     powerTOST(
       alpha = 0.05,
       delta0 = PASS$delta0[i],
@@ -389,57 +401,24 @@ for (i in 1:nrow(PASS)) {
     )
   
 }
-identical(round(owen, 4), PASS$power)
+identical(round(power, 4), PASS$power)
 ```
 
 
-# Validation of `OwenQ1` 
+# Other Owen cumulative functions
 
-$$
-O_4(\nu, t_1, t_2, \delta_1, \delta_2) = 
-Q_1\left(\nu, t_2, \delta_2, \frac{\sqrt{\nu}(\delta_1-\delta_2)}{t_1-t_2}\right)
-- Q_1\left(\nu, t_1, \delta_1, \frac{\sqrt{\nu}(\delta_1-\delta_2)}{t_1-t_2}\right)
-$$
-
-```{r}
-powerTOST2 <- function(alpha, delta0, Delta, sigma, n1, n2) {
-  se <- sqrt(1 / n1 + 1 / n2) * sigma
-  delta1 <- (delta0 + Delta) / se
-  delta2 <- (delta0 - Delta) / se
-  dof <- n1 + n2 - 2
-  q <- qt(1 - alpha, dof)
-  R <- sqrt(dof)*(delta1 - delta2)/q/2
-  OwenQ1(dof, -q, delta2, R) - OwenQ1(dof, q, delta1, R)
-}
-```
-
-```{r}
-owen <- numeric(nrow(PASS))
-for (i in 1:nrow(PASS)) {
-  owen[i] <-
-    powerTOST2(
-      alpha = 0.05,
-      delta0 = PASS$delta0[i],
-      Delta = 1,
-      sigma = 1,
-      n1 = PASS$n1[i],
-      n2 = PASS$n2[i]
-    )
-  
-}
-identical(round(owen, 4), PASS$power)
-```
-
-## Validation of `powen1`, `powen2` and `powen3`
-
+We previously validate the `powen4` function. 
+Now we test the functions `powen1`, `powen3` and `powen3` by checking the equality
 $$
 O_1(\nu, t_1, t_2, \delta_1, \delta_2) + O_2(\nu, t_1, t_2, \delta_1, \delta_2) + 
 O_3(\nu, t_1, t_2, \delta_1, \delta_2) + O_4(\nu, t_1, t_2, \delta_1, \delta_2) = 1.
 $$
 
+We check this equality for the $60$ scenarios of the previous power calculations.
+
 ```{r}
 f <- function(alpha, delta0, Delta, sigma, n1, n2) {
-  se <- sqrt(1 / n1 + 1 / n2) * sigma
+  se <- sqrt(1/n1 + 1/n2) * sigma
   delta1 <- (delta0 + Delta) / se
   delta2 <- (delta0 - Delta) / se
   dof <- n1 + n2 - 2
@@ -465,13 +444,64 @@ for (i in 1:nrow(PASS)) {
 all(abs(test-1) < 1e-15)
 ```
 
-## Validation of `OwenQ2`
+We find that each of the $60$ sums is equal to $1$ up to a tolerance of $15$ digits.
 
+
+# First Owen $Q$-function $Q_1$ (`OwenQ1`) 
+
+We previously validate the fourth Owen cumulative function $O_4$. 
+Then, to test `OwenQ1`, we use the following equality:
+
+$$
+O_4(\nu, t_1, t_2, \delta_1, \delta_2) = 
+Q_1\left(\nu, t_2, \delta_2, \frac{\sqrt{\nu}(\delta_1-\delta_2)}{t_1-t_2}\right)
+- Q_1\left(\nu, t_1, \delta_1, \frac{\sqrt{\nu}(\delta_1-\delta_2)}{t_1-t_2}\right)
+$$
+
+Instead of comparing the values of the power calculations returned by PASS with the ones given by `powen4`, we use `OwenQ1` to evaluate the power.
+
+```{r}
+powerTOST2 <- function(alpha, delta0, Delta, sigma, n1, n2) {
+  se <- sqrt(1/n1 + 1/n2) * sigma
+  delta1 <- (delta0 + Delta) / se
+  delta2 <- (delta0 - Delta) / se
+  dof <- n1 + n2 - 2
+  q <- qt(1 - alpha, dof)
+  R <- sqrt(dof)*(delta1 - delta2)/q/2
+  OwenQ1(dof, -q, delta2, R) - OwenQ1(dof, q, delta1, R)
+}
+```
+
+```{r}
+power <- numeric(nrow(PASS))
+for (i in 1:nrow(PASS)) {
+  power[i] <-
+    powerTOST2(
+      alpha = 0.05,
+      delta0 = PASS$delta0[i],
+      Delta = 1,
+      sigma = 1,
+      n1 = PASS$n1[i],
+      n2 = PASS$n2[i]
+    )
+}
+identical(round(power, 4), PASS$power)
+```
+
+The values rounded to $4$ digits are the same as the ones provided by PASS.
+
+
+# Second Owen $Q$-function $Q_2$ (`OwenQ2`)
+
+We previously validate `powen2`. 
+Now we test the `OwenQ2` function by checking the equality
 $$
 O_2(\nu, t_1, t_2, \delta_1, \delta_2) = 
 Q_2\left(\nu, t_1, \delta_1, \frac{\sqrt{\nu}(\delta_1-\delta_2)}{t_1-t_2}\right)
-- Q_2\left(\nu, t_2, \delta_2, \frac{\sqrt{\nu}(\delta_1-\delta_2)}{t_1-t_2}\right)
+- Q_2\left(\nu, t_2, \delta_2, \frac{\sqrt{\nu}(\delta_1-\delta_2)}{t_1-t_2}\right).
 $$
+
+We check this equality for the $60$ scenarios of the previous power calculations.
 
 
 ```{r}
@@ -504,8 +534,20 @@ for (i in 1:nrow(PASS)) {
 all(abs(test) < 1e-15)
 ```
 
+We find that each of the $60$ equalities hold true up to a tolerance of $15$ digits.
+
+# Limitations 
+
+As mentionned in the other vignette, the results are not reliable for large values of the number of degrees of freedom $\nu$, like $3000$. 
+
+$\implies$ comparison with PASS with large $n_1$, $n_2$ ?..
+
 
 
 # References 
 
-   - M. Patefield. *Fast and Accurate Calculation of Owen's T Function.* Journal of Statistical Software  5 (5), 1--25, 2000 
+   - Patefield, M. (2000). *Fast and Accurate Calculation of Owen's T Function.* Journal of Statistical Software 5 (5), 1-25.
+
+   - Owen, D. B. (1965). *A special case of a bivariate noncentral t-distribution.* Biometrika 52, 437-446.
+
+   - Wolfram Alpha LLC. 2017. Wolfram|Alpha. (access July 17, 2017).
