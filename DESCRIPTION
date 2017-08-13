@@ -11,7 +11,9 @@ License: GPL-3 + file LICENSE
 Imports: Rcpp (>= 0.12.10),
     stats
 LinkingTo: Rcpp,
-    BH
+    BH, 
+    RcppNumerical, 
+    RcppEigen
 Suggests: testthat,
     knitr,
     rmarkdown,
