@@ -1,10 +1,11 @@
 ---
-title: "Validation"
+title: "Validation of the OwenQ package"
 author: "Stéphane Laurent"
 date: "`r Sys.Date()`"
 output: 
   rmarkdown::html_vignette:
     toc: true
+    number_sections: true
 vignette: >
   %\VignetteIndexEntry{Validation}
   %\VignetteEngine{knitr::rmarkdown}
@@ -18,8 +19,10 @@ library(OwenQ)
 
 # Purpose 
 
-The purpose of this vignette is to check that the functions of the `OwenQ` package return correct values. 
-To do so, we will compare the values we get to the ones obtained by other softwares.
+The purpose of this vignette is to assess the correctness of the functions of the `OwenQ`. 
+
+As said in the main vignette, the fourth Owen cumulative function $O_4$, implemented under the name `powen4` allows to evaluate the power of equivalence tests. 
+This is actually the main application of the `OwenQ` package and we will particularly focus on this situation.
 
 
 # Owen $T$-function (`OwenT`)
@@ -28,14 +31,13 @@ The Owen $T$-function is implemented under the name `OwenT`.
 This is a port of the function `owens_t` of the boost C++ library. 
 Some details about the C++ implementation are [available here](http://www.boost.org/doc/libs/1_61_0/libs/math/doc/html/math_toolkit/owens_t.html).
 
-Below we compare the results of `OwenT` to the six values given in Patefield's article, up to $14$ digits. We have also checked that Wolfram|Alpha gives these values. We get the same results with `OwenT`.
+Below we compare the results of `OwenT` to the six values given in Patefield's article, up to $14$ digits. We have also checked that Wolfram|Alpha gives these values. 
 
 ```{r}
 testData <- data.frame(
   h = c(0.0625, 6.5, 7, 4.78125, 2, 1), 
   a = c(0.25, 0.4375, 0.96875, 0.0625, 0.5, 0.9999975),
   Patefield = c(3.8911930234701e-02, 2.0005773048508e-11, 6.3990627193899e-13, 1.0632974804687e-07, 8.6250779855215e-03, 6.6741808978229e-02),
-  Wolfram = c(0.038911930234701, 2.0005773048508e-11, 6.3990627193899e-13, 1.0632974804687e-07, 0.0086250779855215, 0.066741808978229),
   OwenT = numeric(6)
 )
 for(i in 1:nrow(testData)){
@@ -43,6 +45,8 @@ for(i in 1:nrow(testData)){
 }
 print(testData, digits=14)
 ```
+
+We get the same results with `OwenT`.
 
 
 # Owen $Q$-functions: comparing a couple of values
@@ -97,6 +101,8 @@ OwenQ2(1000, 3, 2, 5)
 
 ![](wolfram_OwenQ2_1000.png)
 
+For each example, we get the same values as Wolfram|Alpha. 
+
 
 # Fourth Owen cumulative function $O_4$ 
 
@@ -113,7 +119,7 @@ powerTOST <- function(alpha, delta0, Delta, sigma, n1, n2) {
   delta2 <- (delta0 - Delta) / se
   dof <- n1 + n2 - 2
   q <- qt(1 - alpha, dof)
-  powen4(dof, q,-q, delta1, delta2)
+  powen4(dof, q, -q, delta1, delta2)
 }
 ```
 
@@ -375,27 +381,82 @@ PASS <-
     row.names = c(NA, 60L),
     class = "data.frame"
   )
+PASS <- structure(list(alpha = c(0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 
+0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 
+0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 
+0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 
+0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 
+0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 
+0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 
+0.01, 0.01, 0.01, 0.01, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 0.05, 
+0.05, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 0.01, 
+0.05, 0.05, 0.01, 0.01, 0.05, 0.05), delta0 = c(0, 0, 0, 0, 0, 
+0.1, 0.1, 0.1, 0.1, 0.1, 0.2, 0.2, 0.2, 0.2, 0.2, 0.3, 0.3, 0.3, 
+0.3, 0.3, 0.4, 0.4, 0.4, 0.4, 0.4, 0.5, 0.5, 0.5, 0.5, 0.5, 0, 
+0, 0, 0, 0, 0.1, 0.1, 0.1, 0.1, 0.1, 0.2, 0.2, 0.2, 0.2, 0.2, 
+0.3, 0.3, 0.3, 0.3, 0.3, 0.4, 0.4, 0.4, 0.4, 0.4, 0.5, 0.5, 0.5, 
+0.5, 0.5, 0, 1, 2, 2.5, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 
+1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 1, 2, 3, 0, 4, 0, 4, 0, 4, 
+0, 4), Delta = c(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 
+1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 
+1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 
+1, 1, 1, 3, 3, 3, 3, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 
+4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 4, 5, 5, 5, 5, 5, 5, 5, 
+5), sigma = c(1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 
+1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 
+1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 
+1, 1, 4, 4, 4, 4, 4, 4, 4, 4, 7, 7, 7, 7, 7, 7, 7, 7, 4, 4, 4, 
+4, 8, 8, 8, 8, 10, 10, 10, 10, 14, 14, 14, 14, 35, 35, 30, 50, 
+6, 6, 9, 9), n1 = c(10, 15, 20, 25, 30, 10, 15, 20, 25, 30, 10, 
+15, 20, 25, 30, 10, 15, 20, 25, 30, 10, 15, 20, 25, 30, 10, 15, 
+20, 25, 30, 10, 15, 20, 25, 30, 10, 15, 20, 25, 30, 10, 15, 20, 
+25, 30, 10, 15, 20, 25, 30, 10, 15, 20, 25, 30, 10, 15, 20, 25, 
+30, 50, 50, 50, 50, 10, 10, 10, 10, 100, 100, 100, 100, 100, 
+100, 100, 100, 185, 185, 185, 185, 185, 185, 185, 185, 250, 250, 
+250, 250, 500, 500, 500, 500, 600, 600, 600, 600, 1190, 1190, 
+1190, 1190), n2 = c(10, 15, 20, 25, 30, 10, 15, 20, 25, 30, 10, 
+15, 20, 25, 30, 10, 15, 20, 25, 30, 10, 15, 20, 25, 30, 10, 15, 
+20, 25, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 
+30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 30, 
+30, 50, 50, 50, 50, 90, 90, 90, 90, 100, 100, 100, 100, 100, 
+100, 100, 100, 10, 10, 10, 10, 100, 100, 100, 100, 250, 250, 
+250, 250, 500, 500, 500, 500, 600, 600, 600, 600, 10, 10, 10, 
+10), power = c(0.3909, 0.6954, 0.8558, 0.9343, 0.9709, 0.3827, 
+0.6784, 0.8366, 0.9178, 0.9589, 0.3591, 0.6295, 0.7807, 0.868, 
+0.9202, 0.3229, 0.5554, 0.6932, 0.7847, 0.8491, 0.2782, 0.4653, 
+0.5831, 0.6717, 0.7426, 0.2297, 0.3697, 0.4621, 0.5388, 0.606, 
+0.7037, 0.8576, 0.9232, 0.9545, 0.9709, 0.6865, 0.8385, 0.906, 
+0.94, 0.9589, 0.637, 0.7826, 0.8544, 0.895, 0.9202, 0.5619, 0.695, 
+0.7694, 0.8168, 0.8491, 0.4706, 0.5847, 0.6561, 0.7059, 0.7426, 
+0.3736, 0.4634, 0.5247, 0.5705, 0.606, 0.9624, 0.7985, 0.3433, 
+0.1529, 0.8179, 0.7035, 0.436, 0.1839, 0.9828, 0.9151, 0.6438, 
+0.2617, 0.9083, 0.7492, 0.3744, 0.0929, 0.8457, 0.7303, 0.4546, 
+0.19, 0.9824, 0.9142, 0.6423, 0.261, 0.9671, 0.8452, 0.4616, 
+0.1129, 0.9711, 0.8543, 0.4718, 0.1154, 0.1155, 0.0166, 0.7851, 
+0.0264, 0.2319, 0.0274, 0.0826, 0.0311)), .Names = c("alpha", 
+"delta0", "Delta", "sigma", "n1", "n2", "power"), row.names = c(NA, 
+-100L), class = "data.frame")
 ```
 
-The table shown below contains $60$ results of power calculations with the PASS software (version ?XXXXX?). 
+The table shown below contains $100$ results of power calculations with the PASS software (version ?XXXXX?), for a total sample size $n_1+n_2$ going from $20$ to $1200$. 
 PASS does not provide more than four digits. 
 
 ```{r, echo=FALSE}
 knitr::kable(PASS)
 ```
 
-This table is stored in a dataframe named `PASS`. We compare these values to the ones 
-obtained by our `powerTOST` function. Our values rounded to four digits are exactly the same as the ones provided by PASS.
+This table is stored in a dataframe named `PASS`. 
+We compare these values to the ones obtained by our `powerTOST` function:  
 
 ```{r}
 power <- numeric(nrow(PASS))
 for (i in 1:nrow(PASS)) {
   power[i] <-
     powerTOST(
-      alpha = 0.05,
+      alpha = PASS$alpha[i],
       delta0 = PASS$delta0[i],
-      Delta = 1,
-      sigma = 1,
+      Delta = PASS$Delta[i],
+      sigma = PASS$sigma[i],
       n1 = PASS$n1[i],
       n2 = PASS$n2[i]
     )
@@ -404,17 +465,150 @@ for (i in 1:nrow(PASS)) {
 identical(round(power, 4), PASS$power)
 ```
 
+Our values rounded to four digits are exactly the same as the ones provided by PASS.
+
+
+## Comparison with numerical integration 
+
+The `ipowen4` internal function of the `OwenQ` package evaluates the fourth Owen cumulative function $O_4$ by a powerful numerical integration implemented in C++. 
+Thus we have two completely different implementations of $O_4$. 
+The `ipowerTOST` function below is obtained by replacing `powen4` with `ipowen4` in `powerTOST`. We will compare the results of `powerTOST` with the ones of `ipowerTOST`.
+
+
+```{r}
+ipowerTOST <- function(alpha, delta0, Delta, sigma, n1, n2) {
+  se <- sqrt(1/n1 + 1/n2) * sigma
+  delta1 <- (delta0 + Delta) / se
+  delta2 <- (delta0 - Delta) / se
+  dof <- n1 + n2 - 2
+  q <- qt(1 - alpha, dof)
+  OwenQ:::ipowen4(dof, q, -q, delta1, delta2)
+}
+```
+
+### Failures of `powen4`
+
+- For $n_1=n_2=1000$, $\alpha=0.05$, $\delta=0$, $\Delta=5$, the `powen4` function abnormally takes negative values:
+
+```{r, echo=FALSE, fig.width=8, fig.height=4}
+par(mar=c(4,4,0.4,0.4))
+layout(t(c(1,2)))
+sigma <- seq(65,69,len=100)
+n1 <- 1000; n2 <- 1000
+plot(sigma, powerTOST(0.05, 0, 5, sigma, n1, n2), type="l", lwd=2, 
+     xlab=expression(sigma), ylab="power")
+y <- sapply(sigma, function(sigma) ipowerTOST(0.05, 0, 5, sigma, n1, n2))
+lines(sigma, y, col="blue", lwd=2)
+abline(h=0, col="red", lty=2)
+legend("topright", c("powen4", "ipowen4"), lty=c(1,1), col=c("black", "blue"))
+sigma <- seq(15,69,len=100)
+plot(sigma, powerTOST(0.05, 0, 5, sigma, n1, n2), type="l", lwd=2, 
+     xlab=expression(sigma), ylab="power")
+y <- sapply(sigma, function(sigma) ipowerTOST(0.05, 0, 5, sigma, n1, n2))
+lines(sigma, y, col="blue", lwd=2)
+abline(h=0, col="red", lty=2)
+legend("topright", c("powen4", "ipowen4"), lty=c(1,1), col=c("black", "blue"))
+```
+
+The discrepancy between `powen4` and `ipowen4` occurs only for $\sigma > 65$. 
+
+- For $n_1=n_2=720$, $\alpha=0.05$, $\delta=0$, $\Delta=5$, we observe a discrepancy between `powen4` and `ipowen4`: 
+
+```{r, echo=FALSE, fig.width=4, fig.height=4}
+par(mar=c(4,4,0.4,0.4))
+n1 <- n2 <- 720
+sigma <- seq(56,57,len=100)
+plot(sigma, powerTOST(0.05, 0, 5, sigma, n1, n2), type="l", lwd=2, 
+     xlab=expression(sigma), ylab="power")
+y <- sapply(sigma, function(sigma) ipowerTOST(0.05, 0, 5, sigma, n1, n2))
+lines(sigma, y, col="blue", lwd=2)
+legend("topright", c("powen4", "ipowen4"), lty=c(1,1), col=c("black", "blue"))
+```
+
+The irregularity of `powen4` suggests that it returns wrong values.
+
+- For $n_1=n_2=700$, $\alpha=0.01$, $\delta=0$, $\Delta=5$, we still observe a small discrepancy between `powen4` and `ipowen4` and an irregularity of `powen4` (on the second figure below):
+
+```{r, echo=FALSE, fig.width=8, fig.height=4}
+par(mar=c(4, 4, 0.2, 0.2))
+layout(t(c(1,2)))
+n1 <- n2 <- 700
+sigma <- seq(35,45,len=100)
+plot(sigma, powerTOST(0.01, 1, 5, sigma, n1, n2), type="l", lwd=2, 
+     xlab=expression(sigma), ylab="power")
+y <- sapply(sigma, function(sigma) ipowerTOST(0.01, 1, 5, sigma, n1, n2))
+lines(sigma, y, col="blue", lwd=2)
+legend("topright", c("powen4", "ipowen4"), lty=c(1,1), col=c("black", "blue"))
+n1 <- n2 <- 700
+sigma <- seq(38.5,39,len=100)
+plot(sigma, powerTOST(0.01, 1, 5, sigma, n1, n2), type="l", lwd=2, 
+     xlab=expression(sigma), ylab="power")
+y <- sapply(sigma, function(sigma) ipowerTOST(0.01, 1, 5, sigma, n1, n2))
+lines(sigma, y, col="blue", lwd=2)
+legend("topright", c("powen4", "ipowen4"), lty=c(1,1), col=c("black", "blue"))
+```
+
+- For $n_1 = n_2 = 600$, $\alpha=0.005$, $\delta=0$, $\Delta=5$, we do not observe any discrepancy between `powen4` and `ipowen4`: 
+
+```{r, echo=FALSE, fig.width=4, fig.height=4}
+par(mar=c(4, 4, 0.4, 0.2))
+n1 <- n2 <- 600
+sigma <- seq(30,36,len=100)
+plot(sigma, powerTOST(0.005, 0, 5, sigma, n1, n2), type="l", lwd=2, xlab=expression(sigma), ylab="power")
+y <- sapply(sigma, function(sigma) ipowerTOST(0.005, 0, 5, sigma, n1, n2))
+lines(sigma, y, pch=19, col="blue", lwd=2)
+legend("topright", c("powen4", "ipowen4"), lty=c(1,1), col=c("black", "blue"))
+```
+
+### Comparisons for $n_1+n_2 \leq 1200$
+
+Below we compare the results returned by `powerTOST` to the ones returned by `ipowerTOST` for the parameters given in the `PASS` dataset.
+
+```{r}
+power <- ipower <- numeric(nrow(PASS))
+for (i in 1:nrow(PASS)) {
+  power[i] <-
+    powerTOST(
+      alpha = PASS$alpha[i],
+      delta0 = PASS$delta0[i],
+      Delta = PASS$Delta[i],
+      sigma = PASS$sigma[i],
+      n1 = PASS$n1[i],
+      n2 = PASS$n2[i]
+    )
+  ipower[i] <-
+    ipowerTOST(
+      alpha = PASS$alpha[i],
+      delta0 = PASS$delta0[i],
+      Delta = PASS$Delta[i],
+      sigma = PASS$sigma[i],
+      n1 = PASS$n1[i],
+      n2 = PASS$n2[i]
+    )
+}
+identical(round(power, 10), round(ipower, 10))
+```
+
+Results are the same up to $10$ digits. 
+
+## Conclusion 
+
+- The `powen4` function seems to return correct values for $\nu \leq 1200$. 
+
+- In any case, we recommend to compare the result of `powen4` with the one of `ipowen4`. 
+
 
 # Other Owen cumulative functions
 
-We previously validate the `powen4` function. 
-Now we test the functions `powen1`, `powen3` and `powen3` by checking the equality
+We previously validate the `powen4` function for the $100$ scenarios of the dataset `PASS`. 
+
+Now we test the functions `powen1`, `powen2` and `powen3` by checking the equality
 $$
 O_1(\nu, t_1, t_2, \delta_1, \delta_2) + O_2(\nu, t_1, t_2, \delta_1, \delta_2) + 
 O_3(\nu, t_1, t_2, \delta_1, \delta_2) + O_4(\nu, t_1, t_2, \delta_1, \delta_2) = 1.
 $$
 
-We check this equality for the $60$ scenarios of the previous power calculations.
+We check this equality for the $100$ scenarios of the dataset `PASS`.
 
 ```{r}
 f <- function(alpha, delta0, Delta, sigma, n1, n2) {
@@ -426,31 +620,28 @@ f <- function(alpha, delta0, Delta, sigma, n1, n2) {
   powen1(dof, q,-q, delta1, delta2) + powen2(dof, q,-q, delta1, delta2) + 
     powen3(dof, q,-q, delta1, delta2) + powen4(dof, q,-q, delta1, delta2)
 }
-```
-
-```{r}
 test <- numeric(nrow(PASS))
 for (i in 1:nrow(PASS)) {
   test[i] <-
     f(
-      alpha = 0.05,
+      alpha = PASS$alpha[i],
       delta0 = PASS$delta0[i],
-      Delta = 1,
-      sigma = 1,
+      Delta = PASS$Delta[i],
+      sigma = PASS$sigma[i],
       n1 = PASS$n1[i],
       n2 = PASS$n2[i]
     )
 }
-all(abs(test-1) < 1e-15)
+all(abs(test-1) < 1e-14)
 ```
 
-We find that each of the $60$ sums is equal to $1$ up to a tolerance of $15$ digits.
+We find that each of the $100$ sums is equal to $1$ up to a tolerance of $14$ digits.
 
 
 # First Owen $Q$-function $Q_1$ (`OwenQ1`) 
 
-We previously validate the fourth Owen cumulative function $O_4$. 
-Then, to test `OwenQ1`, we use the following equality:
+We previously validate the `powen4` function (implementation of the fourth Owen cumulative function $O_4$) for the $100$ scenarios of the dataset `PASS`.  
+Now, to test `OwenQ1`, we will use the following equality:
 
 $$
 O_4(\nu, t_1, t_2, \delta_1, \delta_2) = 
@@ -470,9 +661,6 @@ powerTOST2 <- function(alpha, delta0, Delta, sigma, n1, n2) {
   R <- sqrt(dof)*(delta1 - delta2)/q/2
   OwenQ1(dof, -q, delta2, R) - OwenQ1(dof, q, delta1, R)
 }
-```
-
-```{r}
 power <- numeric(nrow(PASS))
 for (i in 1:nrow(PASS)) {
   power[i] <-
@@ -493,7 +681,7 @@ The values rounded to $4$ digits are the same as the ones provided by PASS.
 
 # Second Owen $Q$-function $Q_2$ (`OwenQ2`)
 
-We previously validate `powen2`. 
+We previously validate `powen2` for the $100$ scenarios of the dataset `PASS`. 
 Now we test the `OwenQ2` function by checking the equality
 $$
 O_2(\nu, t_1, t_2, \delta_1, \delta_2) = 
@@ -501,8 +689,7 @@ Q_2\left(\nu, t_1, \delta_1, \frac{\sqrt{\nu}(\delta_1-\delta_2)}{t_1-t_2}\right
 - Q_2\left(\nu, t_2, \delta_2, \frac{\sqrt{\nu}(\delta_1-\delta_2)}{t_1-t_2}\right).
 $$
 
-We check this equality for the $60$ scenarios of the previous power calculations.
-
+We check this equality for the $100$ scenarios of the dataset `PASS`.
 
 ```{r}
 g <- function(alpha, delta0, Delta, sigma, n1, n2) {
@@ -516,17 +703,14 @@ g <- function(alpha, delta0, Delta, sigma, n1, n2) {
   y <- powen2(dof, q, -q, delta1, delta2)
   x - y
 }
-```
-
-```{r}
 test <- numeric(nrow(PASS))
 for (i in 1:nrow(PASS)) {
   test[i] <-
     g(
-      alpha = 0.05,
+      alpha = PASS$alpha[i],
       delta0 = PASS$delta0[i],
-      Delta = 1,
-      sigma = 1,
+      Delta = PASS$Delta[i],
+      sigma = PASS$sigma[i],
       n1 = PASS$n1[i],
       n2 = PASS$n2[i]
     )
@@ -534,14 +718,45 @@ for (i in 1:nrow(PASS)) {
 all(abs(test) < 1e-15)
 ```
 
-We find that each of the $60$ equalities hold true up to a tolerance of $15$ digits.
+We find that each of the $100$ equalities hold true up to a tolerance of $15$ digits.
 
-# Limitations 
+# Student cumulative distribution function 
 
-As mentionned in the other vignette, the results are not reliable for large values of the number of degrees of freedom $\nu$, like $3000$. 
+We finally test `ptOwen`, the implementation of the cumulative distribution function of the noncentral Student distribution.  
+If $T_1$ follows the noncentral Student distribution with number of degrees of freedom $\nu$ and noncentrality parameter $\delta_1$, then for any $t_1$ the equality 
+$$
+\Pr(T \leq t_1) = O_1(\nu, t_1, t_2, \delta_1, \delta_2) + O_2(\nu, t_1, t_2, \delta_1, \delta_2)
+$$
+holds for any $t_2$ and $\delta_2$.
+We check this equality for the $100$ scenarios of the dataset `PASS`. 
 
-$\implies$ comparison with PASS with large $n_1$, $n_2$ ?..
+```{r}
+h <- function(alpha, delta0, Delta, sigma, n1, n2) {
+  se <- sqrt(1/n1 + 1/n2) * sigma
+  delta1 <- (delta0 + Delta) / se
+  delta2 <- (delta0 - Delta) / se
+  dof <- n1 + n2 - 2
+  q <- qt(1 - alpha, dof)
+  x <- ptOwen(q, dof, delta1)
+  y <- powen1(dof, q, -q, delta1, delta2) + powen2(dof, q, -q, delta1, delta2)
+  x - y
+}
+test <- numeric(nrow(PASS))
+for (i in 1:nrow(PASS)) {
+  test[i] <-
+    h(
+      alpha = PASS$alpha[i],
+      delta0 = PASS$delta0[i],
+      Delta = PASS$Delta[i],
+      sigma = PASS$sigma[i],
+      n1 = PASS$n1[i],
+      n2 = PASS$n2[i]
+    )
+}
+all(abs(test) < 1e-15)
+```
 
+For each scenario, the equality holds up to a tolerance of $15$ digits. 
 
 
 # References 

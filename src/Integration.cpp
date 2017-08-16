@@ -49,8 +49,8 @@ Rcpp::NumericVector ipowen4(double nu, double t1, double t2, double delta1, doub
 
 
 double integrand_Q (double x, double nu, double t, double delta) {
-  double f = R::pnorm(t*x /sqrt(nu) - delta, 0.0, 1.0, 1, 0) *
-              exp((nu-1)*log(x) - x*x/2 - (nu/2 - 1) * log(2) - lgamma(nu/2));
+  double f = exp(R::pnorm(t*x /sqrt(nu) - delta, 0.0, 1.0, 1, 1) +
+              (nu-1)*log(x) - x*x/2 - (nu/2 - 1) * log(2) - lgamma(nu/2));
   return f;
 }
 
