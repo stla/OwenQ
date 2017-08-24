@@ -12,13 +12,14 @@ OwenT(h, a)
 \item{a}{numeric scalar}
 }
 \value{
-A number between 0 and 1.
+A number between \code{0} and \code{0.25}.
 }
 \description{
 Evaluates the Owen T-function.
 }
 \details{
-This is a port of the function \code{owens_t} of the \strong{boost} library.
+This is a port of the function \code{owens_t} of the \strong{boost}
+collection of C++ libraries.
 }
 \examples{
 integrate(function(x) pnorm(1+2*x)^2*dnorm(x), lower=-Inf, upper=Inf)

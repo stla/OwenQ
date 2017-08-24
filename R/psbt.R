@@ -12,10 +12,10 @@
 #' infinite allowed
 #' @param t1,t2 two finite numbers, positive or negative
 #' @param delta1,delta2 two vectors of possibly infinite numbers with the same length,
-#' the noncentrality parameters;
+#' the noncentrality parameters
 #' @return A vector of numbers between \eqn{0} and \eqn{1}.
-#' @note The results are theoretically exact when the number of degrees of freedom is even.
-#' When odd, the procedure resorts to the Owen T-function.
+#' @note When the number of degrees of freedom is odd, the procedure resorts to
+#' the Owen T-function (\code{\link{OwenT}}).
 #' @seealso It is better to use \code{\link{powen}} if \code{delta1>delta2}.
 #' @references
 #' Owen, D. B. (1965).
@@ -57,7 +57,7 @@ psbt1 <- function(nu, t1, t2, delta1, delta2){
       }
     }
   }
-  return(out)
+  out
 }
 
 #' @rdname psbt
@@ -89,7 +89,7 @@ psbt2 <- function(nu, t1, t2, delta1, delta2){
       }
     }
   }
-  return(out)
+  out
 }
 
 #' @rdname psbt
@@ -118,7 +118,7 @@ psbt3 <- function(nu, t1, t2, delta1, delta2){
       }
     }
   }
-  return(out)
+  out
 }
 
 #' @rdname psbt
@@ -148,5 +148,5 @@ psbt4 <- function(nu, t1, t2, delta1, delta2){
       }
     }
   }
-  return(out)
+  out
 }

@@ -23,8 +23,8 @@
 #' @importFrom Rcpp evalCpp
 #' @importFrom stats pnorm
 #' @useDynLib OwenQ
-#' @note The results are theoretically exact when the number of degrees of freedom is even.
-#' When odd, the procedure resorts to the Owen T-function.
+#' @note When the number of degrees of freedom is odd, the procedure resorts to
+#' the Owen T-function (\code{\link{OwenT}}).
 #' @seealso Use \code{\link{psbt}} for general values of \code{delta1} and \code{delta2}.
 #' @references
 #' Owen, D. B. (1965).

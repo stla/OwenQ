@@ -25,8 +25,8 @@ Evaluates the second Owen Q-function (integral from \eqn{R} to \eqn{\infty})
 for an integer value of the degrees of freedom.
 }
 \note{
-The results are theoretically exact when the number of degrees of freedom is even.
-When odd, the procedure resorts to the Owen T-function.
+When the number of degrees of freedom is odd, the procedure resorts to
+the Owen T-function (\code{\link{OwenT}}).
 }
 \examples{
 # OwenQ1(nu, t, delta, R) + OwenQ2(nu, t, delta, R) = pt(t, nu, delta)

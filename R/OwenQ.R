@@ -4,14 +4,16 @@
 #' @param nu integer greater than \eqn{1}, the number of degrees of freedom
 #' @param t number, positive or negative, possibly infinite
 #' @param delta vector of finite numbers, with the same length as \code{R}
-#' @param R (upper bound of the integral) vector of finite positive numbers, with the same length as \code{delta}
-#' @return A vector of numbers between \eqn{0} and \eqn{1}, the values of the integral from \eqn{0} to \eqn{R}.
+#' @param R (upper bound of the integral) vector of finite positive numbers,
+#' with the same length as \code{delta}
+#' @return A vector of numbers between \eqn{0} and \eqn{1}, the values of the
+#' integral from \eqn{0} to \eqn{R}.
 #' @export
 #' @importFrom stats pgamma
 #' @importFrom Rcpp evalCpp
 #' @useDynLib OwenQ
-#' @note The results are theoretically exact when the number of degrees of freedom is even.
-#' When odd, the procedure resorts to the Owen T-function.
+#' @note When the number of degrees of freedom is odd, the procedure resorts to
+#' the Owen T-function (\code{\link{OwenT}}).
 #' @references
 #' Owen, D. B. (1965).
 #' A special case of a bivariate noncentral t-distribution.
@@ -25,7 +27,7 @@ OwenQ1 <- function(nu, t, delta, R){
   if(J != length(R)){
     stop("`delta` and `R` must have the same length.")
   }
-  if(any(R<0 || R==Inf)){
+  if(any(R<0 | R==Inf)){
     stop("`R` must be a finite positive number.")
   }
   if(nu==Inf){
@@ -63,8 +65,8 @@ OwenQ1 <- function(nu, t, delta, R){
 #' @importFrom stats pgamma pnorm
 #' @importFrom Rcpp evalCpp
 #' @useDynLib OwenQ
-#' @note The results are theoretically exact when the number of degrees of freedom is even.
-#' When odd, the procedure resorts to the Owen T-function.
+#' @note When the number of degrees of freedom is odd, the procedure resorts to
+#' the Owen T-function (\code{\link{OwenT}}).
 #' @references
 #' Owen, D. B. (1965).
 #' A special case of a bivariate noncentral t-distribution.
@@ -78,7 +80,7 @@ OwenQ2 <- function(nu, t, delta, R){
   if(length(delta) != J){
     stop("`delta` and `R` must have the same length.")
   }
-  if(any(R<0 || R==Inf)){
+  if(any(R<0 | R==Inf)){
     stop("`R` must be a finite positive number.")
   }
   if(nu==Inf){

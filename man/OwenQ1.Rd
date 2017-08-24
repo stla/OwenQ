@@ -13,18 +13,20 @@ OwenQ1(nu, t, delta, R)
 
 \item{delta}{vector of finite numbers, with the same length as \code{R}}
 
-\item{R}{(upper bound of the integral) vector of finite positive numbers, with the same length as \code{delta}}
+\item{R}{(upper bound of the integral) vector of finite positive numbers,
+with the same length as \code{delta}}
 }
 \value{
-A vector of numbers between \eqn{0} and \eqn{1}, the values of the integral from \eqn{0} to \eqn{R}.
+A vector of numbers between \eqn{0} and \eqn{1}, the values of the
+integral from \eqn{0} to \eqn{R}.
 }
 \description{
 Evaluates the first Owen Q-function (integral from \eqn{0} to \eqn{R})
 for an integer value of the degrees of freedom.
 }
 \note{
-The results are theoretically exact when the number of degrees of freedom is even.
-When odd, the procedure resorts to the Owen T-function.
+When the number of degrees of freedom is odd, the procedure resorts to
+the Owen T-function (\code{\link{OwenT}}).
 }
 \examples{
 # OwenQ1(nu, t, delta, Inf) = pt(t, nu, delta)

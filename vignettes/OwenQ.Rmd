@@ -47,12 +47,12 @@ $$
 Owen provided an efficient way to evaluate these functions *when $\nu$ is an integer number*. Owen's algorithms are implemented in the `OwenQ` package. 
 
 For $\delta_1 > \delta_2$, these four functions are implemented in the `OwenQ` package under the respective names `powen1`, `powen2`, `powen3` and `powen4`. 
-For general values of $\delta_1$ and $\delta_2$, they are implemented under the respective names `psbt1`, `psbt2`, `psbt3` and `psbt4` 
+For general values of $\delta_1$ and $\delta_2$, they are implemented under the respective names `psbt1`, `psbt2`, `psbt3` and `psbt4`. 
 
 
 # Non-central Student distribution 
 
-Owen (1965) also provided an algorithm to evaluate the cumulative distribution function of an univariate non-central Student distribution with an integer number of degrees of freedom. 
+Owen (1965) also provided an algorithm to evaluate the cumulative distribution function of a univariate non-central Student distribution with an integer number of degrees of freedom. 
 This evaluation is performed by the function `ptOwen` of the `OwenQ` package.
 
 ```{r}
@@ -61,7 +61,7 @@ pt(q=1, df=3, ncp=2)
 ```
 
 It is known that the `pt` function is not reliable when the non-centrality parameter `ncp` is large. 
-Below we compare the values given by `ptOwen` and `pt` and the value given by Wolfram (returned by the command `N[CDF[NoncentralStudentTDistribution[4,70],80]]`):
+Below we compare the values given by `ptOwen` and `pt` to the value given by Wolfram|Alpha (returned by the command `N[CDF[NoncentralStudentTDistribution[4,70],80]]`):
 
 ```{r}
 p1 <- pt(q=80, df=4, ncp=70)
@@ -85,8 +85,12 @@ ptOwen(q=50, nu=3670, delta=50)
 ptOwen(q=50, nu=3680, delta=50)
 ```
 
+In the other vignette, we investigate the reliability and the limitations of `OwenQ`. 
+
 
 # Application to equivalence testing 
+
+## One sample 
 
 Assume a statistical model given by a sample 
 $y_i \sim_{\text{iid}} {\cal N}(\mu, \sigma^2)$ for $i=1, \ldots, n$. 
@@ -96,12 +100,11 @@ $H_1\colon\{\Delta_1 \leq \mu \leq \Delta_2\}$.
 
 Consider the usual $100(1-2\alpha)\%$-confidence interval about $\mu$:
 $$
-\bigl[\bar y - t^\ast_{n-1}(\alpha)\frac{\hat\sigma}{\sqrt{n}}, \, 
-\bar y + t^\ast_{n-1}(\alpha)\frac{\hat\sigma}{\sqrt{n}} \bigr].
+\left[\bar y - t^\ast_{n-1}(\alpha)\frac{\hat\sigma}{\sqrt{n}}, \, 
+\bar y + t^\ast_{n-1}(\alpha)\frac{\hat\sigma}{\sqrt{n}} \right].
 $$
 
-The $H_1$ hypothesis is accepted at level $\alpha$ when this interval falls into the interval 
-$[\Delta_1, \Delta_2]$.
+The $H_1$ hypothesis is accepted at level $\alpha$ when this interval falls into the interval $[\Delta_1, \Delta_2]$.
 
 This can be written as follows:
 $$
@@ -132,7 +135,7 @@ $\delta_2 = \tfrac{\mu - \Delta_2}{\sigma/\sqrt{n}}$.
 
 Therefore the power of the test - *i.e.* the probability to accept $H_1$ - is given by 
 $$
-O_4(n-1, t^\ast_{n-1}(\alpha), -t^\ast_{n-1}(\alpha), \delta_1, \delta_2),
+O_4\bigl(n-1, t^\ast_{n-1}(\alpha), -t^\ast_{n-1}(\alpha), \delta_1, \delta_2\bigr),
 $$
 and then can be evaluated thanks to `powen4`. 
 
@@ -140,7 +143,7 @@ and then can be evaluated thanks to `powen4`.
 
 The result of the equivalence test is said to be *inconclusive* when only one of the bounds of the confidence interval falls into the interval $[\Delta_1, \Delta_2]$. 
 
-The probability to get an inconclusive result can be obtained with the `OwenQ` package. We show and check that with the help of simulations below.
+The probability to get an inconclusive result can be obtained with the `OwenQ` package. We show and check that below with the help of simulations.
 
 ```{r}
 Delta1 <- -2; Delta2 <- 2 
@@ -170,12 +173,36 @@ mean(inconclusive)
 ptOwen(q, dof, delta2) - ptOwen(-q, dof, delta1) - powen4(dof, q, -q, delta1, delta2)
 ```
 
+## Parallel design 
+
+Now consider two independent samples 
+$x_i \sim_{\text{iid}} {\cal N}(\mu, \sigma^2)$ for $i=1, \ldots, n_1$. 
+and 
+$y_i \sim_{\text{iid}} {\cal N}(\nu, \sigma^2)$ for $i=1, \ldots, n_2$ 
+and the alternative hypothesis 
+$H_1\colon\bigl\{|\mu-\nu| \leq \Delta\bigr\}$. 
+The power of this test is evaluated by the function `powerTOST` below. 
+The parameter `delta0` corresponds to the difference $\mu-\nu$. 
+
+```{r}
+powerTOST <- function(alpha, delta0, Delta, sigma, n1, n2) {
+  se <- sqrt(1/n1 + 1/n2) * sigma
+  delta1 <- (delta0 + Delta) / se
+  delta2 <- (delta0 - Delta) / se
+  dof <- n1 + n2 - 2
+  q <- qt(1 - alpha, dof)
+  powen4(dof, q, -q, delta1, delta2)
+}
+```
+
+
+
 
 # The Owen $T$-function
 
 The `OwenQ` package also provides an implementation of the Owen $T$-function, 
 under the name `OwenT`. 
-This is a port of the function `owens_t` of the C++ `boost` library.
+This is a port of the function `owens_t` of `boost`, the peer-reviewed collection of C++ libraries.
 
 ```{r, echo=FALSE, fig.width=5, fig.height=5}
 h <- seq(-3, 3, length.out=30)
@@ -197,7 +224,7 @@ and
 $$
 Q_2(\nu, t, \delta, R) = \frac{1}{\Gamma\left(\frac{\nu}{2}\right)2^{\frac12(\nu-2)}}
 \int_R^\infty \Phi\left(\frac{tx}{\sqrt{\nu}}-\delta\right)
-x^{\nu-1} e^{-\frac{x^2}{2}} \mathrm{d}x
+x^{\nu-1} e^{-\frac{x^2}{2}} \mathrm{d}x.
 $$
 
 They are implemented in the `OwenQ` package under the respective names `OwenQ1` and `OwenQ2` (for integer values of $\nu$). 
@@ -232,11 +259,18 @@ uniroot(function(ke) spowen2(n-1, ke*sqrt(n), delta) - (1-alpha),
         lower=qnorm(1-alpha), upper=5, extendInt = "upX", tol=1e-9)$root
 ```
 
-The $k_e$ factors are tabulated in KrishnaMoorthy & Mathew's book.
+The $k_e$ factors are tabulated in Krishnamoorthy & Mathew's book.
+
+
+# Internal functions: numerical integration
+
+The `OwenQ` package provides three internal functions, `iOwenQ1`, `iOwenQ2` and `ipowen4`, which respectively perform the evaluation of $Q_1$, $Q_2$ and $O_4$ by numerical integration using the `RcppNumerical` package. 
+They can be called with a positive non-integer value of $\nu$. 
+The evaluation of $O_4$ with `ipowen4` is correct only for $t_1 > t_2$ and $\delta_1 > \delta_2$. 
 
 
 # References
 
-Owen, D. B. (1965). *A special case of a bivariate noncentral t-distribution.* Biometrika 52, 437-446.
+- Owen, D. B. (1965). *A special case of a bivariate noncentral t-distribution.* Biometrika 52, 437-446.
 
-KrishnaMoorthy & Mathew (2009). *Statistical Tolerance Regions*. Wiley. 
+- Krishnamoorthy & Mathew (2009). *Statistical Tolerance Regions*. Wiley. 

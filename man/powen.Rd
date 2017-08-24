@@ -45,8 +45,8 @@ the number of degrees of freedom is integer.
 }
 }
 \note{
-The results are theoretically exact when the number of degrees of freedom is even.
-When odd, the procedure resorts to the Owen T-function.
+When the number of degrees of freedom is odd, the procedure resorts to
+the Owen T-function (\code{\link{OwenT}}).
 }
 \examples{
 nu=5; t1=2; t2=1; delta1=3; delta2=2

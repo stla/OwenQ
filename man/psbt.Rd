@@ -23,7 +23,7 @@ infinite allowed}
 \item{t1, t2}{two finite numbers, positive or negative}
 
 \item{delta1, delta2}{two vectors of possibly infinite numbers with the same length,
-the noncentrality parameters;}
+the noncentrality parameters}
 }
 \value{
 A vector of numbers between \eqn{0} and \eqn{1}.
@@ -39,8 +39,8 @@ for an integer number of degrees of freedom.
 }
 }
 \note{
-The results are theoretically exact when the number of degrees of freedom is even.
-When odd, the procedure resorts to the Owen T-function.
+When the number of degrees of freedom is odd, the procedure resorts to
+the Owen T-function (\code{\link{OwenT}}).
 }
 \examples{
 nu=5; t1=1; t2=2; delta1=2; delta2=3
