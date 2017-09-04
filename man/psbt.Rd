@@ -32,10 +32,10 @@ A vector of numbers between \eqn{0} and \eqn{1}.
 Evaluates the Owen cumulative distribution function
 for an integer number of degrees of freedom.
 \itemize{
-\item \code{psbt1} evaluates \eqn{P(T_1\le t_1, T_2 \le t_2)}
-\item \code{psbt2} evaluates \eqn{P(T_1\le t_1, T_2 \ge t_2)}
-\item \code{psbt3} evaluates \eqn{P(T_1\ge t_1, T_2 \ge t_2)}
-\item \code{psbt4} evaluates \eqn{P(T_1\ge t_1, T_2 \le t_2)}
+\item \code{psbt1} evaluates \ifelse{html}{\out{P(T<sub>1</sub> &le; t<sub>1</sub>, T<sub>2</sub> &le; t<sub>2</sub>)}}{\eqn{P(T_1\le t_1, T_2 \le t_2)}}
+\item \code{psbt2} evaluates \ifelse{html}{\out{P(T<sub>1</sub> &le; t<sub>1</sub>, T<sub>2</sub> &ge; t<sub>2</sub>)}}{\eqn{P(T_1\le t_1, T_2 \ge t_2)}}
+\item \code{psbt3} evaluates \ifelse{html}{\out{P(T<sub>1</sub> &ge; t<sub>1</sub>, T<sub>2</sub> &ge; t<sub>2</sub>)}}{\eqn{P(T_1\ge t_1, T_2 \ge t_2)}}
+\item \code{psbt4} evaluates \ifelse{html}{\out{P(T<sub>1</sub> &ge; t<sub>1</sub>, T<sub>2</sub> &le; t<sub>2</sub>)}}{\eqn{P(T_1\ge t_1, T_2 \le t_2)}}
 }
 }
 \note{

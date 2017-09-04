@@ -6,7 +6,7 @@
 \alias{powen2}
 \alias{powen3}
 \alias{powen4}
-\title{Owen distribution functions when \eqn{\delta_1>\delta_2}}
+\title{Owen distribution functions when \ifelse{html}{\out{&delta;<sub>1</sub>>&delta;<sub>2</sub>}}{\eqn{\delta_1>\delta_2}}}
 \usage{
 powen1(nu, t1, t2, delta1, delta2)
 
@@ -31,16 +31,16 @@ A vector of numbers between \eqn{0} and \eqn{1}.
 }
 \description{
 Evaluates the Owen distribution functions
-when the noncentrality parameters satisfy \eqn{\delta_1>\delta_2} and
+when the noncentrality parameters satisfy \ifelse{html}{\out{&delta;<sub>1</sub>>&delta;<sub>2</sub>}}{\eqn{\delta_1>\delta_2}} and
 the number of degrees of freedom is integer.
 \itemize{
-\item \code{powen1} evaluates \eqn{P(T_1\le t_1, T_2 \le t_2)}
+\item \code{powen1} evaluates \ifelse{html}{\out{P(T<sub>1</sub> &le; t<sub>1</sub>, T<sub>2</sub> &le; t<sub>2</sub>)}}{\eqn{P(T_1\le t_1, T_2 \le t_2)}}
 (Owen's equality 8)
-\item \code{powen2} evaluates \eqn{P(T_1\le t_1, T_2 \ge t_2)}
+\item \code{powen2} evaluates \ifelse{html}{\out{P(T<sub>1</sub> &le; t<sub>1</sub>, T<sub>2</sub> &ge; t<sub>2</sub>)}}{\eqn{P(T_1\le t_1, T_2 \ge t_2)}}
 (Owen's equality 9)
-\item \code{powen3} evaluates \eqn{P(T_1\ge t_1, T_2 \ge t_2)}
+\item \code{powen3} evaluates \ifelse{html}{\out{P(T<sub>1</sub> &ge; t<sub>1</sub>, T<sub>2</sub> &ge; t<sub>2</sub>)}}{\eqn{P(T_1\ge t_1, T_2 \ge t_2)}}
 (Owen's equality 10)
-\item \code{powen4} evaluates \eqn{P(T_1\ge t_1, T_2 \le t_2)}
+\item \code{powen4} evaluates \ifelse{html}{\out{P(T<sub>1</sub> &ge; t<sub>1</sub>, T<sub>2</sub> &le; t<sub>2</sub>)}}{\eqn{P(T_1\ge t_1, T_2 \le t_2)}}
 (Owen's equality 11)
 }
 }
