@@ -1,7 +1,7 @@
 Package: OwenQ
 Type: Package
 Title: Owen Q-function
-Version: 0.3.1.9000
+Version: 0.3.2
 Date: 2017-06-26
 Author: Stéphane Laurent
 Maintainer: Stéphane Laurent <laurent_step@yahoo.fr>
