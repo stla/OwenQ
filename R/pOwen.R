@@ -5,21 +5,22 @@
 #' \itemize{
 #' \item \code{powen1} evaluates \ifelse{html}{\out{P(T<sub>1</sub> &le; t<sub>1</sub>, T<sub>2</sub> &le; t<sub>2</sub>)}}{\eqn{P(T_1\le t_1, T_2 \le t_2)}}
 #' (Owen's equality 8)
-#' \item \code{powen2} evaluates \ifelse{html}{\out{P(T<sub>1</sub> &le; t<sub>1</sub>, T<sub>2</sub> &ge; t<sub>2</sub>)}}{\eqn{P(T_1\le t_1, T_2 \ge t_2)}}
+#' \item \code{powen2} evaluates \ifelse{html}{\out{P(T<sub>1</sub> &le; t<sub>1</sub>, T<sub>2</sub> > t<sub>2</sub>)}}{\eqn{P(T_1\le t_1, T_2 > t_2)}}
 #' (Owen's equality 9)
-#' \item \code{powen3} evaluates \ifelse{html}{\out{P(T<sub>1</sub> &ge; t<sub>1</sub>, T<sub>2</sub> &ge; t<sub>2</sub>)}}{\eqn{P(T_1\ge t_1, T_2 \ge t_2)}}
+#' \item \code{powen3} evaluates \ifelse{html}{\out{P(T<sub>1</sub> > t<sub>1</sub>, T<sub>2</sub> > t<sub>2</sub>)}}{\eqn{P(T_1> t_1, T_2 > t_2)}}
 #' (Owen's equality 10)
-#' \item \code{powen4} evaluates \ifelse{html}{\out{P(T<sub>1</sub> &ge; t<sub>1</sub>, T<sub>2</sub> &le; t<sub>2</sub>)}}{\eqn{P(T_1\ge t_1, T_2 \le t_2)}}
+#' \item \code{powen4} evaluates \ifelse{html}{\out{P(T<sub>1</sub> > t<sub>1</sub>, T<sub>2</sub> &le; t<sub>2</sub>)}}{\eqn{P(T_1> t_1, T_2 \le t_2)}}
 #' (Owen's equality 11)
 #' }
 #' @name powen
 #' @param nu integer greater than \eqn{1}, the number of degrees of freedom;
 #' infinite allowed
-#' @param t1,t2 two finite numbers, positive or negative
+#' @param t1,t2 two numbers, positive or negative, possible infinite
 #' @param delta1,delta2 two vectors of possibly infinite numbers with the same length,
 #' the noncentrality parameters;
 #' must satisfy \code{delta1>delta2}
-#' @return A vector of numbers between \eqn{0} and \eqn{1}.
+#' @return A vector of numbers between \eqn{0} and \eqn{1}, possibly
+#' containing some \code{NaN}.
 #' @importFrom Rcpp evalCpp
 #' @importFrom stats pnorm
 #' @useDynLib OwenQ
@@ -51,34 +52,40 @@ powen1 <- function(nu, t1, t2, delta1, delta2){
   if(J != length(delta2)){
     stop("`delta1` and `delta2` must have the same length.")
   }
-  if(any(delta1<=delta2 & is.finite(delta1) & is.finite(delta2))){
+  if(any(delta1<=delta2)){ # & is.finite(delta1) & is.finite(delta2))){
     stop("`delta1` must be >`delta2`.")
-  }
-  if(is.infinite(t1) || is.infinite(t2)){
-    stop("`t1` and `t2` must be finite.")
   }
   if(isNotPositiveInteger(nu)){
     stop("`nu` must be an integer >=1.")
   }
   if(t1<=t2){
-    return(ptOwen(t1, nu, delta1))
+    out <- rep(NaN, J)
+    if(any(i <- t2 != -Inf || delta2 != -Inf)) out[i] <- ptOwen(t1, nu, delta1[i])
+    return(out)
   }
   if(nu == Inf){
     return(pnorm(t1, mean=delta1) - pmax(0, pnorm(t1, mean=delta1)-pnorm(t2, mean=delta2)))
   }
-  if(any(inf <- (is.infinite(delta1) | is.infinite(delta2)))){
-    out <- numeric(J)
-    if(any(inf2 <- delta2==-Inf)){
-      winf2 <- which(inf2)
-      out[winf2] <- ptOwen(t1, nu, delta1[winf2])
-    }
-    if(!all(inf)){
-      noninf <- which(!inf)
-      out[noninf] <- RcppOwenCDF1(nu, t1, t2, delta1[noninf], delta2[noninf])
-    }
+  if(t1 == Inf){
+    out <- rep(NaN, J)
+    if(any(i <- delta1 != Inf)) out[i] <- ptOwen(t2, nu, delta2[i])
     return(out)
   }
-  RcppOwenCDF1(nu, t1, t2, delta1, delta2)
+  if(t2 == -Inf){
+    out <- rep(NaN, J)
+    if(any(i <- delta2 != -Inf)) out[i] <- ptOwen(t1, nu, delta1[i])
+    return(out)
+  }
+  out <- numeric(J)
+  if(!all(i <- (is.finite(delta1) & is.finite(delta2)))){
+    if(any(inf2 <- delta2==-Inf)){
+      out[inf2] <- ptOwen(t1, nu, delta1[inf2])
+    }
+  }
+  if(any(i)){
+    out[i] <- RcppOwenCDF1(nu, t1, t2, delta1[i], delta2[i])
+  }
+  out
 }
 
 #' @rdname powen
@@ -88,31 +95,58 @@ powen2 <- function(nu, t1, t2, delta1, delta2){
   if(J != length(delta2)){
     stop("`delta1` and `delta2` must have the same length.")
   }
-  if(any(delta1<=delta2 & is.finite(delta1) & is.finite(delta2))){
+  if(any(delta1<=delta2)){# & is.finite(delta1) & is.finite(delta2))){
     stop("`delta1` must be >`delta2`.")
-  }
-  if(is.infinite(t1) || is.infinite(t2)){
-    stop("`t1` and `t2` must be finite.")
   }
   if(isNotPositiveInteger(nu)){
     stop("`nu` must be an integer >=1.")
   }
   if(t1<=t2){
-    return(0)
+    return(numeric(J)) # y'a des NaN ? à revoir
+    # out <- numeric(J)
+    # if(is.infinite(t1)){
+    #   out[delta1==t1] <- NaN
+    # }
+    # if(is.infinite(t2)){
+    #   out[delta2==t2] <- NaN
+    # }
+    # return(out)
   }
   if(nu == Inf){
     #return(-pnorm(t2, mean=delta2)+pnorm(t1, mean=delta1) + pmax(0, pnorm(t2, mean=delta2)-pnorm(t1, mean=delta1)))
     return(pmax(0, pnorm(t1, mean=delta1)-pnorm(t2, mean=delta2)))
   }
-  if(any(inf <- (is.infinite(delta1) | is.infinite(delta2)))){
-    out <- numeric(J)
-    if(!all(inf)){
-      noninf <- which(!inf)
-      out[noninf] <- RcppOwenCDF2(nu, t1, t2, delta1[noninf], delta2[noninf])
-    }
+  #if(is.infinite(t1) || is.infinite(t2)){
+  out <- numeric(J)
+  # if(is.infinite(t1)){
+  #   if(t1==Inf){
+  #     out[i <- delta1==Inf] <- NaN
+  #     out[!i] <- 1-ptOwen(t2, nu, delta2)
+  #   }else{
+  #     out[delta1==-Inf] <- NaN # ça n'arrive pas
+  #   }
+  # }else{
+  #   if(t2 == Inf){ # ça n'arrive pas car t1>t2
+  #     out[delta2==Inf] <- NaN
+  #   }else{
+  #     out[i <- delta2==-Inf] <- NaN
+  #     out[!i] <- ptOwen(t1, nu, delta1)
+  #   }
+  # }
+  if(t1==Inf){
+    out[i <- delta1==Inf] <- NaN
+    if(!all(i)) out[!i] <- 1-ptOwen(t2, nu, delta2[!i])
     return(out)
   }
-  RcppOwenCDF2(nu, t1, t2, delta1, delta2)
+  if(t2 == -Inf){
+    out[i <- delta2==-Inf] <- NaN
+    if(!all(i)) out[!i] <- ptOwen(t1, nu, delta1[!i])
+    return(out)
+  }
+  if(any(i <- is.finite(delta1) & is.finite(delta2))){
+    out[i] <- RcppOwenCDF2(nu, t1, t2, delta1[i], delta2[i])
+  }
+  out
 }
 
 #' @rdname powen
@@ -122,43 +156,38 @@ powen3 <- function(nu, t1, t2, delta1, delta2){
   if(J != length(delta2)){
     stop("`delta1` and `delta2` must have the same length.")
   }
-  if(any(delta1<=delta2 & is.finite(delta1) & is.finite(delta2))){
+  if(any(delta1<=delta2)){ # & is.finite(delta1) & is.finite(delta2))){
     stop("`delta1` must be >`delta2`.")
-  }
-  if(is.infinite(t1) || is.infinite(t2)){
-    stop("`t1` and `t2` must be finite.")
   }
   if(isNotPositiveInteger(nu)){
     stop("`nu` must be an integer >=1.")
   }
-  # if(any(lower <- (delta1<delta2))){
-  #   out <- numeric(J)
-  #   out[lower] <- 1 - ptOwen(t1, nu, delta1)
-  #   if(length(nonlower <- which(!lower))){
-  #     out[nonlower] <- RcppOwenCDF3(nu, t1, t2, delta1[nonlower], delta2[nonlower],
-  #                                   jmax, cutpoint)
-  #   }
-  #   return(out)
-  # }
   if(t1<=t2){
     return(1-ptOwen(t2, nu, delta2))
+  }
+  if(t1 == Inf){
+    out <- numeric(J)
+    out[delta1 == Inf] <- NaN
+    return(out)
+  }
+  if(t2 == -Inf){
+    out <- rep(NaN, J)
+    if(any(i <- delta2 != -Inf)) out[i] <- 1-ptOwen(t1, nu, delta1[i])
+    return(out)
   }
   if(nu == Inf){ # to simplify ?
     return(1-pnorm(t1, mean=delta1) - pmax(0, pnorm(t2, mean=delta2)-pnorm(t1, mean=delta1)))
   }
-  if(any(inf <- (is.infinite(delta1) | is.infinite(delta2)))){
-    out <- numeric(J)
-    inf1 <- which(is.infinite(delta1))
-    if(length(inf1)){
+  out <- numeric(J)
+  if(!all(i <- (is.finite(delta1) & is.finite(delta2)))){
+    if(length(inf1 <- which(is.infinite(delta1)))){
       out[inf1] <- ifelse(delta1[inf1]==Inf, 1-ptOwen(t2, nu, delta2[inf1]), 0)
     }
-    if(!all(inf)){
-      noninf <- which(!inf)
-      out[noninf] <- RcppOwenCDF3(nu, t1, t2, delta1[noninf], delta2[noninf])
-    }
-    return(out)
   }
-  RcppOwenCDF3(nu, t1, t2, delta1, delta2)
+  if(any(i)){
+    out[i] <- RcppOwenCDF3(nu, t1, t2, delta1[i], delta2[i])
+  }
+  out
 }
 
 #' @rdname powen
@@ -168,45 +197,54 @@ powen4 <- function(nu, t1, t2, delta1, delta2){
   if(J != length(delta2)){
     stop("`delta1` and `delta2` must have the same length.")
   }
-  if(any(delta1<=delta2 & is.finite(delta1) & is.finite(delta2))){
+  if(any(delta1<=delta2)){ #& is.finite(delta1) & is.finite(delta2))){
     stop("`delta1` must be >`delta2`.")
-  }
-  if(is.infinite(t1) || is.infinite(t2)){
-    stop("`t1` and `t2` must be finite.")
   }
   if(isNotPositiveInteger(nu)){
     stop("`nu` must be an integer >=1.")
   }
-  # if(any(lower <- (delta1<delta2))){
-  #   out <- numeric(J)
-  #   #out[lower] <- 0
-  #   if(length(nonlower <- which(!lower))){
-  #     out[nonlower] <- RcppOwenCDF4(nu, t1, t2, delta1[nonlower], delta2[nonlower],
-  #                                   jmax, cutpoint)
-  #   }
-  #   return(out)
-  # }
   if(t1<=t2){
     return(ptOwen(t2, nu, delta2)-ptOwen(t1, nu, delta1))
+  }
+  # if(is.infinite(t1) || is.infinite(t2)){
+  #   if(t1==Inf){
+  #     return(ifelse(delta1==Inf, NaN, 0))
+  #   }
+  #   # if(t1==-Inf){ # inutile car t1 <= t2
+  #   #   indices <- delta1==-Inf
+  #   #   return(ifelse(indices, NaN, ptOwen(t2, nu, delta2[!indices])))
+  #   # }
+  #   # if(t2==Inf){ # inutile car t1 <= t2
+  #   #   indices <- delta2==Inf
+  #   #   return(ifelse(indices, NaN, 1-ptOwen(t1, nu, delta1[!indices])))
+  #   # }
+  #   if(t2==-Inf){
+  #     return(ifelse(delta2==-Inf, NaN, 0))
+  #   }
+  # }
+  if(t1==Inf && t2==-Inf){
+    return(ifelse(delta1==Inf || delta2==-Inf, NaN, 0))
+  }
+  if(t1==Inf){
+    return(ifelse(delta1==Inf, NaN, 0))
+  }
+  if(t2==-Inf){
+    return(ifelse(delta2==-Inf, NaN, 0))
   }
   if(nu == Inf){
     return(pmax(0, pnorm(t2, mean=delta2)-pnorm(t1, mean=delta1)))
   }
-  if(any(inf <- (is.infinite(delta1) | is.infinite(delta2)))){
-    out <- numeric(J)
-    inf1 <- which(delta1==Inf)
-    if(length(inf1)){
+  out <- numeric(J)
+  if(!all(i <- (is.finite(delta1) & is.finite(delta2)))){
+    if(any(inf1 <- delta1==Inf)){
       out[inf1] <- ptOwen(t2, nu, delta2[inf1])
     }
-    minf2 <- setdiff(which(delta2==-Inf), inf1)
-    if(length(minf2)){
-      out[minf2] <- 1 - ptOwen(t1, nu, delta1)
+    if(any(minf2 <- delta2==-Inf & !inf1)){
+      out[minf2] <- 1 - ptOwen(t1, nu, delta1[minf2])
     }
-    if(!all(inf)){
-      noninf <- which(!inf)
-      out[noninf] <- RcppOwenCDF4(nu, t1, t2, delta1[noninf], delta2[noninf])
-    }
-    return(out)
   }
-  RcppOwenCDF4(nu, t1, t2, delta1, delta2)
+  if(any(i)){
+    out[i] <- RcppOwenCDF4(nu, t1, t2, delta1[i], delta2[i])
+  }
+  out
 }

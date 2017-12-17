@@ -20,14 +20,15 @@ powen4(nu, t1, t2, delta1, delta2)
 \item{nu}{integer greater than \eqn{1}, the number of degrees of freedom;
 infinite allowed}
 
-\item{t1, t2}{two finite numbers, positive or negative}
+\item{t1, t2}{two numbers, positive or negative, possible infinite}
 
 \item{delta1, delta2}{two vectors of possibly infinite numbers with the same length,
 the noncentrality parameters;
 must satisfy \code{delta1>delta2}}
 }
 \value{
-A vector of numbers between \eqn{0} and \eqn{1}.
+A vector of numbers between \eqn{0} and \eqn{1}, possibly
+containing some \code{NaN}.
 }
 \description{
 Evaluates the Owen distribution functions
@@ -36,11 +37,11 @@ the number of degrees of freedom is integer.
 \itemize{
 \item \code{powen1} evaluates \ifelse{html}{\out{P(T<sub>1</sub> &le; t<sub>1</sub>, T<sub>2</sub> &le; t<sub>2</sub>)}}{\eqn{P(T_1\le t_1, T_2 \le t_2)}}
 (Owen's equality 8)
-\item \code{powen2} evaluates \ifelse{html}{\out{P(T<sub>1</sub> &le; t<sub>1</sub>, T<sub>2</sub> &ge; t<sub>2</sub>)}}{\eqn{P(T_1\le t_1, T_2 \ge t_2)}}
+\item \code{powen2} evaluates \ifelse{html}{\out{P(T<sub>1</sub> &le; t<sub>1</sub>, T<sub>2</sub> > t<sub>2</sub>)}}{\eqn{P(T_1\le t_1, T_2 > t_2)}}
 (Owen's equality 9)
-\item \code{powen3} evaluates \ifelse{html}{\out{P(T<sub>1</sub> &ge; t<sub>1</sub>, T<sub>2</sub> &ge; t<sub>2</sub>)}}{\eqn{P(T_1\ge t_1, T_2 \ge t_2)}}
+\item \code{powen3} evaluates \ifelse{html}{\out{P(T<sub>1</sub> > t<sub>1</sub>, T<sub>2</sub> > t<sub>2</sub>)}}{\eqn{P(T_1> t_1, T_2 > t_2)}}
 (Owen's equality 10)
-\item \code{powen4} evaluates \ifelse{html}{\out{P(T<sub>1</sub> &ge; t<sub>1</sub>, T<sub>2</sub> &le; t<sub>2</sub>)}}{\eqn{P(T_1\ge t_1, T_2 \le t_2)}}
+\item \code{powen4} evaluates \ifelse{html}{\out{P(T<sub>1</sub> > t<sub>1</sub>, T<sub>2</sub> &le; t<sub>2</sub>)}}{\eqn{P(T_1> t_1, T_2 \le t_2)}}
 (Owen's equality 11)
 }
 }

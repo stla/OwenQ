@@ -115,7 +115,7 @@ test_that("powen4 - delta1=Inf and delta2=Inf", {
   expect_true(powen4(2, 3, 1, 101, 100) == 0)
   expect_true(powen4(Inf, 3, 1, 101, 100) == 0)
   # now this is implemented in powen4
-  expect_true(powen4(2, 3, 1, Inf, Inf) == 0)
+  expect_true(psbt4(2, 3, 1, Inf, Inf) == 0)
 })
 
 test_that("powen3", {
@@ -197,7 +197,7 @@ test_that("powen3 - delta1=Inf and delta2=Inf", {
   expect_true(powen3(2, 3, 1, 101, 100) == 1)
   expect_true(powen3(Inf, 3, 1, 101, 100) == 1)
   # now this is implemented in powen3
-  expect_true(powen3(2, 3, 1, Inf, Inf) == 1)
+  expect_true(psbt3(2, 3, 1, Inf, Inf) == 1)
 })
 
 test_that("powen3 - delta1=-Inf and delta2=-Inf", {
@@ -205,7 +205,7 @@ test_that("powen3 - delta1=-Inf and delta2=-Inf", {
   expect_true(powen3(2, 3, 1, -100, -101) == 0)
   expect_true(powen3(Inf, 3, 1, -100, -101) == 0)
   # now this is implemented in powen3
-  expect_true(powen3(2, 3, 1, -Inf, -Inf) == 0)
+  expect_true(psbt3(2, 3, 1, -Inf, -Inf) == 0)
 })
 
 
@@ -286,7 +286,7 @@ test_that("powen2 - delta1=Inf and delta2=Inf", {
   expect_true(powen2(2, 3, 1, 101, 100) == 0)
   expect_true(powen2(Inf, 3, 1, 101, 100) == 0)
   # now this is implemented in powen2
-  expect_true(powen2(2, 3, 1, Inf, Inf) == 0)
+  expect_true(psbt2(2, 3, 1, Inf, Inf) == 0)
 })
 
 test_that("powen2 - delta1=-Inf and delta2=-Inf", {
@@ -294,7 +294,7 @@ test_that("powen2 - delta1=-Inf and delta2=-Inf", {
   expect_true(powen2(2, 3, 1, -100, -101) == 0)
   expect_true(powen2(Inf, 3, 1, -100, -101) == 0)
   # now this is implemented in powen2
-  expect_true(powen2(2, 3, 1, -Inf, -Inf) == 0)
+  expect_true(psbt2(2, 3, 1, -Inf, -Inf) == 0)
 })
 
 
@@ -374,7 +374,7 @@ test_that("powen1 - delta1=Inf and delta2=Inf", {
   expect_true(powen1(2, 3, 1, 101, 100) == 0)
   expect_true(powen1(Inf, 3, 1, 101, 100) == 0)
   # now this is implemented in powen1
-  expect_true(powen1(2, 3, 1, Inf, Inf) == 0)
+  expect_true(psbt1(2, 3, 1, Inf, Inf) == 0)
 })
 
 test_that("powen1 - delta1=-Inf and delta2=-Inf", {
@@ -382,7 +382,7 @@ test_that("powen1 - delta1=-Inf and delta2=-Inf", {
   expect_true(powen1(2, 3, 1, -100, -101) == 1)
   expect_true(powen1(Inf, 3, 1, -100, -101) == 1)
   # now this is implemented in powen1
-  expect_true(powen1(2, 3, 1, -Inf, -Inf) == 1)
+  expect_true(psbt1(2, 3, 1, -Inf, -Inf) == 1)
 })
 
 test_that("The powen's sum to 1", {

@@ -22,7 +22,11 @@
 #' ptOwen(2, 3, delta=1) - pt(2, 3, ncp=1)
 ptOwen <- function(q, nu, delta=0){
   if(is.infinite(q)){
-    stop("`q` must be finite.")
+    return(ifelse(is.infinite(delta),
+                  ifelse(sign(q)==sign(delta),
+                         NaN,
+                         ifelse(q>0, 1, 0)),
+                  as.numeric(q>0)))
   }
   if(nu==Inf){
     return(pnorm(q, mean=delta))

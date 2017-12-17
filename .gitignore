@@ -11,3 +11,5 @@ src-x64/*.o
 src-x64/*.dll
 
 inst/doc
+
+LICENSE
