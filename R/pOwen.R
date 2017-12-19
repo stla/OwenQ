@@ -79,7 +79,7 @@ powen1 <- function(nu, t1, t2, delta1, delta2){
   out <- numeric(J)
   if(!all(i <- (is.finite(delta1) & is.finite(delta2)))){
     if(any(inf2 <- delta2==-Inf)){
-      out[inf2] <- ptOwen(t1, nu, delta1[inf2])
+      out[inf2] <- ptOwen(t1, nu, delta1[inf2]) ## c'est pas l'inverse ?
     }
   }
   if(any(i)){
@@ -182,6 +182,7 @@ powen3 <- function(nu, t1, t2, delta1, delta2){
   if(!all(i <- (is.finite(delta1) & is.finite(delta2)))){
     if(length(inf1 <- which(is.infinite(delta1)))){
       out[inf1] <- ifelse(delta1[inf1]==Inf, 1-ptOwen(t2, nu, delta2[inf1]), 0)
+      # ? delta1 forcément +Inf
     }
   }
   if(any(i)){

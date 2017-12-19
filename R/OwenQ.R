@@ -6,6 +6,7 @@
 #' @param delta vector of finite numbers, with the same length as \code{R}
 #' @param R (upper bound of the integral) vector of finite positive numbers,
 #' with the same length as \code{delta}
+#' @param algo the algorithm, \code{1} or \code{2}
 #' @return A vector of numbers between \eqn{0} and \eqn{1}, the values of the
 #' integral from \eqn{0} to \eqn{R}.
 #' @export
@@ -22,7 +23,7 @@
 #' # OwenQ1(nu, t, delta, Inf) = pt(t, nu, delta)
 #' OwenQ1(nu=5, t=3, delta=2, R=100)
 #' pt(q=3, df=5, ncp=2)
-OwenQ1 <- function(nu, t, delta, R){
+OwenQ1 <- function(nu, t, delta, R, algo=1){
   J <- length(delta)
   if(J != length(R)){
     stop("`delta` and `R` must have the same length.")
@@ -30,25 +31,25 @@ OwenQ1 <- function(nu, t, delta, R){
   if(any(R<0 | R==Inf)){
     stop("`R` must be a finite positive number.")
   }
-  if(nu==Inf){
+  if(nu==Inf || t==-Inf){
     return(numeric(J))
   }
   if(isNotPositiveInteger(nu)){
     stop("`nu` must be an integer >=1.")
   }
-  if(any(is.infinite(delta))){
-    out <- numeric(J)
-    if(any(minf <- delta==-Inf)){
-      wminf <- which(minf)
-      out[wminf] <- pgamma(R[wminf]^2/2, nu/2, lower.tail=TRUE)
-    }
-    if(!all(inf <- is.infinite(delta))){
-      noninf <- which(!inf)
-      out[noninf] <- RcppOwenQ1(nu, t, delta[noninf], R[noninf])
-    }
-    return(out)
+  if(t == Inf){
+    return(pgamma(R^2/2, nu/2, lower.tail=TRUE))
   }
-  RcppOwenQ1(nu, t, delta, R)
+  out <- numeric(J)
+  if(!all(i <- is.finite(delta))){
+    if(any(minf <- delta==-Inf)){
+      out[minf] <- pgamma(R[minf]^2/2, nu/2, lower.tail=TRUE)
+    }
+  }
+  if(any(i)){
+    out[i] <- RcppOwenQ1(nu, t, delta[i], R[i], algo=algo)
+  }
+  out
 }
 
 #' @title Second Owen Q-function
