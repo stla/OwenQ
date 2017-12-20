@@ -60,6 +60,7 @@ OwenQ1 <- function(nu, t, delta, R, algo=1){
 #' @param delta vector of finite numbers, with the same length as \code{R}
 #' @param R (lower bound of the integral) vector of finite positive numbers,
 #' with the same length as \code{delta}
+#' @param algo the algorirthm used, \code{1} or \code{2}
 #' @return A vector of numbers between \eqn{0} and \eqn{1}, the values of the integral
 #' from \eqn{R} to \eqn{\infty}.
 #' @export
@@ -76,7 +77,7 @@ OwenQ1 <- function(nu, t, delta, R, algo=1){
 #' # OwenQ1(nu, t, delta, R) + OwenQ2(nu, t, delta, R) = pt(t, nu, delta)
 #' OwenQ1(nu=5, t=3, delta=2, R=1) + OwenQ2(nu=5, t=3, delta=2, R=1)
 #' pt(q=3, df=5, ncp=2)
-OwenQ2 <- function(nu, t, delta, R){
+OwenQ2 <- function(nu, t, delta, R, algo=1){
   J <- length(R)
   if(length(delta) != J){
     stop("`delta` and `R` must have the same length.")
@@ -98,7 +99,7 @@ OwenQ2 <- function(nu, t, delta, R){
     }
     if(!all(inf <- is.infinite(delta))){
       noninf <- which(!inf)
-      out[noninf] <- RcppOwenQ2(nu, t, delta[noninf], R[noninf])
+      out[noninf] <- RcppOwenQ2(nu, t, delta[noninf], R[noninf], algo)
     }
     return(out)
   }

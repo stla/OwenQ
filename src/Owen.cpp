@@ -120,7 +120,7 @@ NumericVector RcppOwenQ1
   const double b = nu/(nu+t*t);
   const double sB = sqrt(b);
   const double ab = sqrt(nu)/(nu/t + t);
-  const double asB = R::sign(t)*1/sqrt(nu/(t*t)+1);
+  const double asB = R::sign(t)/sqrt(nu/(t*t)+1);
   const int J = delta.size();
   if(nu==1){
     NumericVector C = pnorm(R) - isPositive(delta);
@@ -159,7 +159,7 @@ NumericVector RcppOwenQ1
           A[k] = 1.0/k/A[k-1];
  //         prodA[k] = A[k] * prodA[k-1];
         }
-        if(nu >= 5){
+        if(nu >= 5){ // tu peux enlever ce if je pense (boucle vide)
           for(k=1; k<n-2; k++){
             L(k,_) = A[k+2] * R * L(k-1,_); 
 //              L(k,_) = prodA[k+2] * xndnormx(R,k+1);
@@ -167,7 +167,7 @@ NumericVector RcppOwenQ1
         }
         for(k=2; k<n; k++){
 //            H(k,_) = prodA[k] * xndnormx(R,k);
-            H(k,_) = R * H(k-1,_);
+            H(k,_) = A[k] * R * H(k-1,_);
             M(k,_) = (k-1.0)/k * (A[k-2] * delta * ab * M(k-1,_) + b*M(k-2,_)) - 
                         Lfactor*L(k-2,_);
         }
@@ -176,15 +176,23 @@ NumericVector RcppOwenQ1
         A[0] = 1.0;
         NumericVector halfRR = 0.5*R*R;
         NumericVector logR = log(R);
+        bool even = true;
         for(k=0; k<n-2; k++){
           A[k+1] = 1.0/(k+1.0)/A[k]; // un de trop
           //double Ak = AA(k);
           double ldf;
-          if(k % 2 == 0){
+          if(even){
             ldf = (0.5*k+1.0)*logtwo + lgamma(2.0+0.5*k);
+            even = false;
           }else{
             ldf = lgamma(k+3.0) - 0.5*(k+1.0)*logtwo - lgamma(0.5*(k+3.0));
+            even = true;
           }
+//          if(k % 2 == 0){
+//            ldf = (0.5*k+1.0)*logtwo + lgamma(2.0+0.5*k);
+//          }else{
+//            ldf = lgamma(k+3.0) - 0.5*(k+1.0)*logtwo - lgamma(0.5*(k+3.0));
+//          }
           double r = (k+1.0)/(k+2.0);
           NumericVector K = 
                   exp(-ldf + (k+1.0)*logR - halfRR - logsqrt2pi);
@@ -221,7 +229,8 @@ NumericVector RcppOwenQ1
 
 //****************************************************************************80
 // [[Rcpp::export]]
-NumericVector RcppOwenQ2(int nu, double t, NumericVector delta, NumericVector R){
+NumericVector RcppOwenQ2
+    (int nu, double t, NumericVector delta, NumericVector R, int algo=1){
   const double a = R::sign(t)*sqrt(t*t/nu);
   const double b = nu/(nu+t*t);
   const double sB = sqrt(b);
@@ -248,42 +257,69 @@ NumericVector RcppOwenQ2(int nu, double t, NumericVector delta, NumericVector R)
   const int n = nu-1;
   NumericMatrix H(n,J);
   NumericMatrix M(n,J);
-  H(0,_) = -dnorm(R) * pnorm(a*R-delta);
+  NumericVector Hfactor = -pnorm(a*R-delta); 
+  NumericVector Lfactor = ab * dnorm(a*R-delta);
+  H(0,_) = dnorm(R);
   M(0,_) = asB*dnorm(delta*sB)*pnorm((delta*ab-R)/sB);
   if(nu >= 3){
-    H(1,_) = R * H(0,_);
+    H(1,_) = xdnormx(R);
     M(1,_) = delta*ab*M(0,_) + ab*dnorm(delta*sB)*dnorm((delta*ab-R)/sB);
     if(nu >= 4){
-      NumericVector A(n);
-      NumericMatrix L(n-2,J);
-      A[0] = 1;
-      A[1] = 1;
-      L(0,_) = ab * R * dnorm(R) * dnorm(a*R-delta) / 2;
       int k;
-      for(k=2; k<n; k++){
-        A[k] = 1.0/k/A[k-1];
-      }
-      if(nu >= 5){
-        for(k=1; k<n-2; k++){
-          L(k,_) = A[k+2] * R * L(k-1,_);
+      if(algo == 1){
+        NumericVector A(n);
+        NumericMatrix L(n-2,J);
+        A[0] = 1;
+        A[1] = 1;
+        L(0,_) = 0.5*H(1,_);
+        for(k=2; k<n; k++){
+          A[k] = 1.0/(k*A[k-1]);
         }
-      }
-      for(k=2; k<n; k++){
-        H(k,_) = A[k] * R * H(k-1,_);
-        M(k,_) = (k-1.0)/k * (A[k-2] * delta * ab * M(k-1,_) + b*M(k-2,_)) + L(k-2,_);
+        if(nu >= 5){
+          for(k=1; k<n-2; k++){
+            L(k,_) = A[k+2] * R * L(k-1,_);
+          }
+        }
+        for(k=2; k<n; k++){
+          H(k,_) = A[k] * R * H(k-1,_);
+          M(k,_) = (k-1.0)/k * (A[k-2] * delta * ab * M(k-1,_) + b*M(k-2,_)) + 
+                      Lfactor*L(k-2,_);
+        }
+      }else{ // algo 2
+        NumericVector A(n-1);
+        A[0] = 1.0;
+        NumericVector halfRR = 0.5*R*R;
+        NumericVector logR = log(R);
+        for(k=0; k<n-2; k++){
+          A[k+1] = 1.0/(k+1.0)/A[k]; // un de trop
+          double ldf;
+          if(k % 2 == 0){
+            ldf = (0.5*k+1.0)*logtwo + lgamma(2.0+0.5*k);
+          }else{
+            ldf = lgamma(k+3.0) - 0.5*(k+1.0)*logtwo - lgamma(0.5*(k+3.0));
+          }
+          double r = (k+1.0)/(k+2.0);
+          NumericVector K = 
+                  exp(-ldf + (k+1.0)*logR - halfRR - logsqrt2pi);
+          H(k+2,_) = K*R;
+          M(k+2,_) = r*(A[k]*delta*ab*M(k+1,_)+b*M(k,_)) + K*Lfactor;
+        }                    
       }
     }
   }
-  NumericVector sum(J);
+  NumericVector sumM(J);
+  NumericVector sumH(J);
   int i;
   if(nu % 2 == 0){
     for(i=0; i<nu-1; i+=2){
-      sum += M(i,_)-H(i,_);
+      sumM += M(i,_);
+      sumH += H(i,_);
     }
-    return sqrt2pi * sum;
+    return sqrt2pi * (sumM - Hfactor*sumH);
   }else{
     for(i=1; i<nu-1; i+=2){
-      sum += M(i,_)-H(i,_);
+      sumM += M(i,_);
+      sumH += H(i,_);
     }
     NumericVector C = pnorm(-delta*sB) - pnorm(R) + isPositive(delta);
     for(i=0; i<J; i++){
@@ -291,7 +327,7 @@ NumericVector RcppOwenQ2(int nu, double t, NumericVector delta, NumericVector R)
       double C3 = RcppOwenT(delta[i]*sB, (delta[i]*ab-R[i])/b/delta[i]);
       C[i] += 2*(C2 + C3);
     }
-    return C+2*sum;
+    return C+2*(sumM - Hfactor*sumH);
   }
 }
 

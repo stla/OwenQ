@@ -4,7 +4,7 @@
 \alias{OwenQ1}
 \title{First Owen Q-function}
 \usage{
-OwenQ1(nu, t, delta, R)
+OwenQ1(nu, t, delta, R, algo = 1)
 }
 \arguments{
 \item{nu}{integer greater than \eqn{1}, the number of degrees of freedom}
@@ -15,6 +15,8 @@ OwenQ1(nu, t, delta, R)
 
 \item{R}{(upper bound of the integral) vector of finite positive numbers,
 with the same length as \code{delta}}
+
+\item{algo}{the algorithm, \code{1} or \code{2}}
 }
 \value{
 A vector of numbers between \eqn{0} and \eqn{1}, the values of the
