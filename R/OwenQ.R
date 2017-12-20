@@ -31,14 +31,23 @@ OwenQ1 <- function(nu, t, delta, R, algo=1){
   if(any(R<0 | R==Inf)){
     stop("`R` must be a finite positive number.")
   }
-  if(nu==Inf || t==-Inf){
-    return(numeric(J))
+  if(nu==Inf){
+    return(numeric(J)) # pas cohérent avec powen4 - si car R Inf
   }
   if(isNotPositiveInteger(nu)){
     stop("`nu` must be an integer >=1.")
   }
   if(t == Inf){
-    return(pgamma(R^2/2, nu/2, lower.tail=TRUE))
+    out <- rep(NaN, J)
+    if(any(i <- delta != Inf)){
+      out[i] <- pgamma(R[i]^2/2, nu/2, lower.tail=TRUE)
+    }
+    return(out)
+  }
+  if(t == -Inf){
+    out <- numeric(J)
+    out[delta == -Inf] <- NaN
+    return(out)
   }
   out <- numeric(J)
   if(!all(i <- is.finite(delta))){
@@ -92,10 +101,16 @@ OwenQ2 <- function(nu, t, delta, R, algo=1){
     stop("`nu` must be an integer >=1.")
   }
   if(t==Inf){
-    return(pgamma(R^2/2, nu/2, lower.tail=FALSE))
+    out <- rep(NaN, J)
+    if(any(i <- delta!=Inf)){
+      out[i] <- pgamma(R[i]^2/2, nu/2, lower.tail=FALSE)
+    }
+    return(out)
   }
   if(t==-Inf){
-    return(numeric(J)) # et si delta Inf ?
+    out <- numeric(J)
+    out[delta==-Inf] <- NaN
+    return(out)
   }
   out <- numeric(J)
   if(!all(i <- is.finite(delta))){

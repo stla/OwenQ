@@ -13,6 +13,7 @@
 #' @param t1,t2 two numbers, positive or negative, possibly infinite
 #' @param delta1,delta2 two vectors of possibly infinite numbers with the same length,
 #' the noncentrality parameters
+#' @param algo the algorithm used, \code{1} or \code{2}
 #' @return A vector of numbers between \eqn{0} and \eqn{1},
 #' possibly containing some \code{NaN}.
 #' @note When the number of degrees of freedom is odd, the procedure resorts to
@@ -34,7 +35,7 @@ NULL
 
 #' @rdname psbt
 #' @export
-psbt1 <- function(nu, t1, t2, delta1, delta2){
+psbt1 <- function(nu, t1, t2, delta1, delta2, algo=1){
   L <- length(delta1)
   if(L != length(delta2)){
     stop("`delta1` and `delta2` must have the same length.")
@@ -42,7 +43,7 @@ psbt1 <- function(nu, t1, t2, delta1, delta2){
   out <- numeric(L)
   higher <- (delta1 > delta2) # | is.infinite(delta1) | is.infinite(delta2)
   if(J <- length(whigher <- which(higher))){
-    out[whigher] <- powen1(nu, t1, t2, delta1[whigher], delta2[whigher])
+    out[whigher] <- powen1(nu, t1, t2, delta1[whigher], delta2[whigher], algo)
   }
   if(J < L){
     equal <- delta1==delta2
@@ -51,7 +52,7 @@ psbt1 <- function(nu, t1, t2, delta1, delta2){
     }
     if(J+K < L){
       wlower <- which(!(higher|equal))
-      out[wlower] <- powen1(nu, t2, t1, delta2[wlower], delta1[wlower])
+      out[wlower] <- powen1(nu, t2, t1, delta2[wlower], delta1[wlower], algo)
     }
   }
   out
@@ -59,7 +60,7 @@ psbt1 <- function(nu, t1, t2, delta1, delta2){
 
 #' @rdname psbt
 #' @export
-psbt2 <- function(nu, t1, t2, delta1, delta2){
+psbt2 <- function(nu, t1, t2, delta1, delta2, algo=1){
   L <- length(delta1)
   if(L != length(delta2)){
     stop("`delta1` and `delta2` must have the same length.")
@@ -67,7 +68,7 @@ psbt2 <- function(nu, t1, t2, delta1, delta2){
   out <- numeric(L)
   higher <- (delta1 > delta2) # | is.infinite(delta1) | is.infinite(delta2)
   if(J <- length(whigher <- which(higher))){
-    out[whigher] <- powen2(nu, t1, t2, delta1[whigher], delta2[whigher])
+    out[whigher] <- powen2(nu, t1, t2, delta1[whigher], delta2[whigher], algo)
   }
   if(J < L){
     equal <- delta1==delta2
@@ -77,7 +78,7 @@ psbt2 <- function(nu, t1, t2, delta1, delta2){
     }
     if(J+K < L){
       wlower <- which(!(higher|equal))
-      out[wlower] <- powen4(nu, t2, t1, delta2[wlower], delta1[wlower])
+      out[wlower] <- powen4(nu, t2, t1, delta2[wlower], delta1[wlower], algo)
     }
   }
   out
@@ -85,7 +86,7 @@ psbt2 <- function(nu, t1, t2, delta1, delta2){
 
 #' @rdname psbt
 #' @export
-psbt3 <- function(nu, t1, t2, delta1, delta2){
+psbt3 <- function(nu, t1, t2, delta1, delta2, algo=1){
   L <- length(delta1)
   if(L != length(delta2)){
     stop("`delta1` and `delta2` must have the same length.")
@@ -93,7 +94,7 @@ psbt3 <- function(nu, t1, t2, delta1, delta2){
   out <- numeric(L)
   higher <- (delta1 > delta2) # | is.infinite(delta1) | is.infinite(delta2)
   if(J <- length(whigher <- which(higher))){
-    out[whigher] <- powen3(nu, t1, t2, delta1[whigher], delta2[whigher])
+    out[whigher] <- powen3(nu, t1, t2, delta1[whigher], delta2[whigher], algo)
   }
   if(J < L){
     equal <- delta1==delta2
@@ -102,7 +103,7 @@ psbt3 <- function(nu, t1, t2, delta1, delta2){
     }
     if(J+K < L){
       wlower <- which(!(higher|equal))
-      out[wlower] <- powen3(nu, t2, t1, delta2[wlower], delta1[wlower])
+      out[wlower] <- powen3(nu, t2, t1, delta2[wlower], delta1[wlower], algo)
     }
   }
   out
@@ -110,7 +111,7 @@ psbt3 <- function(nu, t1, t2, delta1, delta2){
 
 #' @rdname psbt
 #' @export
-psbt4 <- function(nu, t1, t2, delta1, delta2){
+psbt4 <- function(nu, t1, t2, delta1, delta2, algo=1){
   L <- length(delta1)
   if(L != length(delta2)){
     stop("`delta1` and `delta2` must have the same length.")
@@ -118,7 +119,7 @@ psbt4 <- function(nu, t1, t2, delta1, delta2){
   out <- numeric(L)
   higher <- (delta1 > delta2) # | is.infinite(delta1) | is.infinite(delta2)
   if(J <- length(whigher <- which(higher))){
-    out[whigher] <- powen4(nu, t1, t2, delta1[whigher], delta2[whigher])
+    out[whigher] <- powen4(nu, t1, t2, delta1[whigher], delta2[whigher], algo)
   }
   if(J < L){
     equal <- delta1==delta2
@@ -128,7 +129,7 @@ psbt4 <- function(nu, t1, t2, delta1, delta2){
     }
     if(J+K < L && t1 < t2){
       wlower <- which(!(higher|equal))
-      out[wlower] <- powen2(nu, t2, t1, delta2[wlower], delta1[wlower])
+      out[wlower] <- powen2(nu, t2, t1, delta2[wlower], delta1[wlower], algo)
     }
   }
   out
