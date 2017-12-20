@@ -19,6 +19,7 @@
 #' @param delta1,delta2 two vectors of possibly infinite numbers with the same length,
 #' the noncentrality parameters;
 #' must satisfy \code{delta1>delta2}
+#' @param algo the algorithm used, \code{1} or \code{2}
 #' @return A vector of numbers between \eqn{0} and \eqn{1}, possibly
 #' containing some \code{NaN}.
 #' @importFrom Rcpp evalCpp
@@ -47,7 +48,7 @@ NULL
 
 #' @rdname powen
 #' @export
-powen1 <- function(nu, t1, t2, delta1, delta2){
+powen1 <- function(nu, t1, t2, delta1, delta2, algo=1){
   J <- length(delta1)
   if(J != length(delta2)){
     stop("`delta1` and `delta2` must have the same length.")
@@ -64,7 +65,8 @@ powen1 <- function(nu, t1, t2, delta1, delta2){
     return(out)
   }
   if(nu == Inf){
-    return(pnorm(t1, mean=delta1) - pmax(0, pnorm(t1, mean=delta1)-pnorm(t2, mean=delta2)))
+    return(pnorm(t1, mean=delta1) -
+             pmax(0, pnorm(t1, mean=delta1)-pnorm(t2, mean=delta2)))
   }
   if(t1 == Inf){
     out <- rep(NaN, J)
@@ -83,14 +85,14 @@ powen1 <- function(nu, t1, t2, delta1, delta2){
     }
   }
   if(any(i)){
-    out[i] <- RcppOwenCDF1(nu, t1, t2, delta1[i], delta2[i])
+    out[i] <- RcppOwenCDF1(nu, t1, t2, delta1[i], delta2[i], algo)
   }
   out
 }
 
 #' @rdname powen
 #' @export
-powen2 <- function(nu, t1, t2, delta1, delta2){
+powen2 <- function(nu, t1, t2, delta1, delta2, algo=1){
   J <- length(delta1)
   if(J != length(delta2)){
     stop("`delta1` and `delta2` must have the same length.")
@@ -144,14 +146,14 @@ powen2 <- function(nu, t1, t2, delta1, delta2){
     return(out)
   }
   if(any(i <- is.finite(delta1) & is.finite(delta2))){
-    out[i] <- RcppOwenCDF2(nu, t1, t2, delta1[i], delta2[i])
+    out[i] <- RcppOwenCDF2(nu, t1, t2, delta1[i], delta2[i], algo)
   }
   out
 }
 
 #' @rdname powen
 #' @export
-powen3 <- function(nu, t1, t2, delta1, delta2){
+powen3 <- function(nu, t1, t2, delta1, delta2, algo=1){
   J <- length(delta1)
   if(J != length(delta2)){
     stop("`delta1` and `delta2` must have the same length.")
@@ -176,7 +178,8 @@ powen3 <- function(nu, t1, t2, delta1, delta2){
     return(out)
   }
   if(nu == Inf){ # to simplify ?
-    return(1-pnorm(t1, mean=delta1) - pmax(0, pnorm(t2, mean=delta2)-pnorm(t1, mean=delta1)))
+    return(1-pnorm(t1, mean=delta1) -
+             pmax(0, pnorm(t2, mean=delta2)-pnorm(t1, mean=delta1)))
   }
   out <- numeric(J)
   if(!all(i <- (is.finite(delta1) & is.finite(delta2)))){
@@ -186,14 +189,14 @@ powen3 <- function(nu, t1, t2, delta1, delta2){
     }
   }
   if(any(i)){
-    out[i] <- RcppOwenCDF3(nu, t1, t2, delta1[i], delta2[i])
+    out[i] <- RcppOwenCDF3(nu, t1, t2, delta1[i], delta2[i], algo)
   }
   out
 }
 
 #' @rdname powen
 #' @export
-powen4 <- function(nu, t1, t2, delta1, delta2){
+powen4 <- function(nu, t1, t2, delta1, delta2, algo=1){
   J <- length(delta1)
   if(J != length(delta2)){
     stop("`delta1` and `delta2` must have the same length.")
@@ -245,7 +248,7 @@ powen4 <- function(nu, t1, t2, delta1, delta2){
     }
   }
   if(any(i)){
-    out[i] <- RcppOwenCDF4(nu, t1, t2, delta1[i], delta2[i])
+    out[i] <- RcppOwenCDF4(nu, t1, t2, delta1[i], delta2[i], algo)
   }
   out
 }

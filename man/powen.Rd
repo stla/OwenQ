@@ -8,13 +8,13 @@
 \alias{powen4}
 \title{Owen distribution functions when \ifelse{html}{\out{&delta;<sub>1</sub>>&delta;<sub>2</sub>}}{\eqn{\delta_1>\delta_2}}}
 \usage{
-powen1(nu, t1, t2, delta1, delta2)
+powen1(nu, t1, t2, delta1, delta2, algo = 1)
 
-powen2(nu, t1, t2, delta1, delta2)
+powen2(nu, t1, t2, delta1, delta2, algo = 1)
 
-powen3(nu, t1, t2, delta1, delta2)
+powen3(nu, t1, t2, delta1, delta2, algo = 1)
 
-powen4(nu, t1, t2, delta1, delta2)
+powen4(nu, t1, t2, delta1, delta2, algo = 1)
 }
 \arguments{
 \item{nu}{integer greater than \eqn{1}, the number of degrees of freedom;
@@ -25,6 +25,8 @@ infinite allowed}
 \item{delta1, delta2}{two vectors of possibly infinite numbers with the same length,
 the noncentrality parameters;
 must satisfy \code{delta1>delta2}}
+
+\item{algo}{the algorithm used, \code{1} or \code{2}}
 }
 \value{
 A vector of numbers between \eqn{0} and \eqn{1}, possibly

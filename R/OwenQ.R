@@ -82,7 +82,7 @@ OwenQ2 <- function(nu, t, delta, R, algo=1){
   if(length(delta) != J){
     stop("`delta` and `R` must have the same length.")
   }
-  if(any(R<0 | R==Inf)){
+  if(any(R<0 | R==Inf)){ # 0 pour R == Inf
     stop("`R` must be a finite positive number.")
   }
   if(nu==Inf){
@@ -91,17 +91,20 @@ OwenQ2 <- function(nu, t, delta, R, algo=1){
   if(isNotPositiveInteger(nu)){
     stop("`nu` must be an integer >=1.")
   }
-  if(any(is.infinite(delta))){
-    out <- numeric(J)
-    if(any(minf <- delta==-Inf)){
-      wminf <- which(minf)
-      out[wminf] <- pgamma(R[wminf]^2/2, nu/2, lower.tail=FALSE)
-    }
-    if(!all(inf <- is.infinite(delta))){
-      noninf <- which(!inf)
-      out[noninf] <- RcppOwenQ2(nu, t, delta[noninf], R[noninf], algo)
-    }
-    return(out)
+  if(t==Inf){
+    return(pgamma(R^2/2, nu/2, lower.tail=FALSE))
   }
-  RcppOwenQ2(nu, t, delta, R)
+  if(t==-Inf){
+    return(numeric(J)) # et si delta Inf ?
+  }
+  out <- numeric(J)
+  if(!all(i <- is.finite(delta))){
+    if(any(minf <- delta==-Inf)){
+      out[minf] <- pgamma(R[minf]^2/2, nu/2, lower.tail=FALSE)
+    }
+  }
+  if(any(i)){
+    out[i] <- RcppOwenQ2(nu, t, delta[i], R[i], algo)
+  }
+  out
 }
