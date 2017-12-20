@@ -21,35 +21,31 @@ RcppOwenStudent <- function(q, nu, delta) {
     .Call('_OwenQ_RcppOwenStudent', PACKAGE = 'OwenQ', q, nu, delta)
 }
 
-RcppOwenQ1 <- function(nu, t, delta, R) {
-    .Call('_OwenQ_RcppOwenQ1', PACKAGE = 'OwenQ', nu, t, delta, R)
+RcppOwenQ1 <- function(nu, t, delta, R, algo = 1L) {
+    .Call('_OwenQ_RcppOwenQ1', PACKAGE = 'OwenQ', nu, t, delta, R, algo)
 }
 
-RcppOwenQ2 <- function(nu, t, delta, R) {
-    .Call('_OwenQ_RcppOwenQ2', PACKAGE = 'OwenQ', nu, t, delta, R)
+RcppOwenQ2 <- function(nu, t, delta, R, algo = 1L) {
+    .Call('_OwenQ_RcppOwenQ2', PACKAGE = 'OwenQ', nu, t, delta, R, algo)
 }
 
-RcppOwenCDF4 <- function(nu, t1, t2, delta1, delta2) {
-    .Call('_OwenQ_RcppOwenCDF4', PACKAGE = 'OwenQ', nu, t1, t2, delta1, delta2)
+RcppOwenCDF4 <- function(nu, t1, t2, delta1, delta2, algo = 1L) {
+    .Call('_OwenQ_RcppOwenCDF4', PACKAGE = 'OwenQ', nu, t1, t2, delta1, delta2, algo)
 }
 
-RcppOwenCDF3 <- function(nu, t1, t2, delta1, delta2) {
-    .Call('_OwenQ_RcppOwenCDF3', PACKAGE = 'OwenQ', nu, t1, t2, delta1, delta2)
+RcppOwenCDF3 <- function(nu, t1, t2, delta1, delta2, algo = 1L) {
+    .Call('_OwenQ_RcppOwenCDF3', PACKAGE = 'OwenQ', nu, t1, t2, delta1, delta2, algo)
 }
 
-RcppOwenCDF2 <- function(nu, t1, t2, delta1, delta2) {
-    .Call('_OwenQ_RcppOwenCDF2', PACKAGE = 'OwenQ', nu, t1, t2, delta1, delta2)
+RcppOwenCDF2 <- function(nu, t1, t2, delta1, delta2, algo = 1L) {
+    .Call('_OwenQ_RcppOwenCDF2', PACKAGE = 'OwenQ', nu, t1, t2, delta1, delta2, algo)
 }
 
-RcppOwenCDF1 <- function(nu, t1, t2, delta1, delta2) {
-    .Call('_OwenQ_RcppOwenCDF1', PACKAGE = 'OwenQ', nu, t1, t2, delta1, delta2)
+RcppOwenCDF1 <- function(nu, t1, t2, delta1, delta2, algo = 1L) {
+    .Call('_OwenQ_RcppOwenCDF1', PACKAGE = 'OwenQ', nu, t1, t2, delta1, delta2, algo)
 }
 
-RcppSpecialOwenCDF2 <- function(nu, t, delta) {
-    .Call('_OwenQ_RcppSpecialOwenCDF2', PACKAGE = 'OwenQ', nu, t, delta)
-}
-
-powen4_boost <- function(nu, t1, t2, delta1, delta2) {
-    .Call('_OwenQ_powen4_boost', PACKAGE = 'OwenQ', nu, t1, t2, delta1, delta2)
+RcppSpecialOwenCDF2 <- function(nu, t, delta, algo = 1L) {
+    .Call('_OwenQ_RcppSpecialOwenCDF2', PACKAGE = 'OwenQ', nu, t, delta, algo)
 }
 

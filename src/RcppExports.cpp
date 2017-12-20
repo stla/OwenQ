@@ -24,6 +24,40 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// iOwenQ1
+Rcpp::NumericVector iOwenQ1(double nu, double t, double delta, double R, int subdiv, double eps_abs, double eps_rel);
+RcppExport SEXP _OwenQ_iOwenQ1(SEXP nuSEXP, SEXP tSEXP, SEXP deltaSEXP, SEXP RSEXP, SEXP subdivSEXP, SEXP eps_absSEXP, SEXP eps_relSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type nu(nuSEXP);
+    Rcpp::traits::input_parameter< double >::type t(tSEXP);
+    Rcpp::traits::input_parameter< double >::type delta(deltaSEXP);
+    Rcpp::traits::input_parameter< double >::type R(RSEXP);
+    Rcpp::traits::input_parameter< int >::type subdiv(subdivSEXP);
+    Rcpp::traits::input_parameter< double >::type eps_abs(eps_absSEXP);
+    Rcpp::traits::input_parameter< double >::type eps_rel(eps_relSEXP);
+    rcpp_result_gen = Rcpp::wrap(iOwenQ1(nu, t, delta, R, subdiv, eps_abs, eps_rel));
+    return rcpp_result_gen;
+END_RCPP
+}
+// iOwenQ2
+Rcpp::NumericVector iOwenQ2(double nu, double t, double delta, double R, int subdiv, double eps_abs, double eps_rel);
+RcppExport SEXP _OwenQ_iOwenQ2(SEXP nuSEXP, SEXP tSEXP, SEXP deltaSEXP, SEXP RSEXP, SEXP subdivSEXP, SEXP eps_absSEXP, SEXP eps_relSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type nu(nuSEXP);
+    Rcpp::traits::input_parameter< double >::type t(tSEXP);
+    Rcpp::traits::input_parameter< double >::type delta(deltaSEXP);
+    Rcpp::traits::input_parameter< double >::type R(RSEXP);
+    Rcpp::traits::input_parameter< int >::type subdiv(subdivSEXP);
+    Rcpp::traits::input_parameter< double >::type eps_abs(eps_absSEXP);
+    Rcpp::traits::input_parameter< double >::type eps_rel(eps_relSEXP);
+    rcpp_result_gen = Rcpp::wrap(iOwenQ2(nu, t, delta, R, subdiv, eps_abs, eps_rel));
+    return rcpp_result_gen;
+END_RCPP
+}
 // RcppOwenT
 double RcppOwenT(double h, double a);
 RcppExport SEXP _OwenQ_RcppOwenT(SEXP hSEXP, SEXP aSEXP) {
@@ -50,8 +84,8 @@ BEGIN_RCPP
 END_RCPP
 }
 // RcppOwenQ1
-NumericVector RcppOwenQ1(int nu, double t, NumericVector delta, NumericVector R);
-RcppExport SEXP _OwenQ_RcppOwenQ1(SEXP nuSEXP, SEXP tSEXP, SEXP deltaSEXP, SEXP RSEXP) {
+NumericVector RcppOwenQ1(int nu, double t, NumericVector delta, NumericVector R, int algo);
+RcppExport SEXP _OwenQ_RcppOwenQ1(SEXP nuSEXP, SEXP tSEXP, SEXP deltaSEXP, SEXP RSEXP, SEXP algoSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -59,13 +93,14 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type t(tSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type delta(deltaSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type R(RSEXP);
-    rcpp_result_gen = Rcpp::wrap(RcppOwenQ1(nu, t, delta, R));
+    Rcpp::traits::input_parameter< int >::type algo(algoSEXP);
+    rcpp_result_gen = Rcpp::wrap(RcppOwenQ1(nu, t, delta, R, algo));
     return rcpp_result_gen;
 END_RCPP
 }
 // RcppOwenQ2
-NumericVector RcppOwenQ2(int nu, double t, NumericVector delta, NumericVector R);
-RcppExport SEXP _OwenQ_RcppOwenQ2(SEXP nuSEXP, SEXP tSEXP, SEXP deltaSEXP, SEXP RSEXP) {
+NumericVector RcppOwenQ2(int nu, double t, NumericVector delta, NumericVector R, int algo);
+RcppExport SEXP _OwenQ_RcppOwenQ2(SEXP nuSEXP, SEXP tSEXP, SEXP deltaSEXP, SEXP RSEXP, SEXP algoSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -73,13 +108,14 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type t(tSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type delta(deltaSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type R(RSEXP);
-    rcpp_result_gen = Rcpp::wrap(RcppOwenQ2(nu, t, delta, R));
+    Rcpp::traits::input_parameter< int >::type algo(algoSEXP);
+    rcpp_result_gen = Rcpp::wrap(RcppOwenQ2(nu, t, delta, R, algo));
     return rcpp_result_gen;
 END_RCPP
 }
 // RcppOwenCDF4
-NumericVector RcppOwenCDF4(int nu, double t1, double t2, NumericVector delta1, NumericVector delta2);
-RcppExport SEXP _OwenQ_RcppOwenCDF4(SEXP nuSEXP, SEXP t1SEXP, SEXP t2SEXP, SEXP delta1SEXP, SEXP delta2SEXP) {
+NumericVector RcppOwenCDF4(int nu, double t1, double t2, NumericVector delta1, NumericVector delta2, int algo);
+RcppExport SEXP _OwenQ_RcppOwenCDF4(SEXP nuSEXP, SEXP t1SEXP, SEXP t2SEXP, SEXP delta1SEXP, SEXP delta2SEXP, SEXP algoSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -88,13 +124,14 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type t2(t2SEXP);
     Rcpp::traits::input_parameter< NumericVector >::type delta1(delta1SEXP);
     Rcpp::traits::input_parameter< NumericVector >::type delta2(delta2SEXP);
-    rcpp_result_gen = Rcpp::wrap(RcppOwenCDF4(nu, t1, t2, delta1, delta2));
+    Rcpp::traits::input_parameter< int >::type algo(algoSEXP);
+    rcpp_result_gen = Rcpp::wrap(RcppOwenCDF4(nu, t1, t2, delta1, delta2, algo));
     return rcpp_result_gen;
 END_RCPP
 }
 // RcppOwenCDF3
-NumericVector RcppOwenCDF3(int nu, double t1, double t2, NumericVector delta1, NumericVector delta2);
-RcppExport SEXP _OwenQ_RcppOwenCDF3(SEXP nuSEXP, SEXP t1SEXP, SEXP t2SEXP, SEXP delta1SEXP, SEXP delta2SEXP) {
+NumericVector RcppOwenCDF3(int nu, double t1, double t2, NumericVector delta1, NumericVector delta2, int algo);
+RcppExport SEXP _OwenQ_RcppOwenCDF3(SEXP nuSEXP, SEXP t1SEXP, SEXP t2SEXP, SEXP delta1SEXP, SEXP delta2SEXP, SEXP algoSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -103,13 +140,14 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type t2(t2SEXP);
     Rcpp::traits::input_parameter< NumericVector >::type delta1(delta1SEXP);
     Rcpp::traits::input_parameter< NumericVector >::type delta2(delta2SEXP);
-    rcpp_result_gen = Rcpp::wrap(RcppOwenCDF3(nu, t1, t2, delta1, delta2));
+    Rcpp::traits::input_parameter< int >::type algo(algoSEXP);
+    rcpp_result_gen = Rcpp::wrap(RcppOwenCDF3(nu, t1, t2, delta1, delta2, algo));
     return rcpp_result_gen;
 END_RCPP
 }
 // RcppOwenCDF2
-NumericVector RcppOwenCDF2(int nu, double t1, double t2, NumericVector delta1, NumericVector delta2);
-RcppExport SEXP _OwenQ_RcppOwenCDF2(SEXP nuSEXP, SEXP t1SEXP, SEXP t2SEXP, SEXP delta1SEXP, SEXP delta2SEXP) {
+NumericVector RcppOwenCDF2(int nu, double t1, double t2, NumericVector delta1, NumericVector delta2, int algo);
+RcppExport SEXP _OwenQ_RcppOwenCDF2(SEXP nuSEXP, SEXP t1SEXP, SEXP t2SEXP, SEXP delta1SEXP, SEXP delta2SEXP, SEXP algoSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -118,13 +156,14 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type t2(t2SEXP);
     Rcpp::traits::input_parameter< NumericVector >::type delta1(delta1SEXP);
     Rcpp::traits::input_parameter< NumericVector >::type delta2(delta2SEXP);
-    rcpp_result_gen = Rcpp::wrap(RcppOwenCDF2(nu, t1, t2, delta1, delta2));
+    Rcpp::traits::input_parameter< int >::type algo(algoSEXP);
+    rcpp_result_gen = Rcpp::wrap(RcppOwenCDF2(nu, t1, t2, delta1, delta2, algo));
     return rcpp_result_gen;
 END_RCPP
 }
 // RcppOwenCDF1
-NumericVector RcppOwenCDF1(int nu, double t1, double t2, NumericVector delta1, NumericVector delta2);
-RcppExport SEXP _OwenQ_RcppOwenCDF1(SEXP nuSEXP, SEXP t1SEXP, SEXP t2SEXP, SEXP delta1SEXP, SEXP delta2SEXP) {
+NumericVector RcppOwenCDF1(int nu, double t1, double t2, NumericVector delta1, NumericVector delta2, int algo);
+RcppExport SEXP _OwenQ_RcppOwenCDF1(SEXP nuSEXP, SEXP t1SEXP, SEXP t2SEXP, SEXP delta1SEXP, SEXP delta2SEXP, SEXP algoSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
@@ -133,51 +172,39 @@ BEGIN_RCPP
     Rcpp::traits::input_parameter< double >::type t2(t2SEXP);
     Rcpp::traits::input_parameter< NumericVector >::type delta1(delta1SEXP);
     Rcpp::traits::input_parameter< NumericVector >::type delta2(delta2SEXP);
-    rcpp_result_gen = Rcpp::wrap(RcppOwenCDF1(nu, t1, t2, delta1, delta2));
+    Rcpp::traits::input_parameter< int >::type algo(algoSEXP);
+    rcpp_result_gen = Rcpp::wrap(RcppOwenCDF1(nu, t1, t2, delta1, delta2, algo));
     return rcpp_result_gen;
 END_RCPP
 }
 // RcppSpecialOwenCDF2
-NumericVector RcppSpecialOwenCDF2(int nu, double t, NumericVector delta);
-RcppExport SEXP _OwenQ_RcppSpecialOwenCDF2(SEXP nuSEXP, SEXP tSEXP, SEXP deltaSEXP) {
+NumericVector RcppSpecialOwenCDF2(int nu, double t, NumericVector delta, int algo);
+RcppExport SEXP _OwenQ_RcppSpecialOwenCDF2(SEXP nuSEXP, SEXP tSEXP, SEXP deltaSEXP, SEXP algoSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
     Rcpp::traits::input_parameter< int >::type nu(nuSEXP);
     Rcpp::traits::input_parameter< double >::type t(tSEXP);
     Rcpp::traits::input_parameter< NumericVector >::type delta(deltaSEXP);
-    rcpp_result_gen = Rcpp::wrap(RcppSpecialOwenCDF2(nu, t, delta));
-    return rcpp_result_gen;
-END_RCPP
-}
-// powen4_boost
-NumericVector powen4_boost(int nu, double t1, double t2, NumericVector delta1, NumericVector delta2);
-RcppExport SEXP _OwenQ_powen4_boost(SEXP nuSEXP, SEXP t1SEXP, SEXP t2SEXP, SEXP delta1SEXP, SEXP delta2SEXP) {
-BEGIN_RCPP
-    Rcpp::RObject rcpp_result_gen;
-    Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< int >::type nu(nuSEXP);
-    Rcpp::traits::input_parameter< double >::type t1(t1SEXP);
-    Rcpp::traits::input_parameter< double >::type t2(t2SEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type delta1(delta1SEXP);
-    Rcpp::traits::input_parameter< NumericVector >::type delta2(delta2SEXP);
-    rcpp_result_gen = Rcpp::wrap(powen4_boost(nu, t1, t2, delta1, delta2));
+    Rcpp::traits::input_parameter< int >::type algo(algoSEXP);
+    rcpp_result_gen = Rcpp::wrap(RcppSpecialOwenCDF2(nu, t, delta, algo));
     return rcpp_result_gen;
 END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
     {"_OwenQ_ipowen4", (DL_FUNC) &_OwenQ_ipowen4, 8},
+    {"_OwenQ_iOwenQ1", (DL_FUNC) &_OwenQ_iOwenQ1, 7},
+    {"_OwenQ_iOwenQ2", (DL_FUNC) &_OwenQ_iOwenQ2, 7},
     {"_OwenQ_RcppOwenT", (DL_FUNC) &_OwenQ_RcppOwenT, 2},
     {"_OwenQ_RcppOwenStudent", (DL_FUNC) &_OwenQ_RcppOwenStudent, 3},
-    {"_OwenQ_RcppOwenQ1", (DL_FUNC) &_OwenQ_RcppOwenQ1, 4},
-    {"_OwenQ_RcppOwenQ2", (DL_FUNC) &_OwenQ_RcppOwenQ2, 4},
-    {"_OwenQ_RcppOwenCDF4", (DL_FUNC) &_OwenQ_RcppOwenCDF4, 5},
-    {"_OwenQ_RcppOwenCDF3", (DL_FUNC) &_OwenQ_RcppOwenCDF3, 5},
-    {"_OwenQ_RcppOwenCDF2", (DL_FUNC) &_OwenQ_RcppOwenCDF2, 5},
-    {"_OwenQ_RcppOwenCDF1", (DL_FUNC) &_OwenQ_RcppOwenCDF1, 5},
-    {"_OwenQ_RcppSpecialOwenCDF2", (DL_FUNC) &_OwenQ_RcppSpecialOwenCDF2, 3},
-    {"_OwenQ_powen4_boost", (DL_FUNC) &_OwenQ_powen4_boost, 5},
+    {"_OwenQ_RcppOwenQ1", (DL_FUNC) &_OwenQ_RcppOwenQ1, 5},
+    {"_OwenQ_RcppOwenQ2", (DL_FUNC) &_OwenQ_RcppOwenQ2, 5},
+    {"_OwenQ_RcppOwenCDF4", (DL_FUNC) &_OwenQ_RcppOwenCDF4, 6},
+    {"_OwenQ_RcppOwenCDF3", (DL_FUNC) &_OwenQ_RcppOwenCDF3, 6},
+    {"_OwenQ_RcppOwenCDF2", (DL_FUNC) &_OwenQ_RcppOwenCDF2, 6},
+    {"_OwenQ_RcppOwenCDF1", (DL_FUNC) &_OwenQ_RcppOwenCDF1, 6},
+    {"_OwenQ_RcppSpecialOwenCDF2", (DL_FUNC) &_OwenQ_RcppSpecialOwenCDF2, 4},
     {NULL, NULL, 0}
 };
 

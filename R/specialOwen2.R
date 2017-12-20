@@ -4,6 +4,7 @@
 #' @param nu positive integer, possibly infinite
 #' @param t positive number
 #' @param delta vector of positive numbers
+#' @param algo the algorithm used, \code{1} or \code{2}
 #'
 #' @return A vector of numbers between 0 and 1.
 #' @importFrom stats pnorm
@@ -13,7 +14,7 @@
 #' @seealso \code{\link{powen2}}
 #' @examples
 #' spowen2(4, 1, 2) == powen2(4, 1, -1, 2, -2)
-spowen2 <- function(nu, t, delta){
+spowen2 <- function(nu, t, delta, algo=1){
   J <- length(delta)
   if(is.infinite(t)){
     stop("`t` must be finite.")
@@ -34,9 +35,9 @@ spowen2 <- function(nu, t, delta){
     out <- numeric(J)
     if(!all(inf)){
       noninf <- which(!inf)
-      out[noninf] <- RcppSpecialOwenCDF2(nu, t, delta[noninf])
+      out[noninf] <- RcppSpecialOwenCDF2(nu, t, delta[noninf], algo)
     }
     return(out)
   }
-  RcppSpecialOwenCDF2(nu, t, delta)
+  RcppSpecialOwenCDF2(nu, t, delta, algo)
 }

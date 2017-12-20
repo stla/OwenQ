@@ -4,7 +4,7 @@
 \alias{spowen2}
 \title{Special case of second Owen distribution function}
 \usage{
-spowen2(nu, t, delta)
+spowen2(nu, t, delta, algo = 1)
 }
 \arguments{
 \item{nu}{positive integer, possibly infinite}
@@ -12,6 +12,8 @@ spowen2(nu, t, delta)
 \item{t}{positive number}
 
 \item{delta}{vector of positive numbers}
+
+\item{algo}{the algorithm used, \code{1} or \code{2}}
 }
 \value{
 A vector of numbers between 0 and 1.
