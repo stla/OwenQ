@@ -7,7 +7,7 @@ using namespace Rcpp;
 #include <boost/math/constants/constants.hpp>
 
 const double sqrt2pi = boost::math::constants::root_two_pi<double>();
-const double onedivsqrt2pi = 
+const double onedivsqrt2pi =
              boost::math::constants::one_div_root_two_pi<double>();
 const double logsqrt2pi = boost::math::constants::log_root_two_pi<double>();
 const double logtwo = 0.693147180559945309417232121458176568;
@@ -92,7 +92,7 @@ NumericVector RcppOwenStudent(double q, int nu, NumericVector delta){
     for(int i=0; i<nu-1; i+=2){
       sum += M(i,_);
     }
-    return pnorm(-delta) + sqrt2pi*sum;      
+    return pnorm(-delta) + sqrt2pi*sum;
   }
 }
 
@@ -146,7 +146,7 @@ NumericVector RcppOwenQ1
   M(0,_) = asB*dnorm(delta*sB)*(pnorm(delta*asB)-pnorm((delta*ab-R)/sB));
   if(nu >= 3){
     H(1,_) = xdnormx(R);
-    M(1,_) = delta*ab*M(0,_) + 
+    M(1,_) = delta*ab*M(0,_) +
                 ab*dnorm(delta*sB)*(dnorm(delta*asB)-dnorm((delta*ab-R)/sB));
     if(nu >= 4){
       if(algo==1){
@@ -157,11 +157,11 @@ NumericVector RcppOwenQ1
             NumericVector AkRj = A[k] * R;
             L = AkRj * L;
             H(k,_) = AkRj * H(k-1,_);
-            M(k,_) = (k-1.0)/k * (A[k-2]*delta*ab*M(k-1,_) + b*M(k-2,_)) - 
+            M(k,_) = (k-1.0)/k * (A[k-2]*delta*ab*M(k-1,_) + b*M(k-2,_)) -
                         Lfactor*L;
         }
       }else{ // algo 2
-        NumericVector W = -(0.5 * R*R + logsqrt2pi); 
+        NumericVector W = -(0.5 * R*R + logsqrt2pi);
         NumericVector logR = log(R);
         double A = 1.0;
         double u = 0.0; double v = 0.0; double ldf;
@@ -176,7 +176,7 @@ NumericVector RcppOwenQ1
           H(k+2,_) = K*R;
           M(k+2,_) = r*(A*delta*ab*M(k+1,_)+b*M(k,_)) - K*Lfactor;
           A = 1.0 / ((k+1)*A);
-        }          
+        }
       }
     }
   }
@@ -213,7 +213,7 @@ NumericVector dnormtimes10pown(NumericVector x, int n){
 //   M(0,_) = asB*dnormtimes10pown(delta*sB, m)*(pnorm(delta*asB)-pnorm((delta*ab-R)/sB));
 //   if(nu >= 3){
 //     H(1,_) = xdnormx(R);
-//     M(1,_) = delta*ab*M(0,_) + 
+//     M(1,_) = delta*ab*M(0,_) +
 //                 ab*dnormtimes10pown(delta*sB,m)*(dnorm(delta*asB)-dnorm((delta*ab-R)/sB));
 //     if(nu >= 4){
 //       int k;
@@ -233,11 +233,11 @@ NumericVector dnormtimes10pown(NumericVector x, int n){
 //           even = true;
 //         }
 //         double r = (k+1.0)/(k+2.0);
-//         NumericVector K = 
+//         NumericVector K =
 //                 exp(-ldf + (k+1.0)*logR - halfRR - logsqrt2pi);
 //         H(k+2,_) = K*R;
 //         M(k+2,_) = r*(A[k]*delta*ab*M(k+1,_)+b*M(k,_)) - K*Lfactor;
-//       }          
+//       }
 //     }
 //   }
 //   List out;
@@ -292,11 +292,11 @@ NumericVector RcppOwenQ2
             NumericVector AkRj = A[k] * R;
             L = AkRj * L;
             H(k,_) = AkRj * H(k-1,_);
-            M(k,_) = (k-1.0)/k * (A[k-2]*delta*ab*M(k-1,_) + b*M(k-2,_)) + 
+            M(k,_) = (k-1.0)/k * (A[k-2]*delta*ab*M(k-1,_) + b*M(k-2,_)) +
                         Lfactor*L;
         }
       }else{ // algo 2
-        NumericVector W = -(0.5 * R*R + logsqrt2pi); 
+        NumericVector W = -(0.5 * R*R + logsqrt2pi);
         NumericVector logR = log(R);
         double A = 1.0;
         double u = 0.0; double v = 0.0; double ldf;
@@ -311,7 +311,7 @@ NumericVector RcppOwenQ2
           H(k+2,_) = K*R;
           M(k+2,_) = r*(A*delta*ab*M(k+1,_)+b*M(k,_)) + K*Lfactor;
           A = 1.0 / ((k+1)*A);
-        }          
+        }
       }
     }
   }
@@ -380,17 +380,17 @@ NumericVector RcppOwenCDF4(int nu, double t1, double t2, NumericVector delta1,
   NumericVector Lfactor1 = ab1 * dnorm(a1*R-delta1);
   NumericVector Lfactor2 = ab2 * dnorm(a2*R-delta2);
   H(0,_) = dnorm(R);
-  M1(0,_) = asB1*dnorm(delta1*sB1) * 
+  M1(0,_) = asB1*dnorm(delta1*sB1) *
                 (pnorm(delta1*asB1)-pnorm((delta1*ab1-R)/sB1));
-  M2(0,_) = asB2*dnorm(delta2*sB2) * 
+  M2(0,_) = asB2*dnorm(delta2*sB2) *
                 (pnorm(delta2*asB2)-pnorm((delta2*ab2-R)/sB2));
   if(nu >= 3){
     H(1,_) = xdnormx(R);
     M1(1,_) = delta1*ab1*M1(0,_) +
-                ab1*dnorm(delta1*sB1) * 
+                ab1*dnorm(delta1*sB1) *
                     (dnorm(delta1*asB1)-dnorm((delta1*ab1-R)/sB1));
     M2(1,_) = delta2*ab2*M2(0,_) +
-                ab2*dnorm(delta2*sB2) * 
+                ab2*dnorm(delta2*sB2) *
                     (dnorm(delta2*asB2)-dnorm((delta2*ab2-R)/sB2));
     if(nu >= 4){
       if(algo==1){
@@ -401,13 +401,13 @@ NumericVector RcppOwenCDF4(int nu, double t1, double t2, NumericVector delta1,
             NumericVector AkRj = A[k] * R;
             L = AkRj * L;
             H(k,_) = AkRj * H(k-1,_);
-            M1(k,_) = (k-1.0)/k * (A[k-2]*delta1*ab1*M1(k-1,_) + b1*M1(k-2,_)) - 
+            M1(k,_) = (k-1.0)/k * (A[k-2]*delta1*ab1*M1(k-1,_) + b1*M1(k-2,_)) -
                         Lfactor1*L;
-            M2(k,_) = (k-1.0)/k * (A[k-2]*delta2*ab2*M2(k-1,_) + b2*M2(k-2,_)) - 
+            M2(k,_) = (k-1.0)/k * (A[k-2]*delta2*ab2*M2(k-1,_) + b2*M2(k-2,_)) -
                         Lfactor2*L;
         }
       }else{ // algo 2
-        NumericVector W = -(0.5 * R*R + logsqrt2pi); 
+        NumericVector W = -(0.5 * R*R + logsqrt2pi);
         NumericVector logR = log(R);
         double A = 1.0;
         double u = 0.0; double v = 0.0; double ldf;
@@ -423,7 +423,7 @@ NumericVector RcppOwenCDF4(int nu, double t1, double t2, NumericVector delta1,
           M1(k+2,_) = r*(A*delta1*ab1*M1(k+1,_)+b1*M1(k,_)) - K*Lfactor1;
           M2(k+2,_) = r*(A*delta2*ab2*M2(k+1,_)+b2*M2(k,_)) - K*Lfactor2;
           A = 1.0 / ((k+1)*A);
-        }          
+        }
       }
     }
   }
@@ -432,13 +432,13 @@ NumericVector RcppOwenCDF4(int nu, double t1, double t2, NumericVector delta1,
     for(int i=0; i<nu-1; i+=2){
       sumM += M2(i,_)-M1(i,_); sumH += H(i,_);
     }
-    return pnorm(-delta2) - pnorm(-delta1) + 
+    return pnorm(-delta2) - pnorm(-delta1) +
             sqrt2pi*(sumM + (pnorm(a1*R-delta1) - pnorm(a2*R-delta2))*sumH);
   }else{
     for(int i=1; i<nu-1; i+=2){
       sumM += M2(i,_)-M1(i,_); sumH += H(i,_);
     }
-    return OwenCDF4_C(nu, t1, t2, delta1, delta2) + 
+    return OwenCDF4_C(nu, t1, t2, delta1, delta2) +
             2.0*(sumM + (pnorm(a1*R-delta1) - pnorm(a2*R-delta2))*sumH);
   }
 }
@@ -456,7 +456,7 @@ NumericVector OwenCDF3_C(int nu, double t1, double t2, NumericVector delta1,
   const double ab2 = a2*b2;
   const int J = delta1.size();
   const NumericVector R = sqrt(nu)*(delta1 - delta2)/(t1-t2);
-  NumericVector C = - isPositive(delta1) + isPositive(delta2) - 
+  NumericVector C = - isPositive(delta1) + isPositive(delta2) -
                         pnorm(-delta1*sB1);
   for(int i=0; i<J; i++){
     double C1 = - RcppOwenT(delta2[i]*sB2, a2);
@@ -495,14 +495,14 @@ NumericVector RcppOwenCDF3(int nu, double t1, double t2, NumericVector delta1,
   NumericVector Lfactor2 = ab2 * dnorm(a2*R-delta2);
   H(0,_) = dnorm(R);
   M1(0,_) = asB1*dnorm(delta1*sB1)*pnorm((delta1*ab1-R)/sB1);
-  M2(0,_) = asB2*dnorm(delta2*sB2) * 
+  M2(0,_) = asB2*dnorm(delta2*sB2) *
             (pnorm(delta2*asB2)-pnorm((delta2*ab2-R)/sB2));
   if(nu >= 3){
     H(1,_) = R * H(0,_);
-    M1(1,_) = delta1*ab1*M1(0,_) + 
+    M1(1,_) = delta1*ab1*M1(0,_) +
                 ab1*dnorm(delta1*sB1)*dnorm((delta1*ab1-R)/sB1);
     M2(1,_) = delta2*ab2*M2(0,_) +
-                ab2*dnorm(delta2*sB2) * 
+                ab2*dnorm(delta2*sB2) *
                     (dnorm(delta2*asB2)-dnorm((delta2*ab2-R)/sB2));
     if(nu >= 4){
       if(algo==1){
@@ -513,13 +513,13 @@ NumericVector RcppOwenCDF3(int nu, double t1, double t2, NumericVector delta1,
             NumericVector AkRj = A[k] * R;
             L = AkRj * L;
             H(k,_) = AkRj * H(k-1,_);
-            M1(k,_) = (k-1.0)/k * (A[k-2]*delta1*ab1*M1(k-1,_) + b1*M1(k-2,_)) + 
+            M1(k,_) = (k-1.0)/k * (A[k-2]*delta1*ab1*M1(k-1,_) + b1*M1(k-2,_)) +
                         Lfactor1*L;
-            M2(k,_) = (k-1.0)/k * (A[k-2]*delta2*ab2*M2(k-1,_) + b2*M2(k-2,_)) - 
+            M2(k,_) = (k-1.0)/k * (A[k-2]*delta2*ab2*M2(k-1,_) + b2*M2(k-2,_)) -
                         Lfactor2*L;
         }
       }else{ // algo 2
-        NumericVector W = -(0.5 * R*R + logsqrt2pi); 
+        NumericVector W = -(0.5 * R*R + logsqrt2pi);
         NumericVector logR = log(R);
         double A = 1.0;
         double u = 0.0; double v = 0.0; double ldf;
@@ -535,7 +535,7 @@ NumericVector RcppOwenCDF3(int nu, double t1, double t2, NumericVector delta1,
           M1(k+2,_) = r*(A*delta1*ab1*M1(k+1,_)+b1*M1(k,_)) + K*Lfactor1;
           M2(k+2,_) = r*(A*delta2*ab2*M2(k+1,_)+b2*M2(k,_)) - K*Lfactor2;
           A = 1.0 / ((k+1)*A);
-        }          
+        }
       }
     }
   }
@@ -544,13 +544,13 @@ NumericVector RcppOwenCDF3(int nu, double t1, double t2, NumericVector delta1,
     for(int i=0; i<nu-1; i+=2){
       sumM += -M2(i,_)-M1(i,_); sumH += H(i,_);
     }
-    return 1.0 - pnorm(-delta2) + 
+    return 1.0 - pnorm(-delta2) +
             sqrt2pi*(sumM + (pnorm(a1*R-delta1) - pnorm(a2*R-delta2))*sumH);
   }else{
     for(int i=1; i<nu-1; i+=2){
       sumM += -M2(i,_)-M1(i,_); sumH += H(i,_);
     }
-    return OwenCDF3_C(nu, t1, t2, delta1, delta2) + 
+    return OwenCDF3_C(nu, t1, t2, delta1, delta2) +
             2.0*(sumM + (pnorm(a1*R-delta1) - pnorm(a2*R-delta2))*sumH);
   }
 }
@@ -620,13 +620,13 @@ NumericVector RcppOwenCDF2(int nu, double t1, double t2, NumericVector delta1,
             NumericVector AkRj = A[k] * R;
             L = AkRj * L;
             H(k,_) = AkRj * H(k-1,_);
-            M1(k,_) = (k-1.0)/k * (A[k-2]*delta1*ab1*M1(k-1,_) + b1*M1(k-2,_)) + 
+            M1(k,_) = (k-1.0)/k * (A[k-2]*delta1*ab1*M1(k-1,_) + b1*M1(k-2,_)) +
                         Lfactor1*L;
-            M2(k,_) = (k-1.0)/k * (A[k-2]*delta2*ab2*M2(k-1,_) + b2*M2(k-2,_)) + 
+            M2(k,_) = (k-1.0)/k * (A[k-2]*delta2*ab2*M2(k-1,_) + b2*M2(k-2,_)) +
                         Lfactor2*L;
         }
       }else{ // algo 2
-        NumericVector W = -(0.5 * R*R + logsqrt2pi); 
+        NumericVector W = -(0.5 * R*R + logsqrt2pi);
         NumericVector logR = log(R);
         double A = 1.0;
         double u = 0.0; double v = 0.0; double ldf;
@@ -642,7 +642,7 @@ NumericVector RcppOwenCDF2(int nu, double t1, double t2, NumericVector delta1,
           M1(k+2,_) = r*(A*delta1*ab1*M1(k+1,_)+b1*M1(k,_)) + K*Lfactor1;
           M2(k+2,_) = r*(A*delta2*ab2*M2(k+1,_)+b2*M2(k,_)) + K*Lfactor2;
           A = 1.0 / ((k+1)*A);
-        }          
+        }
       }
     }
   }
@@ -651,13 +651,13 @@ NumericVector RcppOwenCDF2(int nu, double t1, double t2, NumericVector delta1,
     for(int i=0; i<nu-1; i+=2){
       sumM += M1(i,_) - M2(i,_); sumH += H(i,_);
     }
-    return sqrt2pi*(sumM - 
+    return sqrt2pi*(sumM -
             (pnorm(a1*R-delta1) - pnorm(a2*R-delta2))*sumH);
   }else{
     for(int i=1; i<nu-1; i+=2){
       sumM += M1(i,_) - M2(i,_); sumH += H(i,_);
     }
-    return OwenCDF2_C(nu, t1, t2, delta1, delta2) + 
+    return OwenCDF2_C(nu, t1, t2, delta1, delta2) +
             2.0*(sumM - (pnorm(a1*R-delta1) - pnorm(a2*R-delta2))*sumH);
   }
 }
@@ -675,7 +675,7 @@ NumericVector OwenCDF1_C(int nu, double t1, double t2, NumericVector delta1,
   const double ab2 = a2*b2;
   const int J = delta1.size();
   const NumericVector R = sqrt(nu)*(delta1 - delta2)/(t1-t2);
-  NumericVector C = -isPositive(delta1) + isPositive(delta2) + 
+  NumericVector C = -isPositive(delta1) + isPositive(delta2) +
                       pnorm(-delta2*sB2);
   for(int i=0; i<J; i++){
     double C1 = RcppOwenT(delta1[i]*sB1, a1);
@@ -712,7 +712,7 @@ NumericVector RcppOwenCDF1(int nu, double t1, double t2, NumericVector delta1,
   NumericMatrix M1(n,J); NumericMatrix M2(n,J);
   NumericVector Lfactor1 = ab1 * dnorm(a1*R-delta1);
   NumericVector Lfactor2 = ab2 * dnorm(a2*R-delta2);
-  M1(0,_) = asB1*dnorm(delta1*sB1) * 
+  M1(0,_) = asB1*dnorm(delta1*sB1) *
                 (pnorm(delta1*asB1)-pnorm((delta1*ab1-R)/sB1));
   M2(0,_) = asB2*dnorm(delta2*sB2)*pnorm((delta2*ab2-R)/sB2);
   if(nu >= 3){
@@ -727,13 +727,13 @@ NumericVector RcppOwenCDF1(int nu, double t1, double t2, NumericVector delta1,
           A[k] = 1.0 / (k*A[k-1]);
           NumericVector AkRj = A[k] * R;
           L = AkRj * L;
-          M1(k,_) = (k-1.0)/k * (A[k-2]*delta1*ab1*M1(k-1,_) + b1*M1(k-2,_)) - 
+          M1(k,_) = (k-1.0)/k * (A[k-2]*delta1*ab1*M1(k-1,_) + b1*M1(k-2,_)) -
                       Lfactor1*L;
-          M2(k,_) = (k-1.0)/k * (A[k-2]*delta2*ab2*M2(k-1,_) + b2*M2(k-2,_)) + 
+          M2(k,_) = (k-1.0)/k * (A[k-2]*delta2*ab2*M2(k-1,_) + b2*M2(k-2,_)) +
                       Lfactor2*L;
       }
     }else{ // algo 2
-      NumericVector W = -(0.5 * R*R + logsqrt2pi); 
+      NumericVector W = -(0.5 * R*R + logsqrt2pi);
       NumericVector logR = log(R);
       double A = 1.0;
       double u = 0.0; double v = 0.0; double ldf;
@@ -748,7 +748,7 @@ NumericVector RcppOwenCDF1(int nu, double t1, double t2, NumericVector delta1,
         M1(k+2,_) = r*(A*delta1*ab1*M1(k+1,_)+b1*M1(k,_)) - K*Lfactor1;
         M2(k+2,_) = r*(A*delta2*ab2*M2(k+1,_)+b2*M2(k,_)) + K*Lfactor2;
         A = 1.0 / ((k+1)*A);
-      }          
+      }
     }
   }
   NumericVector sumM(J);
@@ -775,7 +775,7 @@ NumericVector SpecialOwenCDF2_C(int nu, double t, NumericVector delta){
   const NumericVector R = sqrt(nu)*delta/t;
   NumericVector C = 2*pnorm(-delta*sB);
   for(int i=0; i<J; i++){
-    C[i] += 4 * (RcppOwenT(R[i], (a*R[i]-delta[i])/R[i]) + 
+    C[i] += 4 * (RcppOwenT(R[i], (a*R[i]-delta[i])/R[i]) +
                   RcppOwenT(delta[i]*sB, (delta[i]*ab-R[i])/b/delta[i]));
   }
   return C;
@@ -798,62 +798,54 @@ NumericVector RcppSpecialOwenCDF2(int nu, double t, NumericVector delta, int alg
   NumericVector Lfactor = ab * dnorm(a*R-delta);
   // Hfactor = 2*pnorm(a*R-delta) - 1
   H(0,_) = dnorm(R);
-  M(0,_) = 2*asB*dnorm(delta*sB)*pnorm((delta*ab-R)/sB);
+  M(0,_) = 2.0*asB*dnorm(delta*sB)*pnorm((delta*ab-R)/sB);
   if(nu >= 3){
     H(1,_) = xdnormx(R);
     M(1,_) = delta*ab*M(0,_) + 2*ab*dnorm(delta*sB)*dnorm((delta*ab-R)/sB);
     if(nu >= 4){
-      int k;
       if(algo == 1){
         NumericVector A(n); A[0] = 1; A[1] = 1;
-        NumericMatrix L(n-2,J);
-        L(0,_) = H(1,_);
-        for(k=2; k<n; k++){
-          A[k] = 1.0/(k*A[k-1]);
-        }
-        if(nu >= 5){
-          for(k=1; k<n-2; k++){
-            L(k,_) = A[k+2] * R * L(k-1,_);
-          }
-        }
-        for(k=2; k<n; k++){
-          H(k,_) = A[k] * R * H(k-1,_);
+        NumericVector L = 2.0*H(0,_);
+        for(int k=2; k<n; k++){
+          A[k] = 1.0 / (k*A[k-1]);
+          NumericVector AkRj = A[k] * R;
+          L = AkRj * L;
+          H(k,_) = AkRj * H(k-1,_);
           M(k,_) = (k-1.0)/k *
-                    (A[k-2] * delta * ab * M(k-1,_) + b*M(k-2,_)) + 
-                      Lfactor*L(k-2,_);
+                    (A[k-2] * delta * ab * M(k-1,_) + b*M(k-2,_)) +
+                      Lfactor*L;
         }
       }else{ // algo 2
-        NumericVector A(n-1); A[0] = 1.0;
-        NumericVector halfRR = 0.5*R*R; NumericVector logR = log(R);
-        for(k=0; k<n-2; k++){
-          A[k+1] = 1.0/((k+1)*A[k]); // un de trop
-          double ldf;
+        NumericVector W = -(0.5 * R*R + logsqrt2pi);
+        NumericVector logR = log(R);
+        double A = 1.0;
+        double u = 0.0; double v = 0.0; double ldf;
+        for(int k=0; k<n-2; k++){
           if(k % 2 == 0){
-            ldf = (0.5*k+1.0)*logtwo + lgamma(2.0+0.5*k);
+            u += log(k+2.0); ldf = u;
           }else{
-            ldf = lgamma(k+3.0) - 0.5*(k+1.0)*logtwo - lgamma(0.5*(k+3.0));
+            v += log(k+2.0); ldf = v;
           }
-          double r = (k+1.0)/(k+2.0);
-          NumericVector K = 
-                  exp(-ldf + (k+1.0)*logR - halfRR - logsqrt2pi);
-          M(k+2,_) = r*(A[k] * delta *ab * M(k+1,_) + b*M(k,_)) + 2*K*Lfactor;
-        }                                                  
+          NumericVector K =  exp(-ldf + (k+1.0)*logR + W);
+          H(k+2,_) = K*R;
+          M(k+2,_) = (k+1.0)/(k+2.0)*(A*delta*ab*M(k+1,_) + b*M(k,_)) +
+                      2.0*K*Lfactor;
+          A = 1.0 / ((k+1)*A);
+        }
       }
     }
   }
   NumericVector sumM(J); NumericVector sumH(J);
   if(nu % 2 == 0){
     for(int i=0; i<n; i+=2){
-      sumM += M(i,_);
-      sumH += H(i,_);
+      sumM += M(i,_); sumH += H(i,_);
     }
-    return sqrt2pi * (sumM - (2*pnorm(a*R-delta) - 1)*sumH);
+    return sqrt2pi * (sumM - (2.0*pnorm(a*R-delta) - 1.0)*sumH);
   }else{
     for(int i=1; i<n; i+=2){
-      sumM += M(i,_);
-      sumH += H(i,_);
+      sumM += M(i,_); sumH += H(i,_);
     }
-    return SpecialOwenCDF2_C(nu, t, delta) + 
-            2*(sumM - (2*pnorm(a*R-delta) - 1)*sumH);
+    return SpecialOwenCDF2_C(nu, t, delta) +
+            2.0*(sumM - (2*pnorm(a*R-delta) - 1.0)*sumH);
   }
 }

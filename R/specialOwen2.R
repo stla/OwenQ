@@ -15,10 +15,6 @@
 #' @examples
 #' spowen2(4, 1, 2) == powen2(4, 1, -1, 2, -2)
 spowen2 <- function(nu, t, delta, algo=1){
-  J <- length(delta)
-  if(is.infinite(t)){
-    stop("`t` must be finite.")
-  }
   if(t<0){
     stop("`t` must be positive")
   }
@@ -31,13 +27,14 @@ spowen2 <- function(nu, t, delta, algo=1){
   if(nu == Inf){
     return(pmax(0, 2*pnorm(t, mean=delta)-1))
   }
-  if(any(inf <- (delta==Inf))){
-    out <- numeric(J)
-    if(!all(inf)){
-      noninf <- which(!inf)
-      out[noninf] <- RcppSpecialOwenCDF2(nu, t, delta[noninf], algo)
-    }
+  if(t == Inf){
+    out <- rep(NaN, length(delta))
+    out[delta != Inf] <- 1
     return(out)
   }
-  RcppSpecialOwenCDF2(nu, t, delta, algo)
+  out <- numeric(length(delta))
+  if(any(i <- delta!=Inf)){
+    out[i] <- RcppSpecialOwenCDF2(nu, t, delta[i], algo)
+  }
+  out
 }

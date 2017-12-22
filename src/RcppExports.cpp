@@ -58,6 +58,24 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// ipowen2
+Rcpp::NumericVector ipowen2(double nu, double t1, double t2, double delta1, double delta2, int subdiv, double eps_abs, double eps_rel);
+RcppExport SEXP _OwenQ_ipowen2(SEXP nuSEXP, SEXP t1SEXP, SEXP t2SEXP, SEXP delta1SEXP, SEXP delta2SEXP, SEXP subdivSEXP, SEXP eps_absSEXP, SEXP eps_relSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type nu(nuSEXP);
+    Rcpp::traits::input_parameter< double >::type t1(t1SEXP);
+    Rcpp::traits::input_parameter< double >::type t2(t2SEXP);
+    Rcpp::traits::input_parameter< double >::type delta1(delta1SEXP);
+    Rcpp::traits::input_parameter< double >::type delta2(delta2SEXP);
+    Rcpp::traits::input_parameter< int >::type subdiv(subdivSEXP);
+    Rcpp::traits::input_parameter< double >::type eps_abs(eps_absSEXP);
+    Rcpp::traits::input_parameter< double >::type eps_rel(eps_relSEXP);
+    rcpp_result_gen = Rcpp::wrap(ipowen2(nu, t1, t2, delta1, delta2, subdiv, eps_abs, eps_rel));
+    return rcpp_result_gen;
+END_RCPP
+}
 // RcppOwenT
 double RcppOwenT(double h, double a);
 RcppExport SEXP _OwenQ_RcppOwenT(SEXP hSEXP, SEXP aSEXP) {
@@ -196,6 +214,7 @@ static const R_CallMethodDef CallEntries[] = {
     {"_OwenQ_ipowen4", (DL_FUNC) &_OwenQ_ipowen4, 8},
     {"_OwenQ_iOwenQ1", (DL_FUNC) &_OwenQ_iOwenQ1, 7},
     {"_OwenQ_iOwenQ2", (DL_FUNC) &_OwenQ_iOwenQ2, 7},
+    {"_OwenQ_ipowen2", (DL_FUNC) &_OwenQ_ipowen2, 8},
     {"_OwenQ_RcppOwenT", (DL_FUNC) &_OwenQ_RcppOwenT, 2},
     {"_OwenQ_RcppOwenStudent", (DL_FUNC) &_OwenQ_RcppOwenStudent, 3},
     {"_OwenQ_RcppOwenQ1", (DL_FUNC) &_OwenQ_RcppOwenQ1, 5},
