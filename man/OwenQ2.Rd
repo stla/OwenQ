@@ -4,7 +4,7 @@
 \alias{OwenQ2}
 \title{Second Owen Q-function}
 \usage{
-OwenQ2(nu, t, delta, R, algo = 1)
+OwenQ2(nu, t, delta, R, algo = 2)
 }
 \arguments{
 \item{nu}{integer greater than \eqn{1}, the number of degrees of freedom}

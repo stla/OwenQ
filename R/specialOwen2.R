@@ -14,7 +14,7 @@
 #' @seealso \code{\link{powen2}}
 #' @examples
 #' spowen2(4, 1, 2) == powen2(4, 1, -1, 2, -2)
-spowen2 <- function(nu, t, delta, algo=1){
+spowen2 <- function(nu, t, delta, algo=2){
   if(t<0){
     stop("`t` must be positive")
   }

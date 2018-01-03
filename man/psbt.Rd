@@ -8,13 +8,13 @@
 \alias{psbt4}
 \title{Owen distribution functions}
 \usage{
-psbt1(nu, t1, t2, delta1, delta2, algo = 1)
+psbt1(nu, t1, t2, delta1, delta2, algo = 2)
 
-psbt2(nu, t1, t2, delta1, delta2, algo = 1)
+psbt2(nu, t1, t2, delta1, delta2, algo = 2)
 
-psbt3(nu, t1, t2, delta1, delta2, algo = 1)
+psbt3(nu, t1, t2, delta1, delta2, algo = 2)
 
-psbt4(nu, t1, t2, delta1, delta2, algo = 1)
+psbt4(nu, t1, t2, delta1, delta2, algo = 2)
 }
 \arguments{
 \item{nu}{integer greater than \eqn{1}, the number of degrees of freedom;

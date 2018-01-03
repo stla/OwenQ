@@ -4,7 +4,7 @@
 \alias{spowen2}
 \title{Special case of second Owen distribution function}
 \usage{
-spowen2(nu, t, delta, algo = 1)
+spowen2(nu, t, delta, algo = 2)
 }
 \arguments{
 \item{nu}{positive integer, possibly infinite}

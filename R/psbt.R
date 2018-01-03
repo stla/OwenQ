@@ -35,7 +35,7 @@ NULL
 
 #' @rdname psbt
 #' @export
-psbt1 <- function(nu, t1, t2, delta1, delta2, algo=1){
+psbt1 <- function(nu, t1, t2, delta1, delta2, algo=2){
   L <- length(delta1)
   if(L != length(delta2)){
     stop("`delta1` and `delta2` must have the same length.")
@@ -60,7 +60,7 @@ psbt1 <- function(nu, t1, t2, delta1, delta2, algo=1){
 
 #' @rdname psbt
 #' @export
-psbt2 <- function(nu, t1, t2, delta1, delta2, algo=1){
+psbt2 <- function(nu, t1, t2, delta1, delta2, algo=2){
   L <- length(delta1)
   if(L != length(delta2)){
     stop("`delta1` and `delta2` must have the same length.")
@@ -86,7 +86,7 @@ psbt2 <- function(nu, t1, t2, delta1, delta2, algo=1){
 
 #' @rdname psbt
 #' @export
-psbt3 <- function(nu, t1, t2, delta1, delta2, algo=1){
+psbt3 <- function(nu, t1, t2, delta1, delta2, algo=2){
   L <- length(delta1)
   if(L != length(delta2)){
     stop("`delta1` and `delta2` must have the same length.")
@@ -111,7 +111,7 @@ psbt3 <- function(nu, t1, t2, delta1, delta2, algo=1){
 
 #' @rdname psbt
 #' @export
-psbt4 <- function(nu, t1, t2, delta1, delta2, algo=1){
+psbt4 <- function(nu, t1, t2, delta1, delta2, algo=2){
   L <- length(delta1)
   if(L != length(delta2)){
     stop("`delta1` and `delta2` must have the same length.")

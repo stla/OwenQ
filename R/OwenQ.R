@@ -23,7 +23,7 @@
 #' # OwenQ1(nu, t, delta, Inf) = pt(t, nu, delta)
 #' OwenQ1(nu=5, t=3, delta=2, R=100)
 #' pt(q=3, df=5, ncp=2)
-OwenQ1 <- function(nu, t, delta, R, algo=1){
+OwenQ1 <- function(nu, t, delta, R, algo=2){
   J <- length(delta)
   if(J != length(R)){
     stop("`delta` and `R` must have the same length.")
@@ -86,7 +86,7 @@ OwenQ1 <- function(nu, t, delta, R, algo=1){
 #' # OwenQ1(nu, t, delta, R) + OwenQ2(nu, t, delta, R) = pt(t, nu, delta)
 #' OwenQ1(nu=5, t=3, delta=2, R=1) + OwenQ2(nu=5, t=3, delta=2, R=1)
 #' pt(q=3, df=5, ncp=2)
-OwenQ2 <- function(nu, t, delta, R, algo=1){
+OwenQ2 <- function(nu, t, delta, R, algo=2){
   J <- length(R)
   if(length(delta) != J){
     stop("`delta` and `R` must have the same length.")

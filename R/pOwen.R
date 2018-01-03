@@ -48,7 +48,7 @@ NULL
 
 #' @rdname powen
 #' @export
-powen1 <- function(nu, t1, t2, delta1, delta2, algo=1){
+powen1 <- function(nu, t1, t2, delta1, delta2, algo=2){
   J <- length(delta1)
   if(J != length(delta2)){
     stop("`delta1` and `delta2` must have the same length.")
@@ -92,7 +92,7 @@ powen1 <- function(nu, t1, t2, delta1, delta2, algo=1){
 
 #' @rdname powen
 #' @export
-powen2 <- function(nu, t1, t2, delta1, delta2, algo=1){
+powen2 <- function(nu, t1, t2, delta1, delta2, algo=2){
   J <- length(delta1)
   if(J != length(delta2)){
     stop("`delta1` and `delta2` must have the same length.")
@@ -153,7 +153,7 @@ powen2 <- function(nu, t1, t2, delta1, delta2, algo=1){
 
 #' @rdname powen
 #' @export
-powen3 <- function(nu, t1, t2, delta1, delta2, algo=1){
+powen3 <- function(nu, t1, t2, delta1, delta2, algo=2){
   J <- length(delta1)
   if(J != length(delta2)){
     stop("`delta1` and `delta2` must have the same length.")
@@ -196,7 +196,7 @@ powen3 <- function(nu, t1, t2, delta1, delta2, algo=1){
 
 #' @rdname powen
 #' @export
-powen4 <- function(nu, t1, t2, delta1, delta2, algo=1){
+powen4 <- function(nu, t1, t2, delta1, delta2, algo=2){
   J <- length(delta1)
   if(J != length(delta2)){
     stop("`delta1` and `delta2` must have the same length.")
