@@ -76,14 +76,14 @@ public:
 
 // [[Rcpp::export]]
 Rcpp::NumericVector iOwenQ1(double nu, double t, double delta, double R,
-                            int subdiv=100, double eps_abs=1e-14, double eps_rel=1e-14){
+                            int subdiv=100, double eps_abs=1e-14,
+                            double eps_rel=1e-14){
   Integrand_Q1 f(nu, t, delta);
   double err_est;
   int err_code;
-  const double res = integrate(f, 0, R, err_est, err_code, subdiv, eps_abs, eps_rel,
-                               Integrator<double>::GaussKronrod201);
-  Rcpp::NumericVector out =
-    Rcpp::NumericVector::create(res);
+  const double res = integrate(f, 0, R, err_est, err_code, subdiv, eps_abs,
+                               eps_rel, Integrator<double>::GaussKronrod201);
+  Rcpp::NumericVector out = Rcpp::NumericVector::create(res);
   out.attr("err_est") = err_est;
   out.attr("err_code") = err_code;
   return out;
@@ -109,14 +109,14 @@ public:
 
 // [[Rcpp::export]]
 Rcpp::NumericVector iOwenQ2(double nu, double t, double delta, double R,
-                            int subdiv=100, double eps_abs=1e-14, double eps_rel=1e-14){
+                            int subdiv=100, double eps_abs=1e-14,
+                            double eps_rel=1e-14){
   Integrand_Q2 f(nu, t, delta, R);
   double err_est;
   int err_code;
-  const double res = integrate(f, 0, 1, err_est, err_code, subdiv, eps_abs, eps_rel,
-                               Integrator<double>::GaussKronrod201);
-  Rcpp::NumericVector out =
-    Rcpp::NumericVector::create(res);
+  const double res = integrate(f, 0, 1, err_est, err_code, subdiv, eps_abs,
+                               eps_rel, Integrator<double>::GaussKronrod201);
+  Rcpp::NumericVector out = Rcpp::NumericVector::create(res);
   out.attr("err_est") = err_est;
   out.attr("err_code") = err_code;
   return out;
@@ -141,7 +141,8 @@ private:
   double delta2;
   double R;
 public:
-  Integrand_o2 (double nu_, double t1_, double delta1_, double t2_, double delta2_, double R_) :
+  Integrand_o2 (double nu_, double t1_, double delta1_, double t2_,
+                double delta2_, double R_) :
   nu(nu_), t1(t1_), delta1(delta1_), t2(t2_), delta2(delta2_), R(R_) {}
 
   double operator()(const double& x) const
@@ -151,16 +152,16 @@ public:
 };
 
 // [[Rcpp::export]]
-Rcpp::NumericVector ipowen2(double nu, double t1, double t2, double delta1, double delta2,
-                           int subdiv=100, double eps_abs=1e-14, double eps_rel=1e-14){
+Rcpp::NumericVector ipowen2(double nu, double t1, double t2, double delta1,
+                            double delta2, int subdiv=100, double eps_abs=1e-14,
+                            double eps_rel=1e-14){
   const double R = (delta1-delta2)/(t1-t2)*sqrt(nu);
   Integrand_o2 f(nu, t1, delta1, t2, delta2, R);
   double err_est;
   int err_code;
-  const double res = integrate(f, 0, 1, err_est, err_code, subdiv, eps_abs, eps_rel,
-                               Integrator<double>::GaussKronrod201);
-  Rcpp::NumericVector out =
-    Rcpp::NumericVector::create(res);
+  const double res = integrate(f, 0, 1, err_est, err_code, subdiv, eps_abs,
+                               eps_rel, Integrator<double>::GaussKronrod201);
+  Rcpp::NumericVector out = Rcpp::NumericVector::create(res);
   out.attr("err_est") = err_est;
   out.attr("err_code") = err_code;
   return out;

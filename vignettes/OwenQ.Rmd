@@ -76,7 +76,7 @@ p2 - wolfram
 
 When `q`$=$`delta`, the value of `ptOwen(q, nu, delta)` should go to `0.5` as `nu` increases to infinity. The examples below show the failure of this expectation when `nu` is too large.
 
-```{r}
+```{r ptOwen_fails}
 ptOwen(q=50, nu=3500, delta=50)
 ptOwen(q=50, nu=3600, delta=50)
 ptOwen(q=50, nu=3650, delta=50)
@@ -85,10 +85,24 @@ ptOwen(q=50, nu=3670, delta=50)
 ptOwen(q=50, nu=3680, delta=50)
 ```
 
+Since all Owen's algorithms are somehow similar to the algorithm evaluating `ptOwen`, we can suspect that the other ones also suffer from certain limitations. 
 In the other vignette, we investigate the reliability and the limitations of `OwenQ`. 
+
+In order to do some comparisons, and thanks to the `BH` package, we have ported the `boost` implementation of the cumulative Student distribution to `OwenQ`. It is evaluated by the internal function `pt_boost`. We concluded that this function is highly reliable. In particular it does not suffer from the failures of `ptOwen` we have just shown:
+
+```{r pt_boost}
+OwenQ:::pt_boost(q=50, nu=3500, delta=50)
+OwenQ:::pt_boost(q=50, nu=3600, delta=50)
+OwenQ:::pt_boost(q=50, nu=3650, delta=50)
+OwenQ:::pt_boost(q=50, nu=3660, delta=50)
+OwenQ:::pt_boost(q=50, nu=3670, delta=50)
+OwenQ:::pt_boost(q=50, nu=3680, delta=50)
+```
 
 
 # Application to equivalence testing 
+
+The Owen distribution intervenes in the calculation of the power of equivalence tests. 
 
 ## One sample 
 
@@ -197,7 +211,6 @@ powerTOST <- function(alpha, delta0, Delta, sigma, n1, n2) {
 
 
 
-
 # The Owen $T$-function
 
 The `OwenQ` package also provides an implementation of the Owen $T$-function, 
@@ -211,6 +224,7 @@ z <- outer(h, a, Vectorize(OwenT))
 par(mar=c(0,2,0,0))
 persp(h, a, z, theta=30, phi=30, expand=0.5, zlab="Owen T", ticktype = "detailed", col = "lightblue")
 ```
+
 
 # The Owen $Q$-functions
 

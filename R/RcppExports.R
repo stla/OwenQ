@@ -53,3 +53,11 @@ RcppSpecialOwenCDF2 <- function(nu, t, delta, algo = 1L) {
     .Call('_OwenQ_RcppSpecialOwenCDF2', PACKAGE = 'OwenQ', nu, t, delta, algo)
 }
 
+pt_boost <- function(q, nu, delta) {
+    .Call('_OwenQ_pt_boost', PACKAGE = 'OwenQ', q, nu, delta)
+}
+
+qt_boost <- function(p, nu, delta) {
+    .Call('_OwenQ_qt_boost', PACKAGE = 'OwenQ', p, nu, delta)
+}
+

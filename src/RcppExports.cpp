@@ -209,6 +209,32 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// pt_boost
+double pt_boost(double q, double nu, double delta);
+RcppExport SEXP _OwenQ_pt_boost(SEXP qSEXP, SEXP nuSEXP, SEXP deltaSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type q(qSEXP);
+    Rcpp::traits::input_parameter< double >::type nu(nuSEXP);
+    Rcpp::traits::input_parameter< double >::type delta(deltaSEXP);
+    rcpp_result_gen = Rcpp::wrap(pt_boost(q, nu, delta));
+    return rcpp_result_gen;
+END_RCPP
+}
+// qt_boost
+double qt_boost(double p, double nu, double delta);
+RcppExport SEXP _OwenQ_qt_boost(SEXP pSEXP, SEXP nuSEXP, SEXP deltaSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< double >::type p(pSEXP);
+    Rcpp::traits::input_parameter< double >::type nu(nuSEXP);
+    Rcpp::traits::input_parameter< double >::type delta(deltaSEXP);
+    rcpp_result_gen = Rcpp::wrap(qt_boost(p, nu, delta));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_OwenQ_ipowen4", (DL_FUNC) &_OwenQ_ipowen4, 8},
@@ -224,6 +250,8 @@ static const R_CallMethodDef CallEntries[] = {
     {"_OwenQ_RcppOwenCDF2", (DL_FUNC) &_OwenQ_RcppOwenCDF2, 6},
     {"_OwenQ_RcppOwenCDF1", (DL_FUNC) &_OwenQ_RcppOwenCDF1, 6},
     {"_OwenQ_RcppSpecialOwenCDF2", (DL_FUNC) &_OwenQ_RcppSpecialOwenCDF2, 4},
+    {"_OwenQ_pt_boost", (DL_FUNC) &_OwenQ_pt_boost, 3},
+    {"_OwenQ_qt_boost", (DL_FUNC) &_OwenQ_qt_boost, 3},
     {NULL, NULL, 0}
 };
 
