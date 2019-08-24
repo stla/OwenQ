@@ -456,6 +456,26 @@ number of degrees of freedom is too large.
 As said before, the interest of the option `algo=1` is that the evaluation is 
 faster.
 
+For $n_1=n_2=2500$, the results of `powerTOST` with `algo=2` still coincide 
+with the result of `ipowerTOST`:
+
+```{r}
+alpha <- 0.05; delta0 <- 0; Delta <- 5
+sigma <- 110
+n1 <- n2 <- 2500
+powerTOST(alpha, delta0, Delta, sigma, n1, n2)
+ipowerTOST(alpha, delta0, Delta, sigma, n1, n2)
+```
+
+And even for $n_1=n_2=5000$: 
+
+```{r}
+sigma <- 152
+n1 <- n2 <- 5000
+powerTOST(alpha, delta0, Delta, sigma, n1, n2)
+ipowerTOST(alpha, delta0, Delta, sigma, n1, n2)
+```
+
 ### Comparisons for $n_1+n_2 \leq 1200$
 
 Below we compare the results returned by `powerTOST` to the ones returned by 

@@ -13,3 +13,5 @@ inst/doc
 LICENSE
 src-i386
 src-x64
+inst/
+TODO.txt

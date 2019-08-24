@@ -3,3 +3,4 @@
 ^inst/testing$
 ^inst/Validation$
 ^TODO\.txt$
+^cran-comments\.md$
