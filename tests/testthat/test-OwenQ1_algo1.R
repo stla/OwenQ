@@ -28,7 +28,7 @@ test_that("OwenQ1 for t=+Inf does not depend on delta", {
   # does not depend on t for delta=-Inf and the same result
   expect_equal(OwenQ1(5, Inf, 2, 2), OwenQ1(5, 1, -100, 2, algo), tolerance=1e-15)
   expect_equal(OwenQ1(6, Inf, 2, 2), OwenQ1(6, 1, -100, 2, algo), tolerance=1e-15)
-  expect_true(OwenQ1(1, Inf, 2, 2) == OwenQ:::RcppOwenQ1(1, 1, -Inf, 2, algo))
+  expect_equal(OwenQ1(1, Inf, 2, 2), OwenQ:::RcppOwenQ1(1, 1, -Inf, 2, algo), tolerance=1e-15)
   expect_equal(OwenQ1(2, Inf, 2, 2), OwenQ:::RcppOwenQ1(2, 1, -Inf, 2, algo), tolerance=1e-15)
   # now delta=-Inf is implemented
   expect_equal(OwenQ1(5, Inf, 2, 2), OwenQ1(5, 1, -Inf, 2), tolerance=1e-15)
