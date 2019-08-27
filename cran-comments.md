@@ -20,3 +20,7 @@ Maintainer: 'Stéphane Laurent <laurent_step@outlook.fr>'
 
 New submission
 
+## Resubmission comments
+
+  * I made clearer that the commented lines in the examples are not commented examples.
+  * In the vignettes I replaces the `par(.......)` with `oldpar <- par(......)` followed by `par(oldpar)`.

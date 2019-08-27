@@ -221,8 +221,9 @@ This is a port of the function `owens_t` of `boost`, the peer-reviewed collectio
 h <- seq(-3, 3, length.out=30)
 a <- seq(-5, 5, length.out=30)
 z <- outer(h, a, Vectorize(OwenT))
-par(mar=c(0,2,0,0))
+oldpar <- par(mar=c(0,2,0,0))
 persp(h, a, z, theta=30, phi=30, expand=0.5, zlab="Owen T", ticktype = "detailed", col = "lightblue")
+par(oldpar)
 ```
 
 

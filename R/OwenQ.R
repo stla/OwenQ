@@ -20,7 +20,7 @@
 #' A special case of a bivariate noncentral t-distribution.
 #' \emph{Biometrika} \bold{52}, 437-446.
 #' @examples
-#' # OwenQ1(nu, t, delta, Inf) = pt(t, nu, delta)
+#' # As R goes to Inf, OwenQ1(nu, t, delta, R) goes to pt(t, nu, delta):
 #' OwenQ1(nu=5, t=3, delta=2, R=100)
 #' pt(q=3, df=5, ncp=2)
 OwenQ1 <- function(nu, t, delta, R, algo=2){
@@ -83,7 +83,7 @@ OwenQ1 <- function(nu, t, delta, R, algo=2){
 #' A special case of a bivariate noncentral t-distribution.
 #' \emph{Biometrika} \bold{52}, 437-446.
 #' @examples
-#' # OwenQ1(nu, t, delta, R) + OwenQ2(nu, t, delta, R) = pt(t, nu, delta)
+#' # OwenQ1(nu, t, delta, R) + OwenQ2(nu, t, delta, R) equals pt(t, nu, delta):
 #' OwenQ1(nu=5, t=3, delta=2, R=1) + OwenQ2(nu=5, t=3, delta=2, R=1)
 #' pt(q=3, df=5, ncp=2)
 OwenQ2 <- function(nu, t, delta, R, algo=2){

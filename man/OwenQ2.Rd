@@ -31,7 +31,7 @@ When the number of degrees of freedom is odd, the procedure resorts to
 the Owen T-function (\code{\link{OwenT}}).
 }
 \examples{
-# OwenQ1(nu, t, delta, R) + OwenQ2(nu, t, delta, R) = pt(t, nu, delta)
+# OwenQ1(nu, t, delta, R) + OwenQ2(nu, t, delta, R) equals pt(t, nu, delta):
 OwenQ1(nu=5, t=3, delta=2, R=1) + OwenQ2(nu=5, t=3, delta=2, R=1)
 pt(q=3, df=5, ncp=2)
 }

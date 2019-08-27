@@ -353,7 +353,7 @@ ipowerTOST <- function(alpha, delta0, Delta, sigma, n1, n2) {
 function with the option `algo=1` abnormally takes some negative values:
 
 ```{r, echo=FALSE, fig.width=8, fig.height=4}
-par(mar=c(4,4,0.4,0.4))
+oldpar <- par(mar=c(4,4,0.4,0.4))
 layout(t(c(1,2)))
 sigma <- seq(65,69,len=100)
 n1 <- 1000; n2 <- 1000
@@ -376,6 +376,7 @@ lines(sigma, y, col="red", lwd=2)
 abline(h=0, col="green", lty=2)
 legend("topright", c("powen4 - 1", "powen4 - 2", "ipowen4"), 
        lty=c(1,1,1), col=c("red", "black", "blue"))
+par(oldpar)
 ```
 
 Note that the discrepancy between `powen4` and `ipowen4` occurs only for 
@@ -385,7 +386,7 @@ $\sigma > 65$.
 discrepancy between `powen4` with the option `algo=1` and `ipowen4`: 
 
 ```{r, echo=FALSE, fig.width=4, fig.height=4}
-par(mar=c(4,4,0.4,0.4))
+oldpar <- par(mar=c(4,4,0.4,0.4))
 n1 <- n2 <- 720
 sigma <- seq(56,57,len=100)
 plot(sigma, powerTOST(0.05, 0, 5, sigma, n1, n2), type="l", lwd=2, 
@@ -396,6 +397,7 @@ y <- sapply(sigma, function(sigma) powerTOST(0.05, 0, 5, sigma, n1, n2, algo=1))
 lines(sigma, y, col="red", lwd=2)
 legend("topright", c("powen4 - 1", "powen4 - 2", "ipowen4"), 
        lty=c(1,1,1), col=c("red", "black", "blue"))
+par(oldpar)
 ```
 
 There is no discrepancy between `powen4` with the option `algo=2` and `ipowen4`. 
@@ -407,7 +409,7 @@ small discrepancy between `powen4` with the option `algo=1` and `ipowen4`, and
 we still observe an irregularity of `powen4` (on the second figure below):
 
 ```{r, echo=FALSE, fig.width=8, fig.height=4}
-par(mar=c(4, 4, 0.2, 0.2))
+oldpar <- par(mar=c(4, 4, 0.2, 0.2))
 layout(t(c(1,2)))
 n1 <- n2 <- 700
 sigma <- seq(35,45,len=100)
@@ -429,6 +431,7 @@ y <- sapply(sigma, function(sigma) powerTOST(0.05, 0, 5, sigma, n1, n2, algo=1))
 lines(sigma, y, col="red", lwd=2)
 legend("topright", c("powen4 - 1", "powen4 - 2", "ipowen4"), 
        lty=c(1,1,1), col=c("red", "black", "blue"))
+par(oldpar)
 ```
 
 With the option `algo=2`, the results of `powen4` coincide with the ones of 
@@ -438,7 +441,7 @@ With the option `algo=2`, the results of `powen4` coincide with the ones of
 observe any discrepancy between `powen4` and `ipowen4`: 
 
 ```{r, echo=FALSE, fig.width=4, fig.height=4}
-par(mar=c(4, 4, 0.7, 0.2))
+oldpar <- par(mar=c(4, 4, 0.7, 0.2))
 n1 <- n2 <- 600
 sigma <- seq(30,36,len=100)
 plot(sigma, powerTOST(0.005, 0, 5, sigma, n1, n2), type="l", lwd=2, 
@@ -449,6 +452,7 @@ y <- sapply(sigma, function(sigma) powerTOST(0.05, 0, 5, sigma, n1, n2, algo=1))
 lines(sigma, y, col="red", lwd=2)
 legend("topright", c("powen4 - 1", "powen4 - 2", "ipowen4"), 
        lty=c(1,1,1), col=c("red", "black", "blue"))
+par(oldpar)
 ```
 
 We conclude that `powen4` with the option `algo=1` is not reliable when the 
