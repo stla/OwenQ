@@ -1,3 +1,19 @@
+# Release version 1.0.1 (2019-08-29)
+
+## Release summary 
+
+Attempted to fix the problems raised by Solaris; I replaced log(2) with log(2.0).
+
+## Test environments
+
+   * windows 7 64bit, R 3.6.1
+   * online win-builder.r-project.org 
+
+## R CMD check results
+
+
+___
+
 # Release version 1.0.0 (2019-08-24)
 
 ## Release summary

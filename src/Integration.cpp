@@ -12,7 +12,7 @@ double integrand_o4 (double x, double nu, double t1, double t2,
             double delta1, double delta2) {
   double f = (R::pnorm(t2*x /sqrt(nu) - delta2, 0.0, 1.0, 1, 0) -
               R::pnorm(t1*x /sqrt(nu) - delta1, 0.0, 1.0, 1, 0))*
-              exp((nu-1)*log(x) - x*x/2 - (nu/2 - 1) * log(2) - lgamma(nu/2));
+              exp((nu-1.0)*log(x) - x*x/2.0 - (nu/2.0 - 1.0) * log(2.0) - lgamma(nu/2.0));
   return f;
 }
 
@@ -54,7 +54,7 @@ Rcpp::NumericVector ipowen4(double nu, double t1, double t2, double delta1, doub
 //--------- OwenQ1 ------------//
 double integrand_Q (double x, double nu, double t, double delta) {
   double f = exp(R::pnorm(t*x /sqrt(nu) - delta, 0.0, 1.0, 1, 1) +
-              (nu-1)*log(x) - x*x/2 - (nu/2 - 1) * log(2) - lgamma(nu/2));
+              (nu-1.0)*log(x) - x*x/2.0 - (nu/2.0 - 1.0) * log(2.0) - lgamma(nu/2.0));
   return f;
 }
 
@@ -103,7 +103,7 @@ public:
 
   double operator()(const double& x) const
   {
-    return integrand_Q(R + x/(1-x), nu, t, delta)/(1-x)/(1-x);
+    return integrand_Q(R + x/(1.0-x), nu, t, delta)/(1.0-x)/(1.0-x);
   }
 };
 
@@ -127,7 +127,7 @@ double integrand_o2 (double x, double nu, double t1, double t2,
             double delta1, double delta2) {
   double f = (R::pnorm(t2*x /sqrt(nu) - delta2, 0.0, 1.0, 1, 0) -
               R::pnorm(t1*x /sqrt(nu) - delta1, 0.0, 1.0, 1, 0))*
-              exp((nu-1)*log(x) - x*x/2 - (nu/2 - 1) * log(2) - lgamma(nu/2));
+              exp((nu-1.0)*log(x) - x*x/2.0 - (nu/2.0 - 1.0) * log(2.0) - lgamma(nu/2.0));
   return f;
 }
 
@@ -147,7 +147,7 @@ public:
 
   double operator()(const double& x) const
   {
-    return integrand_o2(R + x/(1-x), nu, t1, t2, delta1, delta2)/(1-x)/(1-x);
+    return integrand_o2(R + x/(1.0-x), nu, t1, t2, delta1, delta2)/(1.0-x)/(1.0-x);
   }
 };
 
@@ -167,37 +167,3 @@ Rcpp::NumericVector ipowen2(double nu, double t1, double t2, double delta1,
   return out;
 }
 
-// // test
-// class Integrand: public Func
-// {
-// private:
-//   std::function<double(double)> f;
-// public:
-//   Integrand (std::function<double(double)> f_) :
-//   f(f_) {}
-//
-//   double operator()(const double& x) const
-//   {
-//     return f(x);
-//   }
-// };
-//
-// double SEXPtoReal (SEXP vectorR){
-//   double* vector = REAL(vectorR);
-//   return vector[0];
-// }
-//
-// Rcpp::NumericVector integral(Rcpp::Function f,
-//                             int subdiv=100, double eps_abs=1e-14, double eps_rel=1e-14){
-//   std::function<double(double)> ff = [&](double x){ return REAL(f(x))[0]; };
-//   Integrand I(ff);
-//   double err_est;
-//   int err_code;
-//   const double res = integrate(I, 0, 1, err_est, err_code, subdiv, eps_abs, eps_rel,
-//                                Integrator<double>::GaussKronrod201);
-//   Rcpp::NumericVector out =
-//     Rcpp::NumericVector::create(res);
-//   out.attr("err_est") = err_est;
-//   out.attr("err_code") = err_code;
-//   return out;
-// }
