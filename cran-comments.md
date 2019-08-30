@@ -3,7 +3,7 @@
 ## Release summary 
 
 Attempted to fix the C++ problems raised by the CRAN checks on Solaris, and 
-a test which fails.
+a test which failed.
 
 ## Test environments
 
@@ -12,6 +12,12 @@ a test which fails.
 
 ## R CMD check results
 
+Status: 1 NOTE
+
+* checking CRAN incoming feasibility ... NOTE
+Maintainer: 'St�phane Laurent <laurent_step@outlook.fr>'
+
+Days since last update: 0
 
 ____
 
