@@ -2,7 +2,8 @@
 
 ## Release summary 
 
-Attempted to fix the problems raised by Solaris; I replaced log(2) with log(2.0).
+Attempted to fix the problems raised by the CRAN checks on Solaris; 
+I replaced log(2) with log(2.0).
 
 ## Test environments
 
@@ -11,6 +12,12 @@ Attempted to fix the problems raised by Solaris; I replaced log(2) with log(2.0)
 
 ## R CMD check results
 
+Status: 1 NOTE
+
+* checking CRAN incoming feasibility ... NOTE
+Maintainer: 'St�phane Laurent <laurent_step@outlook.fr>'
+
+Days since last update: 1
 
 ___
 
