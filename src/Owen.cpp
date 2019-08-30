@@ -16,25 +16,6 @@ NumericVector xdnormx(NumericVector x){
   return exp(log(x) - 0.5*x*x - logsqrt2pi);
 }
 
-//NumericVector xndnormx(NumericVector x, int n){
-//  return exp(n*log(x) - 0.5*x*x - logsqrt2pi);
-//}
-//
-//double logAA(int k){
-//  if(k == 0){
-//    return 0.0;
-//  }
-//  if(k % 2 == 1){
-//    return (k-1.0)*logtwo + 2*lgamma((k+1.0)/2.0) - lgamma(k+1.0);
-//  }else{
-//    return lgamma(k) - (k-2)*logtwo - 2.0*lgamma(k/2.0) - log(k);
-//  }
-//}
-//
-//double AA(int k){
-//  return exp(logAA(k));
-//}
-
 
 // [[Rcpp::export]]
 double RcppOwenT(double h, double a){
@@ -45,8 +26,9 @@ double RcppOwenT(double h, double a);
 
 //****************************************************************************80
 NumericVector OwenStudent_C(double q, int nu, NumericVector delta){
-  const double a = R::sign(q)*sqrt(q*q/nu);
-  NumericVector dsB = delta*sqrt(nu/(nu+q*q));
+  const double nudbl = nu;
+  const double a = R::sign(q)*sqrt(q*q/nudbl);
+  NumericVector dsB = delta*sqrt(nudbl/(nudbl+q*q));
   const int J = delta.size();
   NumericVector C = pnorm(-dsB);
   for(int i=0; i<J; i++){
@@ -61,8 +43,9 @@ NumericVector RcppOwenStudent(double q, int nu, NumericVector delta){
   if(nu==1){
     return OwenStudent_C(q, nu, delta);
   }
-  const double a = R::sign(q)*sqrt(q*q/nu);
-  const double b = nu/(nu+q*q);
+  const double nudbl = nu;
+  const double a = R::sign(q)*sqrt(q*q/nudbl);
+  const double b = nudbl/(nudbl+q*q);
   NumericVector dsB = delta*sqrt(b);
   const int J = delta.size();
   NumericMatrix M(nu-1,J);
@@ -111,10 +94,11 @@ NumericVector isPositive(NumericVector x);
 //****************************************************************************80
 NumericVector OwenQ1_C
     (int nu, double t, NumericVector delta, NumericVector R){
-  const double a = R::sign(t)*sqrt(t*t/nu);
-  const double b = nu/(nu+t*t);
+  const double nudbl = nu;
+  const double a = R::sign(t)*sqrt(t*t/nudbl);
+  const double b = nudbl/(nudbl+t*t);
   const double sB = sqrt(b);
-  const double ab = sqrt(nu)/(nu/t + t);
+  const double ab = sqrt(nudbl)/(nudbl/t + t);
   const int J = delta.size();
   NumericVector C = pnorm(R) - isPositive(delta);
   for(int i=0; i<J; i++){
@@ -133,11 +117,12 @@ NumericVector RcppOwenQ1
   if(nu==1){
     return OwenQ1_C(nu, t, delta, R);
   }
-  const double a = R::sign(t)*sqrt(t*t/nu);
-  const double b = nu/(nu+t*t);
+  const double nudbl = nu;
+  const double a = R::sign(t)*sqrt(t*t/nudbl);
+  const double b = nudbl/(nudbl+t*t);
   const double sB = sqrt(b);
-  const double ab = sqrt(nu)/(nu/t + t);
-  const double asB = R::sign(t)/sqrt(nu/(t*t)+1);
+  const double ab = sqrt(nudbl)/(nudbl/t + t);
+  const double asB = R::sign(t)/sqrt(nudbl/(t*t)+1);
   const int J = delta.size();
   const int n = nu-1;
   NumericMatrix H(n,J); NumericMatrix M(n,J);
@@ -198,58 +183,13 @@ NumericVector dnormtimes10pown(NumericVector x, int n){
   return exp(n*2.302585092994045684017991454684364207 - 0.5*x*x - logsqrt2pi);
 }
 
-// List zzz
-//     (int nu, double t, NumericVector delta, NumericVector R, int m){
-//   const double a = R::sign(t)*sqrt(t*t/nu);
-//   const double b = nu/(nu+t*t);
-//   const double sB = sqrt(b);
-//   const double ab = sqrt(nu)/(nu/t + t);
-//   const double asB = R::sign(t)/sqrt(nu/(t*t)+1);
-//   const int J = delta.size();
-//   const int n = nu-1;
-//   NumericMatrix H(n,J); NumericMatrix M(n,J);
-//   NumericVector Lfactor = ab * dnorm(a*R-delta);
-//   H(0,_) = dnorm(R);
-//   M(0,_) = asB*dnormtimes10pown(delta*sB, m)*(pnorm(delta*asB)-pnorm((delta*ab-R)/sB));
-//   if(nu >= 3){
-//     H(1,_) = xdnormx(R);
-//     M(1,_) = delta*ab*M(0,_) +
-//                 ab*dnormtimes10pown(delta*sB,m)*(dnorm(delta*asB)-dnorm((delta*ab-R)/sB));
-//     if(nu >= 4){
-//       int k;
-//       NumericVector A(n-1);
-//       A[0] = 1.0;
-//       NumericVector halfRR = 0.5*R*R;
-//       NumericVector logR = log(R);
-//       bool even = true;
-//       for(k=0; k<n-2; k++){
-//         A[k+1] = 1.0/(k+1.0)/A[k]; // un de trop
-//         double ldf;
-//         if(even){
-//           ldf = (0.5*k+1.0)*logtwo + lgamma(2.0+0.5*k);
-//           even = false;
-//         }else{
-//           ldf = lgamma(k+3.0) - 0.5*(k+1.0)*logtwo - lgamma(0.5*(k+3.0));
-//           even = true;
-//         }
-//         double r = (k+1.0)/(k+2.0);
-//         NumericVector K =
-//                 exp(-ldf + (k+1.0)*logR - halfRR - logsqrt2pi);
-//         H(k+2,_) = K*R;
-//         M(k+2,_) = r*(A[k]*delta*ab*M(k+1,_)+b*M(k,_)) - K*Lfactor;
-//       }
-//     }
-//   }
-//   List out;
-//   out["M"] = M(_,0); out["H"] = H(_,0);
-//   return out;
-// }
 
 //****************************************************************************80
 NumericVector OwenQ2_C
     (int nu, double t, NumericVector delta, NumericVector R){
-  const double a = R::sign(t)*sqrt(t*t/nu);
-  const double b = nu/(nu+t*t);
+  const double nudbl = nu;
+  const double a = R::sign(t)*sqrt(t*t/nudbl);
+  const double b = nudbl/(nudbl+t*t);
   const double sB = sqrt(b);
   const double ab = a*b;
   const int J = delta.size();
@@ -269,11 +209,12 @@ NumericVector RcppOwenQ2
   if(nu==1){
     return OwenQ2_C(nu, t, delta, R);
   }
-  const double a = R::sign(t)*sqrt(t*t/nu);
-  const double b = nu/(nu+t*t);
+  const double nudbl = nu;
+  const double a = R::sign(t)*sqrt(t*t/nudbl);
+  const double b = nudbl/(nudbl+t*t);
   const double sB = sqrt(b);
   const double ab = a*b;
-  const double asB = R::sign(t)*sqrt(t*t/(nu+t*t));
+  const double asB = R::sign(t)*sqrt(t*t/(nudbl+t*t));
   const int J = delta.size();
   const int n = nu-1;
   NumericMatrix H(n,J); NumericMatrix M(n,J);
@@ -332,16 +273,17 @@ NumericVector RcppOwenQ2
 //****************************************************************************80
 NumericVector OwenCDF4_C(int nu, double t1, double t2, NumericVector delta1,
     NumericVector delta2){
-  const double a1 = R::sign(t1)*sqrt(t1*t1/nu);
-  const double b1 = nu/(nu+t1*t1);
+  const double nudbl = nu;
+  const double a1 = R::sign(t1)*sqrt(t1*t1/nudbl);
+  const double b1 = nudbl/(nudbl+t1*t1);
   const double sB1 = sqrt(b1);
   const double ab1 = a1*b1;
-  const double a2 = R::sign(t2)*sqrt(t2*t2/nu);
-  const double b2 = nu/(nu+t2*t2);
+  const double a2 = R::sign(t2)*sqrt(t2*t2/nudbl);
+  const double b2 = nudbl/(nudbl+t2*t2);
   const double sB2 = sqrt(b2);
   const double ab2 = a2*b2;
   const int J = delta1.size();
-  const NumericVector R = sqrt(nu)*(delta1 - delta2)/(t1-t2);
+  const NumericVector R = sqrt(nudbl)*(delta1 - delta2)/(t1-t2);
   NumericVector C = isPositive(delta1) - isPositive(delta2);
   for(int i=0; i<J; i++){
     double C1 = RcppOwenT(delta2[i]*sB2, a2) - RcppOwenT(delta1[i]*sB1, a1);
@@ -362,18 +304,19 @@ NumericVector RcppOwenCDF4(int nu, double t1, double t2, NumericVector delta1,
   if(nu==1){
     return OwenCDF4_C(nu, t1, t2, delta1, delta2);
   }
-  const double a1 = R::sign(t1)*sqrt(t1*t1/nu);
-  const double b1 = nu/(nu+t1*t1);
+  const double nudbl = nu;
+  const double a1 = R::sign(t1)*sqrt(t1*t1/nudbl);
+  const double b1 = nudbl/(nudbl+t1*t1);
   const double sB1 = sqrt(b1);
   const double ab1 = a1*b1;
-  const double asB1 = R::sign(t1)*sqrt(t1*t1/(nu+t1*t1));
-  const double a2 = R::sign(t2)*sqrt(t2*t2/nu);
-  const double b2 = nu/(nu+t2*t2);
+  const double asB1 = R::sign(t1)*sqrt(t1*t1/(nudbl+t1*t1));
+  const double a2 = R::sign(t2)*sqrt(t2*t2/nudbl);
+  const double b2 = nudbl/(nudbl+t2*t2);
   const double sB2 = sqrt(b2);
   const double ab2 = a2*b2;
-  const double asB2 = R::sign(t2)*sqrt(t2*t2/(nu+t2*t2));
+  const double asB2 = R::sign(t2)*sqrt(t2*t2/(nudbl+t2*t2));
   const int J = delta1.size();
-  const NumericVector R = sqrt(nu)*(delta1 - delta2)/(t1-t2);
+  const NumericVector R = sqrt(nudbl)*(delta1 - delta2)/(t1-t2);
   const int n = nu-1;
   NumericMatrix H(n,J);
   NumericMatrix M1(n,J); NumericMatrix M2(n,J);
@@ -446,16 +389,17 @@ NumericVector RcppOwenCDF4(int nu, double t1, double t2, NumericVector delta1,
 //****************************************************************************80
 NumericVector OwenCDF3_C(int nu, double t1, double t2, NumericVector delta1,
     NumericVector delta2){
-  const double a1 = R::sign(t1)*sqrt(t1*t1/nu);
-  const double b1 = nu/(nu+t1*t1);
+  const double nudbl = nu;
+  const double a1 = R::sign(t1)*sqrt(t1*t1/nudbl);
+  const double b1 = nudbl/(nudbl+t1*t1);
   const double sB1 = sqrt(b1);
   const double ab1 = a1*b1;
-  const double a2 = R::sign(t2)*sqrt(t2*t2/nu);
-  const double b2 = nu/(nu+t2*t2);
+  const double a2 = R::sign(t2)*sqrt(t2*t2/nudbl);
+  const double b2 = nudbl/(nudbl+t2*t2);
   const double sB2 = sqrt(b2);
   const double ab2 = a2*b2;
   const int J = delta1.size();
-  const NumericVector R = sqrt(nu)*(delta1 - delta2)/(t1-t2);
+  const NumericVector R = sqrt(nudbl)*(delta1 - delta2)/(t1-t2);
   NumericVector C = - isPositive(delta1) + isPositive(delta2) -
                         pnorm(-delta1*sB1);
   for(int i=0; i<J; i++){
@@ -477,18 +421,19 @@ NumericVector RcppOwenCDF3(int nu, double t1, double t2, NumericVector delta1,
   if(nu==1){
     return OwenCDF3_C(nu, t1, t2, delta1, delta2);
   }
-  const double a1 = R::sign(t1)*sqrt(t1*t1/nu);
-  const double b1 = nu/(nu+t1*t1);
+  const double nudbl = nu;
+  const double a1 = R::sign(t1)*sqrt(t1*t1/nudbl);
+  const double b1 = nudbl/(nudbl+t1*t1);
   const double sB1 = sqrt(b1);
   const double ab1 = a1*b1;
-  const double asB1 = R::sign(t1)*sqrt(t1*t1/(nu+t1*t1));
-  const double a2 = R::sign(t2)*sqrt(t2*t2/nu);
-  const double b2 = nu/(nu+t2*t2);
+  const double asB1 = R::sign(t1)*sqrt(t1*t1/(nudbl+t1*t1));
+  const double a2 = R::sign(t2)*sqrt(t2*t2/nudbl);
+  const double b2 = nudbl/(nudbl+t2*t2);
   const double sB2 = sqrt(b2);
   const double ab2 = a2*b2;
-  const double asB2 = R::sign(t2)*sqrt(t2*t2/(nu+t2*t2));
+  const double asB2 = R::sign(t2)*sqrt(t2*t2/(nudbl+t2*t2));
   const int J = delta1.size();
-  const NumericVector R = sqrt(nu)*(delta1 - delta2)/(t1-t2);
+  const NumericVector R = sqrt(nudbl)*(delta1 - delta2)/(t1-t2);
   const int n = nu-1;
   NumericMatrix H(n,J); NumericMatrix M1(n,J); NumericMatrix M2(n,J);
   NumericVector Lfactor1 = ab1 * dnorm(a1*R-delta1);
@@ -558,16 +503,17 @@ NumericVector RcppOwenCDF3(int nu, double t1, double t2, NumericVector delta1,
 //****************************************************************************80
 NumericVector OwenCDF2_C(int nu, double t1, double t2, NumericVector delta1,
     NumericVector delta2){
-  const double a1 = R::sign(t1)*sqrt(t1*t1/nu);
-  const double b1 = nu/(nu+t1*t1);
+  const double nudbl = nu;
+  const double a1 = R::sign(t1)*sqrt(t1*t1/nudbl);
+  const double b1 = nudbl/(nudbl+t1*t1);
   const double sB1 = sqrt(b1);
   const double ab1 = a1*b1;
-  const double a2 = R::sign(t2)*sqrt(t2*t2/nu);
-  const double b2 = nu/(nu+t2*t2);
+  const double a2 = R::sign(t2)*sqrt(t2*t2/nudbl);
+  const double b2 = nudbl/(nudbl+t2*t2);
   const double sB2 = sqrt(b2);
   const double ab2 = a2*b2;
   const int J = delta1.size();
-  const NumericVector R = sqrt(nu)*(delta1 - delta2)/(t1-t2);
+  const NumericVector R = sqrt(nudbl)*(delta1 - delta2)/(t1-t2);
   NumericVector C = isPositive(delta1) - isPositive(delta2) +
                       pnorm(-delta1*sB1) - pnorm(-delta2*sB2);
   for(int i=0; i<J; i++){
@@ -585,22 +531,23 @@ NumericVector OwenCDF2_C(int nu, double t1, double t2, NumericVector delta1,
 // [[Rcpp::export]]
 NumericVector RcppOwenCDF2(int nu, double t1, double t2, NumericVector delta1,
     NumericVector delta2, int algo=1){
-  const NumericVector R = sqrt(nu)*(delta1 - delta2)/(t1-t2);
   if(nu == 1){
     return OwenCDF2_C(nu, t1, t2, delta1, delta2);
   }
-  const double a1 = R::sign(t1)*sqrt(t1*t1/nu);
-  const double b1 = nu/(nu+t1*t1);
+  const double nudbl = nu;
+  const double a1 = R::sign(t1)*sqrt(t1*t1/nudbl);
+  const double b1 = nudbl/(nudbl+t1*t1);
   const double sB1 = sqrt(b1);
   const double ab1 = a1*b1;
-  const double asB1 = R::sign(t1)*sqrt(t1*t1/(nu+t1*t1));
-  const double a2 = R::sign(t2)*sqrt(t2*t2/nu);
-  const double b2 = nu/(nu+t2*t2);
+  const double asB1 = R::sign(t1)*sqrt(t1*t1/(nudbl+t1*t1));
+  const double a2 = R::sign(t2)*sqrt(t2*t2/nudbl);
+  const double b2 = nudbl/(nudbl+t2*t2);
   const double sB2 = sqrt(b2);
   const double ab2 = a2*b2;
-  const double asB2 = R::sign(t2)*sqrt(t2*t2/(nu+t2*t2));
+  const double asB2 = R::sign(t2)*sqrt(t2*t2/(nudbl+t2*t2));
   const int J = delta1.size();
   const int n = nu-1;
+  const NumericVector R = sqrt(nudbl)*(delta1 - delta2)/(t1-t2);
   NumericMatrix H(n,J); NumericMatrix M1(n,J); NumericMatrix M2(n,J);
   NumericVector Lfactor1 = ab1 * dnorm(a1*R-delta1);
   NumericVector Lfactor2 = ab2 * dnorm(a2*R-delta2);
@@ -665,16 +612,17 @@ NumericVector RcppOwenCDF2(int nu, double t1, double t2, NumericVector delta1,
 //****************************************************************************80
 NumericVector OwenCDF1_C(int nu, double t1, double t2, NumericVector delta1,
     NumericVector delta2){
-  const double a1 = R::sign(t1)*sqrt(t1*t1/nu);
-  const double b1 = nu/(nu+t1*t1);
+  const double nudbl = nu;
+  const double a1 = R::sign(t1)*sqrt(t1*t1/nudbl);
+  const double b1 = nudbl/(nudbl+t1*t1);
   const double sB1 = sqrt(b1);
   const double ab1 = a1*b1;
-  const double a2 = R::sign(t2)*sqrt(t2*t2/nu);
-  const double b2 = nu/(nu+t2*t2);
+  const double a2 = R::sign(t2)*sqrt(t2*t2/nudbl);
+  const double b2 = nudbl/(nudbl+t2*t2);
   const double sB2 = sqrt(b2);
   const double ab2 = a2*b2;
   const int J = delta1.size();
-  const NumericVector R = sqrt(nu)*(delta1 - delta2)/(t1-t2);
+  const NumericVector R = sqrt(nudbl)*(delta1 - delta2)/(t1-t2);
   NumericVector C = -isPositive(delta1) + isPositive(delta2) +
                       pnorm(-delta2*sB2);
   for(int i=0; i<J; i++){
@@ -693,22 +641,23 @@ NumericVector OwenCDF1_C(int nu, double t1, double t2, NumericVector delta1,
 // [[Rcpp::export]]
 NumericVector RcppOwenCDF1(int nu, double t1, double t2, NumericVector delta1,
     NumericVector delta2, int algo=1){
-  const NumericVector R = sqrt(nu)*(delta1 - delta2)/(t1-t2);
   if(nu == 1){
     return OwenCDF1_C(nu, t1, t2, delta1, delta2);
   }
-  const double a1 = R::sign(t1)*sqrt(t1*t1/nu);
-  const double b1 = nu/(nu+t1*t1);
+  const double nudbl = nu;
+  const double a1 = R::sign(t1)*sqrt(t1*t1/nudbl);
+  const double b1 = nudbl/(nudbl+t1*t1);
   const double sB1 = sqrt(b1);
   const double ab1 = a1*b1;
-  const double asB1 = R::sign(t1)*sqrt(t1*t1/(nu+t1*t1));
-  const double a2 = R::sign(t2)*sqrt(t2*t2/nu);
-  const double b2 = nu/(nu+t2*t2);
+  const double asB1 = R::sign(t1)*sqrt(t1*t1/(nudbl+t1*t1));
+  const double a2 = R::sign(t2)*sqrt(t2*t2/nudbl);
+  const double b2 = nudbl/(nudbl+t2*t2);
   const double sB2 = sqrt(b2);
   const double ab2 = a2*b2;
-  const double asB2 = R::sign(t2)*sqrt(t2*t2/(nu+t2*t2));
+  const double asB2 = R::sign(t2)*sqrt(t2*t2/(nudbl+t2*t2));
   const int J = delta1.size();
   const int n = nu-1;
+  const NumericVector R = sqrt(nudbl)*(delta1 - delta2)/(t1-t2);
   NumericMatrix M1(n,J); NumericMatrix M2(n,J);
   NumericVector Lfactor1 = ab1 * dnorm(a1*R-delta1);
   NumericVector Lfactor2 = ab2 * dnorm(a2*R-delta2);
@@ -767,12 +716,13 @@ NumericVector RcppOwenCDF1(int nu, double t1, double t2, NumericVector delta1,
 
 //****************************************************************************80
 NumericVector SpecialOwenCDF2_C(int nu, double t, NumericVector delta){
-  const double a = sqrt(t*t/nu);
-  const double b = nu/(nu+t*t);
+  const double nudbl = nu;
+  const double a = sqrt(t*t/nudbl);
+  const double b = nudbl/(nudbl+t*t);
   const double sB = sqrt(b);
   const double ab = a*b;
   const int J = delta.size();
-  const NumericVector R = sqrt(nu)*delta/t;
+  const NumericVector R = sqrt(nudbl)*delta/t;
   NumericVector C = 2*pnorm(-delta*sB);
   for(int i=0; i<J; i++){
     C[i] += 4 * (RcppOwenT(R[i], (a*R[i]-delta[i])/R[i]) +
@@ -786,13 +736,14 @@ NumericVector RcppSpecialOwenCDF2(int nu, double t, NumericVector delta, int alg
   if(nu == 1){
     return SpecialOwenCDF2_C(nu, t, delta);
   }
-  const double a = sqrt(t*t/nu);
-  const double b = nu/(nu+t*t);
+  const double nudbl = nu;
+  const double a = sqrt(t*t/nudbl);
+  const double b = nudbl/(nudbl+t*t);
   const double sB = sqrt(b);
   const double ab = a*b;
-  const double asB = sqrt(t*t/(nu+t*t));
+  const double asB = sqrt(t*t/(nudbl+t*t));
   const int J = delta.size();
-  const NumericVector R = sqrt(nu)*delta/t;
+  const NumericVector R = sqrt(nudbl)*delta/t;
   const int n = nu-1;
   NumericMatrix H(n,J); NumericMatrix M(n,J);
   NumericVector Lfactor = ab * dnorm(a*R-delta);

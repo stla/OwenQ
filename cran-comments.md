@@ -1,3 +1,20 @@
+# Release version 1.0.2 (2019-08-30)
+
+## Release summary 
+
+Attempted to fix the C++ problems raised by the CRAN checks on Solaris, and 
+a test which fails.
+
+## Test environments
+
+   * windows 7 64bit, R 3.6.1
+   * online win-builder.r-project.org 
+
+## R CMD check results
+
+
+____
+
 # Release version 1.0.1 (2019-08-29)
 
 ## Release summary 

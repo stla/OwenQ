@@ -15,7 +15,7 @@ test_that("OwenT(0,a)", {
   a <- 0.9
   expect_equal(OwenT(0,a), atan(a)/(2*pi), tolerance=1e-16)
   a <- 2
-  expect_true(OwenT(0,a) == atan(a)/(2*pi))
+  expect_equal(OwenT(0,a), atan(a)/(2*pi), tolerance=1e-15)
 })
 
 test_that("OwenT(h,1)", {
