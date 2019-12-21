@@ -1,3 +1,22 @@
+# Release version 1.0.3 (2019-12-21)
+
+## Release summary 
+
+Fixed the "additional issues" of CRAN checks.
+
+## Test environments
+
+   * Windows 10 64bit, R 3.6.2
+   * Ubuntu 18.04.3 LTS, R 3.6.1
+   * online win-builder.r-project.org 
+
+## R CMD check results
+
+Status: OK except on win-devel, because there is no package testthat
+
+
+____
+
 # Release version 1.0.2 (2019-08-30)
 
 ## Release summary 
