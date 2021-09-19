@@ -1,3 +1,8 @@
+# Resubmission of release version 1.0.4 (2021-09-19)
+
+I updated the hyperlink in the vignette.
+
+
 # Release version 1.0.4 (2021-09-19)
 
 ## Release summary 

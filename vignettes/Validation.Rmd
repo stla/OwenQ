@@ -61,7 +61,7 @@ The Owen $T$-function is implemented under the name `OwenT`.
 This is a port of the function `owens_t` of the C++ `special_functions` library 
 included in the `boost` set of libraries. 
 Some details about the C++ implementation are 
-[available here](http://www.boost.org/doc/libs/1_61_0/libs/math/doc/html/math_toolkit/owens_t.html).
+[available here](https://www.boost.org/doc/libs/1_77_0/libs/math/doc/html/math_toolkit/owens_t.html).
 
 The libraries provided by `boost` are peer-reviewed, and this is enough to 
 trust the reliability of `OwenT`. 
