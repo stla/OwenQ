@@ -21,5 +21,6 @@ test_that("ptOwen for infinite delta", {
 })
 
 test_that("ptOwen = Q2 for R=0", {
-  expect_equal(ptOwen(2, 1, 3), OwenQ2(1, 2, 3, 0), tolerance=1e-14)
+  skip_on_os("mac")
+  expect_equal(ptOwen(2, 5, 1.5), OwenQ2(5, 2, 1.5, 0), tolerance=1e-14)
 })

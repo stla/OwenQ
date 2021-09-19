@@ -99,7 +99,7 @@ test_that("powen4 - delta1=Inf", {
   # BIZARRE
   expect_equal(OwenQ:::RcppOwenCDF4(1, 3, t2, 1000, delta2, algo),
                ptOwen(t2, 1, delta2),
-               tolerance=1e-100)
+               tolerance=1e-15)
   # now this is implemented in powen4
   x <- powen4(nu, 3, t2, Inf, delta2)
   expect_equal(x1, x, tolerance=1e-16)

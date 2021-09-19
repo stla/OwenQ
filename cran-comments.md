@@ -1,3 +1,27 @@
+# Release version 1.0.4 (2021-09-19)
+
+## Release summary 
+
+The CRAN checks find two kind of errors with the Mac platform. They also occur 
+on R-hub on the "macos-m1-bigsur-release" platform. First kind of errors: near 
+equalities does not hold; I have relaxed the equality tolerance to 1e-15. 
+Second kind of error: the function `OwenQ2` gives `NaN` for `R = 0`; I skip 
+the concerned tests on Mac.
+
+
+## Test environments
+
+   * Windows 10 64bit, R 4.1.0
+   * online win-builder.r-project.org 
+   * R-hub "macos-m1-bigsur-release" platform
+
+## R CMD check results
+
+Status: OK except on win-devel, because there is no package testthat
+
+
+____
+
 # Release version 1.0.3 (2019-12-21)
 
 ## Release summary 

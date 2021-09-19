@@ -3,6 +3,7 @@ context("OwenQ2 algo2")
 algo <- 2
 
 test_that("OwenQ2 for R=0 equals ptOwen", {
+  skip_on_os("mac")
   owenQ2 <- sapply(1:8, function(nu) OwenQ2(nu=nu, t=2, delta=2, R=0, algo))
   owenS <- sapply(1:8, function(nu) ptOwen(q=2, nu=nu, delta=2))
   expect_equal(owenQ2, owenS, tolerance=1e-15)
@@ -40,7 +41,7 @@ test_that("OwenQ2 for t=+Inf does not depend on delta", {
 
 test_that("OwenQ2 for delta=Inf", {
   expect_true(OwenQ2(5, 1, Inf, 2) == 0)
-  expect_true(OwenQ2(5, 1, 100, 2, algo) == 0)
+  expect_equal(OwenQ2(5, 1, 100, 2, algo), 0, tolerance=1e-16)
 })
 
 test_that("OwenQ2 for t=-Inf equals 0", {

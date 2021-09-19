@@ -1,3 +1,7 @@
+# OwenQ 1.0.4
+
+Fixed some issues on Mac raised by CRAN checks. No difference for the user.
+
 # OwenQ 1.0.3
 
 Fixed some issues raised by CRAN checks. No difference for the user.

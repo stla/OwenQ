@@ -6,6 +6,11 @@
 
 using namespace Rcpp;
 
+#ifdef RCPP_USE_GLOBAL_ROSTREAM
+Rcpp::Rostream<true>&  Rcpp::Rcout = Rcpp::Rcpp_cout_get();
+Rcpp::Rostream<false>& Rcpp::Rcerr = Rcpp::Rcpp_cerr_get();
+#endif
+
 // ipowen4
 Rcpp::NumericVector ipowen4(double nu, double t1, double t2, double delta1, double delta2, int subdiv, double eps_abs, double eps_rel);
 RcppExport SEXP _OwenQ_ipowen4(SEXP nuSEXP, SEXP t1SEXP, SEXP t2SEXP, SEXP delta1SEXP, SEXP delta2SEXP, SEXP subdivSEXP, SEXP eps_absSEXP, SEXP eps_relSEXP) {

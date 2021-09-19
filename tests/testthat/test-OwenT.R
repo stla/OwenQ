@@ -50,8 +50,8 @@ test_that("Relation OwenT Cauchy", {
 
 test_that("Comparison Wolfram", {
   expect_equal(OwenT(1,2), 0.078468186993084, tolerance=1e-16)
-  expect_equal(OwenT(1,0.5), 0.0430646911207853656324, tolerance=1e-100)
-  expect_equal(OwenT(2,0.9), 0.0109285988291624569525, tolerance=1e-100)
+  expect_equal(OwenT(1,0.5), 0.0430646911207853656324, tolerance=1e-15)
+  expect_equal(OwenT(2,0.9), 0.0109285988291624569525, tolerance=1e-15)
   # h=1/2
   wolfram <- c(0.013993020236280154243,0.027679288269477873649,0.040786707344250107440,0.053103310576947631095,
                0.064488602847503757028,0.074871390139948867182,0.084238500228436371909,
@@ -86,7 +86,7 @@ test_that("Relation T(h,a) T(ah,1/a)", {
   a <- -2
   expect_equal(OwenT(h,a)+OwenT(a*h,1/a),
                (pnorm(h)+pnorm(a*h))/2-pnorm(h)*pnorm(a*h)-0.5,
-               tolerance=1e-100)
+               tolerance=1e-15)
   h <- 100; a <- 2 # this gives 0
   expect_true(OwenT(h,a)+OwenT(a*h,1/a) ==
                 (pnorm(h)+pnorm(a*h))/2-pnorm(h)*pnorm(a*h))

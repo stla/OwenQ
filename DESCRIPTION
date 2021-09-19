@@ -1,8 +1,7 @@
 Package: OwenQ
 Type: Package
 Title: Owen Q-Function
-Version: 1.0.3
-Date: 2019-12-21
+Version: 1.0.4
 Author: Stéphane Laurent
 Maintainer: Stéphane Laurent <laurent_step@outlook.fr>
 Description: Evaluates the Owen Q-function for an integer value of the degrees of freedom, by applying Owen's algorithm (1965) <doi:10.1093/biomet/52.3-4.437>. 
@@ -19,7 +18,6 @@ Suggests: testthat,
     rmarkdown,
     mvtnorm
 Encoding: UTF-8
-LazyData: true
 SystemRequirements: C++11
 RoxygenNote: 7.0.2
 VignetteBuilder: knitr
