@@ -1,3 +1,7 @@
+# OwenQ 1.0.5
+
+Relicensed the package.
+
 # OwenQ 1.0.4
 
 Fixed some issues on Mac raised by CRAN checks. No difference for the user.

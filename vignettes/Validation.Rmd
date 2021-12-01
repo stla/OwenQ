@@ -7,7 +7,7 @@ output:
     toc: true
     number_sections: true
 vignette: >
-  %\VignetteIndexEntry{Validation}
+  %\VignetteIndexEntry{Is OwenQ reliable?}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -626,10 +626,10 @@ for (i in 1:nrow(SAS)) {
       n2 = SAS$n2[i]
     )
 }
-identical(round(power, 14), round(power2, 14))
+all(abs(power - power2) < 1e-9)
 ```
 
-The values rounded to $14$ digits are the same as the ones we previously 
+The values rounded to $9$ digits are the same as the ones we previously 
 obtained with `powen4`.
 
 
