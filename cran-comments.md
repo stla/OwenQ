@@ -1,4 +1,4 @@
-# Release version 1.0.5 (2021-12-01)
+# Release version 1.0.5 (2022-01-05)
 
 I only relicensed the package.
 
