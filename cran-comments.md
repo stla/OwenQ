@@ -1,3 +1,8 @@
+# Release version 1.0.6 (2023-01-27)
+
+Switched from C++ 11 to C++ 17.
+
+
 # Release version 1.0.5 (2022-01-05)
 
 I only relicensed the package.

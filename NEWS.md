@@ -1,3 +1,7 @@
+# OwenQ 1.0.6
+
+Switched to C++ 17.
+
 # OwenQ 1.0.5
 
 Relicensed the package.
