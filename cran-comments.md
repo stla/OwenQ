@@ -1,3 +1,8 @@
+# Release version 1.0.6 (2023-04-11)
+
+Skip a test on 32 bits systems.
+
+
 # Release version 1.0.6 (2023-01-27)
 
 Switched from C++ 11 to C++ 17.

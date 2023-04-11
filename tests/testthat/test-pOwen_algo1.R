@@ -22,6 +22,7 @@ test_that("powen4", {
 })
 
 test_that("Comparison with PASS", {
+  skip_if(.Machine$sizeof.pointer < 8L) # skip if 32 bits
   powerTOST <- function(alpha, delta0, Delta, sigma, n1, n2){
     se <- sqrt(1/n1 + 1/n2)*sigma
     delta1 <- (delta0+Delta)/se

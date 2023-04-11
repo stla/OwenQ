@@ -1,3 +1,7 @@
+# OwenQ 1.0.7
+
+Skip some tests for 32 bits systems.
+
 # OwenQ 1.0.6
 
 Switched to C++ 17.

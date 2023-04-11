@@ -1,7 +1,7 @@
 Type: Package
 Package: OwenQ
 Title: Owen Q-Function
-Version: 1.0.6
+Version: 1.0.7
 Author: Stéphane Laurent
 Maintainer: Stéphane Laurent <laurent_step@outlook.fr>
 Description: Evaluates the Owen Q-function for an integer value of the
